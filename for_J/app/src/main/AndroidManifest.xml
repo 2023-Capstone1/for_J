@@ -86,6 +86,16 @@
         <activity
             android:name=".TodoSetDateNew"
             android:exported="false" />
+
+
+        <!--민형파트-->
+        <activity
+            android:name=".CalendarMainActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
     </application>
 
 </manifest>

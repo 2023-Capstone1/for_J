@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TimeFragment">
+
+    <!--년월 부분 (헤더)-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/white">
+        <!--월 년-->
+        <TextView
+            android:id="@+id/monthYearText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="2"
+            android:text="2월 2023"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:background="@color/white"
+            android:textSize="20dp" />
+
+        <!--옵션 버튼-->
+        <ImageButton
+            android:id="@+id/btn_option"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:background="#ffffff"
+            android:src="@drawable/ic_more_horiz" />
+    </LinearLayout>
+
+    <!--주간 캘린더 부분-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/weekRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#efefef" />
+
+
+</LinearLayout>

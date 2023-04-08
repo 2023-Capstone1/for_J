@@ -44,7 +44,7 @@ public class Login extends AppCompatActivity {
 
                 if(loginApiService.getStatus() == 200){
                     Toast.makeText(Login.this, "로그인 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Login.this, MainActivity.class);
+                    Intent intent = new Intent(Login.this, CalendarMainActivity.class);
                     startActivity(intent);
                 }else if(key == "login_id_pw_error") {
                     // url 만들어지고 ID 잘못될때 출력

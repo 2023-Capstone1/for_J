@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".ToDoFragment">
+
+    <!--하프캘린터 구현-->
+    <!--년월 부분 (헤더)-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/white">
+        <!--이전달 버튼-->
+        <ImageButton
+            android:id="@+id/preBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="50dp"
+            android:background="#ffffff"
+            android:src="@drawable/ic_pre_month" />
+        <!--월 년-->
+        <TextView
+            android:id="@+id/monthYearText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="2"
+            android:text="2월 2023"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:background="@color/white"
+            android:textSize="20dp" />
+
+        <!--다음달 버튼-->
+        <ImageButton
+            android:id="@+id/nextBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingRight="50dp"
+            android:background="#ffffff"
+            android:src="@drawable/ic_next_month" />
+        <!--옵션 버튼-->
+        <ImageButton
+            android:id="@+id/btn_option"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:background="#ffffff"
+            android:src="@drawable/ic_more_horiz" />
+    </LinearLayout>
+
+    <!--요일 부분-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="일"
+            android:textColor="#FF0000"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="월"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="화"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="수"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="목"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="금"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="토"
+            android:textColor="#0000FF"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <!--하프캘린더 부분-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dateRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#efefef" />
+
+    <!--카테고리 제목, 일정 개수, 오늘 날짜-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/todoTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="To-Do"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_margin="10dp"/>
+
+            <TextView
+                android:id="@+id/todoListCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="0"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_200"
+                android:layout_margin="10dp"/>
+
+            <TextView
+                android:id="@+id/todoToday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="3.5"
+                android:gravity="center"
+                android:text="29"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:textColor="@color/blueGray_900"
+                android:background="@drawable/list_item_background"/>
+        </LinearLayout>
+
+        <!--리스트뷰랑 추가 버튼-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <ScrollView
+                android:id="@+id/todo_listScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:id="@+id/todoList_add_position"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!--카테고리별 리스트뷰는 자바로 구현 부탁부탁-->
+                    <!--디비 카테고리 테이블에서 투두 카테고리 개수 만틈 todoList_set 동적으로 생성-->
+                    <!--todoList_add_position라는 리니어 레이아웃에 todoList_set레이아웃이 생성되어야함-->
+                    <!--todoList_set 레이아웃 안에는 버튼이랑 리스트뷰 포함-->
+                    <LinearLayout
+                        android:id="@+id/todoList_set"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:dividerHeight="10dp"
+                            android:divider="@color/white"
+                            android:text="Personal"/>
+
+                        <!--여기 layout_height를 아이템 개수 확인해서 동적으로 바꿔줘야할 듯-->
+                        <!--투두 테이블에서 해당 카테고리의 투두리스트+여분공간 계산해서 높이 동적으로 줘야함-->
+                        <ListView
+                            android:id="@+id/todo_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="135dp"
+                            android:dividerHeight="10dp"
+                            android:divider="@color/white"
+                            android:nestedScrollingEnabled="false">
+
+                        </ListView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:dividerHeight="10dp"
+                            android:divider="@color/white"
+                            android:text="Personal"/>
+
+                        <ListView
+                            android:id="@+id/todo_list2"
+                            android:layout_width="match_parent"
+                            android:layout_height="135dp"
+                            android:dividerHeight="10dp"
+                            android:divider="@color/white">
+
+                        </ListView>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+            <ImageButton
+                android:id="@+id/todo_listAddBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:src="@drawable/plus_btn"
+                android:background="#000ff000">
+
+            </ImageButton>
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+    android:id="@+id/calendar"
+    android:enabled="true"
+    android:icon="@drawable/calendar_month"
+    android:title="CALENDAR"
+    app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/todo"
+        android:enabled="true"
+        android:icon="@drawable/check_circle"
+        android:title="TODO"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/habit"
+        android:enabled="true"
+        android:icon="@drawable/event_repeat"
+        android:title="HABIT"
+        app:showAsAction="always"/>
+
+
+
+    <item
+        android:id="@+id/time"
+        android:enabled="true"
+        android:icon="@drawable/timer"
+        android:title="TIME"
+        app:showAsAction="always"/>
+
+</menu>
