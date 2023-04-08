@@ -21,6 +21,12 @@
             android:visibility="gone"/>
 
         <!-- 카테고리 버튼들은 자바로 구현 -->
+        <!-- 버튼 라디오 그룹 -->
+        <RadioGroup
+            android:id="@+id/PC_listRG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
 
     </LinearLayout>
 

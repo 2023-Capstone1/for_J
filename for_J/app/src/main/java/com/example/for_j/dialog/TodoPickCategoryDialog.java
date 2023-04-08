@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 
@@ -24,6 +25,8 @@ public class TodoPickCategoryDialog extends Dialog {
         this.PickCategoryDialogListener = pickCategoryDialogListener;
     }
 
+    private RadioGroup PC_listRG;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,11 @@ public class TodoPickCategoryDialog extends Dialog {
 
         // 디비에서 카테고리 모든 튜플 가지고 와서 라디오 버튼 만들기
         // showCategoryLayout 안에 for문으로 라디오 버튼 만들기
+        PC_listRG = findViewById(R.id.PC_listRG)
+
+
+
+
 
         // 추가 눌렀을 때
         LinearLayout addCategory = findViewById(R.id.PC_Add);
