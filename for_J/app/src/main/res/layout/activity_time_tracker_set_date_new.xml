@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TodoSetDateNew"
+    android:orientation="vertical">
+
+    <!-- 투두 이름 입련란 -->
+    <EditText
+        android:id="@+id/TRSDN_Title"
+        android:importantForAutofill="no"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:hint="Time Tracker Title"
+        android:textSize="30sp"
+
+        android:singleLine="true"
+        android:lines="1"
+
+        android:inputType="text"
+        tools:ignore="VisualLintTextFieldSize"
+        />
+
+    <!-- 옵션 레이아웃 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 카테고리 레이아웃 -->
+        <!-- 카테고리 img, text 왼쪽 정렬 / btn 오른쪽 정렬 -->
+        <!-- 카테고리 선택은 다이얼로그로 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- 카테고리 아이콘 -->
+            <ImageView
+                android:id="@+id/TRSDN_CategoryImg"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_bookmark"
+                />
+
+            <!-- 카테고리 텍스트 -->
+            <TextView
+                android:id="@+id/TRSDN_CategoryTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+
+                android:textSize="25sp"
+                android:text="카테고리"/>
+
+            <!-- 오른쪽 정렬 -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+
+            <!-- 카테고리 btn -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/TRSDN_CategoryBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+
+                android:background="@drawable/round_rectangle"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- NFC 태그 -->
+    <!-- NFC 추가 설정 버튼 vertical -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- NFC img, text 왼쪽 정렬 / switch 오른쪽 정렬 -->
+        <!-- NFC 태그 다이얼로그로 구현 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- NFC 아이콘 -->
+            <ImageView
+                android:id="@+id/TRSDN_NFCImg"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_nfc"
+                />
+
+            <!-- NFC 텍스트 -->
+            <TextView
+                android:id="@+id/TRSDN_NFCTxt"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+
+                android:textSize="25sp"
+
+                android:text="NFC 태그"/>
+
+            <!-- 오른쪽 정렬 -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+
+            <!-- NFC 스위치 -->
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/TRSDN_NFCSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+
+                android:checked="false"
+                android:thumb="@drawable/shape_switch_thumb"
+
+
+                app:switchMinWidth="60sp"
+                app:track="@drawable/selector_switch"
+                tools:ignore="DuplicateSpeakableTextCheck"
+
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+        <!-- NFC 설정 버튼 -->
+        <!-- 다이얼 로그 -->
+        <!-- 등록 되면 txt="nfc 값"으로 변경 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/TRSDN_NFCBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginHorizontal="30dp"
+            android:layout_gravity="center"
+
+            android:text="NFC 등록"
+            />
+
+    </LinearLayout>
+
+    <!-- 하단 고정을 위한 공간 생성 -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <!-- 취소 / 저장 버튼 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/TRSDN_Cancle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+
+            android:text="취소"
+            android:textSize="22sp"
+            android:padding="20dp"
+            />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/TRSDN_Save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+
+            android:text="저장"
+            android:textSize="22sp"
+            android:padding="20dp"
+            />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

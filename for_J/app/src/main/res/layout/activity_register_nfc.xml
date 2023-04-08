@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="35dp"
+        android:src="@drawable/ic_cardtag"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/RNFC_TagBtn"
+            android:layout_width="300dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="55dp"
+            android:background="#7986CB"
+            android:text="태그하기"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
