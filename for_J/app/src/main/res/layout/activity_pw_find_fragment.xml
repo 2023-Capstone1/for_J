@@ -49,7 +49,8 @@
                 android:hint="@string/pw_find_id_hint"
                 android:text=""
                 android:autofillHints=""
-                android:inputType="" />
+                android:inputType=""
+                android:singleLine="true" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,7 +73,8 @@
                 android:hint="@string/pw_find_name_hint"
                 android:text=""
                 android:autofillHints=""
-                android:inputType="" />
+                android:inputType=""
+                android:singleLine="true" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,7 +101,8 @@
                     android:hint="@string/pw_find_email_hint"
                     android:text=""
                     android:autofillHints=""
-                    android:inputType="" />
+                    android:inputType=""
+                    android:singleLine="true"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/PwFindFragment_mail_cn_button"
@@ -138,7 +141,8 @@
                     android:hint="@string/pw_find_cn_hint"
                     android:inputType="textPassword"
                     android:text=""
-                    android:autofillHints="" />
+                    android:autofillHints=""
+                    android:singleLine="true" />
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/PwFindFragment_mail_cn_check_button"
                     android:layout_width="wrap_content"

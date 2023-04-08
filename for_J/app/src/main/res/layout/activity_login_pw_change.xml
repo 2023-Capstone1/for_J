@@ -77,7 +77,8 @@
                     android:hint="@string/login_pw_change_id_hint"
                     android:text=""
                     android:autofillHints=""
-                    android:inputType="" />
+                    android:inputType=""
+                    android:singleLine="true"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -100,7 +101,8 @@
                     android:hint="@string/login_pw_change_new_pw_hint"
                     android:text=""
                     android:autofillHints=""
-                    android:inputType="" />
+                    android:inputType=""
+                    android:singleLine="true"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -122,7 +124,8 @@
                     android:hint="@string/login_pw_change_new_pw_check_hint"
                     android:text=""
                     android:autofillHints=""
-                    android:inputType="" />
+                    android:inputType=""
+                    android:singleLine="true"/>
             </LinearLayout>
         </ScrollView>
         <androidx.appcompat.widget.AppCompatButton

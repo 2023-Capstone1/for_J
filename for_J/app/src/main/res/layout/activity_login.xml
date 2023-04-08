@@ -41,7 +41,8 @@
                 android:id="@+id/Login_id"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="@string/login_id_hint">
+                android:hint="@string/login_id_hint"
+                android:singleLine="true">
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -53,7 +54,8 @@
                 android:id="@+id/Login_pw"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="@string/login_pw_hint">
+                android:hint="@string/login_pw_hint"
+                android:singleLine="true">
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
         <LinearLayout

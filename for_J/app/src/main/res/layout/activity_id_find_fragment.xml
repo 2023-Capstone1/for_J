@@ -49,7 +49,8 @@
                 android:hint="@string/id_find_edit_name"
                 android:text=""
                 android:autofillHints=""
-                android:inputType="text" />
+                android:inputType="text"
+                android:singleLine="true"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +77,8 @@
                     android:hint="@string/id_find_email_hint"
                     android:inputType="textPersonName"
                     android:text=""
-                    android:autofillHints="" />
+                    android:autofillHints=""
+                    android:singleLine="true"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/IdFindFragment_mail_cn_button"
@@ -115,7 +117,8 @@
                     android:hint="@string/id_find_cn_hint"
                     android:inputType="textPassword"
                     android:text=""
-                    android:autofillHints="" />
+                    android:autofillHints=""
+                    android:singleLine="true"/>
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/IdFindFragment_mail_cn_check_button"
                     android:layout_width="wrap_content"
