@@ -258,14 +258,14 @@ public class TimeAddCategory extends Dialog{
                 categorySchema.setIsTodo(0);
 
 
-//                // url 작성
-//                String url = "http://203.250.133.156:8080/categoryAPI/set_todo_category/" + categorySchema.getLoginID() + "/" + categorySchema.getName() + "/" + categorySchema.getColor() + "/" + categorySchema.getIsTodo();
-//                ApiService categoryApiService = new ApiService();
-//                categoryApiService.postUrl(url);
-//
-//                if (categoryApiService.getStatus() == 200){
-//                    dismiss();
-//                }
+                // url 작성
+                String url = "http://203.250.133.156:8080/categoryAPI/set_time_category/" + categorySchema.getLoginID() + "/" + categorySchema.getName() + "/" + categorySchema.getColor() + "/" + categorySchema.getIsTodo();
+                ApiService categoryApiService = new ApiService();
+                categoryApiService.postUrl(url);
+
+                if (categoryApiService.getStatus() == 200){
+                    dismiss();
+                }
             }
         });
 
