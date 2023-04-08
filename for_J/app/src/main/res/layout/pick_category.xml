@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="250dp"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_round_rectangle_10"
+    android:backgroundTint="@color/blueGray_50">
+
+    <LinearLayout
+        android:id="@+id/showCategoryLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이거 안쓸거임 gone 설정하삼"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:visibility="gone"/>
+
+        <!-- 카테고리 버튼들은 자바로 구현 -->
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/divider" />
+
+
+
+
+    <!-- 이 레이아웃을 버튼 처럼 사용할 거임 -->
+    <LinearLayout
+        android:id="@+id/PC_Add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="10dp"
+        android:clickable="true">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_plus"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="추가"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

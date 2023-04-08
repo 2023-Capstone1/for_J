@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="350dp"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_round_rectangle_10">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal"
+        >
+
+        <!-- X -->
+        <ImageView
+            android:id="@+id/AC_Close"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_cancel"
+            android:clickable="true"/>
+
+        <!-- 오른쪽 정렬 -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <!-- 저장 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/AC_Save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_gravity="center"
+            android:backgroundTint="#00ff0000"
+            android:text="저장"
+            android:textSize="23sp"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/AddCategory_Title"
+        android:importantForAutofill="no"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:hint="카테고리 이름"
+        android:textSize="20sp"
+        android:singleLine="true"
+        android:lines="1"
+        android:inputType="text"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginBottom="10dp"
+        >
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/categoryPink"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/pink"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/categoryCrimson"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/crimson"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/categoryOrange"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/orange"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/categoryYellow"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/yellow"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/categoryLightGreen"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/light_green"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/categoryTurquoise"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/turquoise"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/categoryPastelBlue"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/pastel_blue"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/categoryPastelPurple"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/pastel_purple"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,233 @@
+package com.example.for_j.dialog;
+
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
+import com.example.for_j.R;
+
+public class AddCategory extends Dialog{
+    private Context context;
+    private ImageView AC_Close;
+    private Button AC_Save;
+    private EditText AC_Title;
+    private Button categoryPink, categoryCrimson, categoryOrange, categoryYellow,
+            categoryLightGreen, categoryTurquoise, categoryPastelBlue, categoryPastelPurple;
+    private int colorCheck;
+
+    public AddCategory(@NonNull Context context){
+        super(context);
+        this.context = context;
+    }
+
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(Bundle savedInstancesState){
+        super.onCreate(savedInstancesState);
+        setContentView(R.layout.add_category);
+
+
+        // 카테고리 이름
+        AC_Title = findViewById(R.id.AddCategory_Title);
+
+        // 색깔 버튼 8개
+        categoryPink = findViewById(R.id.categoryPink);
+        categoryCrimson = findViewById(R.id.categoryCrimson);
+        categoryOrange = findViewById(R.id.categoryOrange);
+        categoryYellow = findViewById(R.id.categoryYellow);
+        categoryLightGreen = findViewById(R.id.categoryLightGreen);
+        categoryTurquoise = findViewById(R.id.categoryTurquoise);
+        categoryPastelBlue = findViewById(R.id.categoryPastelBlue);
+        categoryPastelPurple  = findViewById(R.id.categoryPastelPurple);
+
+
+        // 클릭된 버튼에 체크 표시 하기
+        // 핑크 버튼 체크 표시
+        categoryPink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorCheck = 0;
+                Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
+                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+                categoryPink.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+
+                categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryOrange.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryYellow.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryLightGreen.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryTurquoise.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelPurple.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+        });
+
+        // 크림슨 버튼 체크 표시
+        categoryCrimson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorCheck = 1;
+                Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
+                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+                categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+
+                categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryOrange.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryYellow.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryLightGreen.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryTurquoise.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelPurple.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+        });
+
+        // 오렌지 버튼 체크 표시
+        categoryOrange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorCheck = 2;
+                Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
+                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+                categoryOrange.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+
+                categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryYellow.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryLightGreen.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryTurquoise.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelPurple.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+        });
+
+        // 옐로우 버튼 체크 표시
+        categoryYellow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorCheck = 3;
+                Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
+                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+                categoryYellow.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+
+                categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryOrange.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryLightGreen.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryTurquoise.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelPurple.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+        });
+
+        // 라이트 버튼 체크 표시
+        categoryLightGreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorCheck = 4;
+                Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
+                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+                categoryLightGreen.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+
+                categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryOrange.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryYellow.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryTurquoise.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelPurple.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+        });
+
+        // 터키즈 버튼 체크 표시
+        categoryTurquoise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorCheck = 5;
+                Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
+                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+                categoryTurquoise.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+
+                categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryOrange.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryYellow.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryLightGreen.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelPurple.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+        });
+
+        // 파스텔 블루 버튼 체크 표시
+        categoryPastelBlue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorCheck = 6;
+                Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
+                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+                categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+
+                categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryOrange.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryYellow.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryLightGreen.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryTurquoise.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelPurple.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+        });
+
+        // 파스텔 퍼플 버튼 체크 표시
+        categoryPastelPurple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorCheck = 7;
+                Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
+                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+                categoryPastelPurple.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+
+                categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryOrange.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryYellow.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryLightGreen.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryTurquoise.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+        });
+
+        // x 버튼
+        AC_Close = findViewById(R.id.AC_Close);
+        // 저장 버튼
+        AC_Save = findViewById(R.id.AC_Save);
+
+        // x 버튼 클릭 시 다이얼로그 종료
+        AC_Close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 전 화면으로 이동
+                dismiss();
+            }
+        });
+
+
+        // 저장 버튼 누를 시
+        AC_Save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 타임트래커, 투두 각각 따로 구현
+                // 카테고리 db에 이름, 색상 저장하기
+                dismiss();
+            }
+        });
+
+
+    }
+}
