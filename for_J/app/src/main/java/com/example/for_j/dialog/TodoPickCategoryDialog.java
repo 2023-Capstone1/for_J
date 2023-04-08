@@ -11,14 +11,14 @@ import androidx.annotation.NonNull;
 
 import com.example.for_j.R;
 
-public class PickCategoryDialog extends Dialog {
+public class TodoPickCategoryDialog extends Dialog {
 
-    private PickCategoryDialog.PickCategoryDialogListener PickCategoryDialogListener;
+    private TodoPickCategoryDialog.PickCategoryDialogListener PickCategoryDialogListener;
     public interface PickCategoryDialogListener {
         void getCategoryData(String cName, String cColor);
     }
     private Context context;
-    public PickCategoryDialog(@NonNull Context context, PickCategoryDialogListener pickCategoryDialogListener) {
+    public TodoPickCategoryDialog(@NonNull Context context, PickCategoryDialogListener pickCategoryDialogListener) {
         super(context);
         this.context = context;
         this.PickCategoryDialogListener = pickCategoryDialogListener;
@@ -39,7 +39,7 @@ public class PickCategoryDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 // add_category 다이얼로그 열기
-                AddCategory AC = new AddCategory(PickCategoryDialog.this.getContext());
+                TodoAddCategory AC = new TodoAddCategory(TodoPickCategoryDialog.this.getContext());
                 AC.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
                 // 다이얼로그 밖을 터치했을 때, 다이얼로그 꺼짐

@@ -13,7 +13,7 @@ import androidx.fragment.app.DialogFragment;
 
 
 import com.example.for_j.dialog.DatePickerFragment;
-import com.example.for_j.dialog.PickCategoryDialog;
+import com.example.for_j.dialog.TodoPickCategoryDialog;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -74,7 +74,7 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
             @Override
             public void onClick(View v) {
                 // pickCategory 띄우기
-                PickCategoryDialog PCD = new PickCategoryDialog(TodoSetDateNew.this, new PickCategoryDialog.PickCategoryDialogListener() {
+                TodoPickCategoryDialog PCD = new TodoPickCategoryDialog(TodoSetDateNew.this, new TodoPickCategoryDialog.PickCategoryDialogListener() {
                     @Override
                     public void getCategoryData(String cName, String cColor) {
                         // 카테고리 색, 이름 가지고 오기

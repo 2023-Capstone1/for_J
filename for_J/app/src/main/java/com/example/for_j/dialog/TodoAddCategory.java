@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,20 +12,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
+import com.example.for_j.ApiService;
 import com.example.for_j.R;
+import com.example.for_j.dbSchemaClass.CategorySchemaClass;
 
-public class AddCategory extends Dialog{
-    private Context context;
+public class TodoAddCategory extends Dialog{
+    private final Context context;
     private ImageView AC_Close;
     private Button AC_Save;
     private EditText AC_Title;
     private Button categoryPink, categoryCrimson, categoryOrange, categoryYellow,
             categoryLightGreen, categoryTurquoise, categoryPastelBlue, categoryPastelPurple;
-    private int colorCheck;
+//    private int colorCheck;
 
-    public AddCategory(@NonNull Context context){
+    private CategorySchemaClass categorySchema;
+
+    public TodoAddCategory(@NonNull Context context){
         super(context);
         this.context = context;
     }
@@ -34,6 +40,11 @@ public class AddCategory extends Dialog{
     protected void onCreate(Bundle savedInstancesState){
         super.onCreate(savedInstancesState);
         setContentView(R.layout.add_category);
+
+        // 서버로 보낼 값들 저장한 클래스
+        categorySchema = new CategorySchemaClass();
+        categorySchema.setName(null);
+        categorySchema.setColor("");
 
 
         // 카테고리 이름
@@ -55,10 +66,11 @@ public class AddCategory extends Dialog{
         categoryPink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCheck = 0;
+//                colorCheck = 0;
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+                categorySchema.setColor("pink");
 
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryOrange.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -74,10 +86,11 @@ public class AddCategory extends Dialog{
         categoryCrimson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCheck = 1;
+//                colorCheck = 1;
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+                categorySchema.setColor("crimson");
 
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryOrange.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -93,10 +106,11 @@ public class AddCategory extends Dialog{
         categoryOrange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCheck = 2;
+//                colorCheck = 2;
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryOrange.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+                categorySchema.setColor("orange");
 
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -112,10 +126,11 @@ public class AddCategory extends Dialog{
         categoryYellow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCheck = 3;
+//                colorCheck = 3;
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryYellow.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+                categorySchema.setColor("yellow");
 
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -131,10 +146,11 @@ public class AddCategory extends Dialog{
         categoryLightGreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCheck = 4;
+//                colorCheck = 4;
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryLightGreen.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+                categorySchema.setColor("green");
 
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -150,10 +166,11 @@ public class AddCategory extends Dialog{
         categoryTurquoise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCheck = 5;
+//                colorCheck = 5;
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryTurquoise.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+                categorySchema.setColor("turquoise");
 
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -169,10 +186,11 @@ public class AddCategory extends Dialog{
         categoryPastelBlue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCheck = 6;
+//                colorCheck = 6;
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+                categorySchema.setColor("pastelBlue");
 
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -188,10 +206,10 @@ public class AddCategory extends Dialog{
         categoryPastelPurple.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCheck = 7;
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryPastelPurple.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+                categorySchema.setColor("pastelBlue");
 
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -202,6 +220,10 @@ public class AddCategory extends Dialog{
                 categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             }
         });
+
+
+
+
 
         // x 버튼
         AC_Close = findViewById(R.id.AC_Close);
@@ -220,11 +242,32 @@ public class AddCategory extends Dialog{
 
         // 저장 버튼 누를 시
         AC_Save.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                // 타임트래커, 투두 각각 따로 구현
+                // loginId는 123으로 통일
+                // 나중에 바꿀거임 여기 수정해야함!!!!!!!!!!!!!!
+                categorySchema.setLoginID("123");
+
                 // 카테고리 db에 이름, 색상 저장하기
-                dismiss();
+                if (AC_Title.getText() == null){
+                    categorySchema.setName(null);
+                }else{
+                    categorySchema.setName(AC_Title.getText().toString());
+                }
+
+                // 투두임
+                categorySchema.setIsTodo(1);
+
+
+                // url 작성
+                String url = "http://203.250.133.156:8080/categoryAPI/set_todo_category/" + categorySchema.getLoginID() + "/" + categorySchema.getName() + "/" + categorySchema.getColor() + "/" + categorySchema.getIsTodo();
+                ApiService categoryApiService = new ApiService();
+                categoryApiService.postUrl(url);
+
+                if (categoryApiService.getStatus() == 200){
+                    dismiss();
+                }
             }
         });
 
