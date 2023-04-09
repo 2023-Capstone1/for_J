@@ -68,5 +68,7 @@
     <color name="stroke_pastel_blue">#6D82BF</color>
     <color name="stroke_pastel_purple">#8877B5</color>
 
+    <!-- colorAccent color -->
+    <color name="colorAccent">#ff4081</color>
 
 </resources>

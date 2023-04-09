@@ -15,16 +15,20 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class TimeFragment extends Fragment {
 
     // 달력 관련 변수
     TextView TimeFragment_monthYearText; // 년월 텍스트뷰
     RecyclerView TimeFragment_recyclerView; // RecyclerView 객체 생성
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    Calendar selectedDate; // 변경된 부분
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,12 +40,14 @@ public class TimeFragment extends Fragment {
         TimeFragment_recyclerView = timeView.findViewById(R.id.weekRecyclerView); // 리사이클러뷰 초기화
 
         // 현재 날짜
-        selectedDate = LocalDate.now();
+        selectedDate = Calendar.getInstance(); // 변경된 부분
 
         // 화면 설정
-        ArrayList<LocalDate> weekDaysList = new ArrayList<>();
+        ArrayList<Calendar> weekDaysList = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
-            weekDaysList.add(selectedDate.plusDays(i));
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, i - 3); // 수요일로 맞추기 위해 3일 빼고 더함
+            weekDaysList.add(calendar);
         }
 
         // 주간 캘린더 어댑터 설정
@@ -57,16 +63,14 @@ public class TimeFragment extends Fragment {
     }
 
     // 날짜 타입 설정
-    @SuppressLint("NewApi")
-    private String monthYearFromDate(LocalDate date) {
-        @SuppressLint({"NewApi", "LocalSuppress"}) DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월");
-        return date.format(formatter);
+    private String monthYearFromDate(Calendar date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월", Locale.KOREA);
+        return sdf.format(date.getTime());
     }
 
     // 화면 설정
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void setMonthView() {
         // 년월 텍스트뷰 세팅
-        TimeFragment_monthYearText.setText(monthYearFromDate(CalendarUtill.selectedDate));
+        TimeFragment_monthYearText.setText(monthYearFromDate(selectedDate));
     }
 }
