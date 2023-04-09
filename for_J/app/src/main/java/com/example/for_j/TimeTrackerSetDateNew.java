@@ -2,6 +2,7 @@ package com.example.for_j;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.for_j.dialog.TimePickCategoryDialog;
 
@@ -19,6 +21,14 @@ public class TimeTrackerSetDateNew extends AppCompatActivity {
     private Button TRSDN_CategortBtn;   // 타임트래커 카테고리 버튼
     private Button TRSDN_Cancle, TRSDN_Save;    // 타임트래커 저장, 취소 버튼
     private Button TRSDN_NFCBtn;
+
+    private String loginID = null;
+    private String name = null;
+    private String today = null;
+    private String caName = null;
+    private String caColor = null;
+    private String nfc = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +55,45 @@ public class TimeTrackerSetDateNew extends AppCompatActivity {
                     public void getCategoryData(String cName, String cColor) {
                         // 카테고리 색, 이름 가지고 오기, TodoSetDateNew.java 참고
 
-
-
-
-
-
-
-
-
-
+                        TRSDN_CategortBtn.setText(cName);
+                        Drawable btnDrawable;
+                        caName = cName;
+                        caColor = cColor;
+                        // 컬러설정
+                        switch(cColor){
+                            case "pink":
+                                btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_pink_selector);
+                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "crimson":
+                                btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_crimson_selector);
+                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "orange":
+                                btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_orange_selector);
+                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "yellow":
+                                btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_yellow_selector);
+                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "light_green":
+                                btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_light_green_selector);
+                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "turquoise":
+                                btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_turquoise_selector);
+                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "pastel_blue":
+                                btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_pastel_blue_selector);
+                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "pastel_purple":
+                                btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_pastel_purple_selector);
+                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                        }
                     }
                 });
 

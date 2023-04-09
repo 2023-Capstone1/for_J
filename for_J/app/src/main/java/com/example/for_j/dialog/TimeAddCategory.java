@@ -149,7 +149,7 @@ public class TimeAddCategory extends Dialog{
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryLightGreen.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
-                categorySchema.setColor("green");
+                categorySchema.setColor("light_green");
 
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -189,7 +189,7 @@ public class TimeAddCategory extends Dialog{
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryPastelBlue.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
-                categorySchema.setColor("pastelBlue");
+                categorySchema.setColor("pastel_blue");
 
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -208,7 +208,7 @@ public class TimeAddCategory extends Dialog{
                 Drawable img = ContextCompat.getDrawable(v.getContext(), R.drawable.ic_check);
                 img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
                 categoryPastelPurple.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
-                categorySchema.setColor("pastelBlue");
+                categorySchema.setColor("pastel_purple");
 
                 categoryPink.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 categoryCrimson.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
