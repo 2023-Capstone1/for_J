@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -257,14 +258,23 @@ public class TimeAddCategory extends Dialog{
                 // 투두임
                 categorySchema.setIsTodo(0);
 
+                if (categorySchema.getName().length() == 0){
+                    Toast toast = Toast.makeText(context, "카테고리 이름을 입력하세요.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else if (categorySchema.getColor().length() == 0){
+                    Toast toast = Toast.makeText(context, "카테고리 색상을 선택하세요.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else {
+                    // url 작성
+                    String url = "http://203.250.133.156:8080/categoryAPI/set_time_category/" + categorySchema.getLoginID() + "/" + categorySchema.getName() + "/" + categorySchema.getColor() + "/" + categorySchema.getIsTodo();
+                    ApiService categoryApiService = new ApiService();
+                    categoryApiService.postUrl(url);
 
-                // url 작성
-                String url = "http://203.250.133.156:8080/categoryAPI/set_time_category/" + categorySchema.getLoginID() + "/" + categorySchema.getName() + "/" + categorySchema.getColor() + "/" + categorySchema.getIsTodo();
-                ApiService categoryApiService = new ApiService();
-                categoryApiService.postUrl(url);
-
-                if (categoryApiService.getStatus() == 200){
-                    dismiss();
+                    if (categoryApiService.getStatus() == 200) {
+                        dismiss();
+                    }
                 }
             }
         });

@@ -35,7 +35,8 @@ public class TodoPickCategoryDialog extends Dialog {
 
         // 디비에서 카테고리 모든 튜플 가지고 와서 라디오 버튼 만들기
         // showCategoryLayout 안에 for문으로 라디오 버튼 만들기
-        PC_listRG = findViewById(R.id.PC_listRG)
+        PC_listRG = findViewById(R.id.PC_listRG);
+
 
 
 
