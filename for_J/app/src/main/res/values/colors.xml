@@ -57,4 +57,16 @@
     <color name="turquoise">#79C4A3</color>
     <color name="pastel_blue">#89A4F1</color>
     <color name="pastel_purple">#B49EF0</color>
+
+    <!-- stroke color -->
+    <color name="stroke_pink">#BD5557</color>
+    <color name="stroke_crimson">#D17857</color>
+    <color name="stroke_orange">#CF8D59</color>
+    <color name="stroke_yellow">#CC9E57</color>
+    <color name="stroke_light_green">#A4AB5B</color>
+    <color name="stroke_turquoise">#5A9179</color>
+    <color name="stroke_pastel_blue">#6D82BF</color>
+    <color name="stroke_pastel_purple">#8877B5</color>
+
+
 </resources>
