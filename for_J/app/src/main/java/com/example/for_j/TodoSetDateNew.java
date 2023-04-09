@@ -1,6 +1,7 @@
 package com.example.for_j;
 
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -9,9 +10,11 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 
+import com.example.for_j.dbSchemaClass.TodoSchemaClass;
 import com.example.for_j.dialog.DatePickerFragment;
 import com.example.for_j.dialog.TodoPickCategoryDialog;
 
@@ -30,6 +33,15 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
     private Button TSDN_CategortBtn;
     // 반복주기 버튼
     //private Button TSDN_RepeatBtn;
+
+    // 투두 클래스 변수
+//    TodoSchemaClass todoSchemaClass;
+    private String loginID = null;
+    private String name = null;
+    private String date = null;
+    private String caName = null;
+    private String caColor = null;
+    private int state = 0;
 
 
 
@@ -78,22 +90,48 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
                     @Override
                     public void getCategoryData(String cName, String cColor) {
                         // 카테고리 색, 이름 가지고 오기
+                        //todoSchemaClass.setCName(cName);
+                        //todoSchemaClass.setCColor(cColor);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        TSDN_CategortBtn.setText(cName);
+                        Drawable btnDrawable;
+                        caName = cName;
+                        caColor = cColor;
+                        // 컬러설정
+                        switch(cColor){
+                            case "pink":
+                                btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_pink_selector);
+                                TSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "crimson":
+                                btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_crimson_selector);
+                                TSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "orange":
+                                btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_orange_selector);
+                                TSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "yellow":
+                                btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_yellow_selector);
+                                TSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "light_green":
+                                btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_light_green_selector);
+                                TSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "turquoise":
+                                btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_turquoise_selector);
+                                TSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "pastel_blue":
+                                btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_pastel_blue_selector);
+                                TSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                            case "pastel_purple":
+                                btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_pastel_purple_selector);
+                                TSDN_CategortBtn.setBackground(btnDrawable);
+                                break;
+                        }
                     }
                 });
 

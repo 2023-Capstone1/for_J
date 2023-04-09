@@ -1,11 +1,11 @@
 package com.example.for_j.dbSchemaClass;
 
 public class TodoSchemaClass {
-    private String loginID;
-    private String name;
-    private String date;
-    private String cName;
-    private String cColor;
+    private String loginID = null;
+    private String name = null;
+    private String date = null;
+    private String cName = null;
+    private String cColor = null;
     private int state = 0;
 
     // Getter methods

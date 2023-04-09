@@ -1,9 +1,9 @@
 package com.example.for_j.dbSchemaClass;
 
 public class CategorySchemaClass {
-    private String loginID;
-    private String name;
-    private String color;
+    private String loginID = null;
+    private String name = null;
+    private String color = null;
     private int isTodo;
 
     public String getLoginID() {

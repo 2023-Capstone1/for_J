@@ -7,6 +7,22 @@
     android:backgroundTint="@color/blueGray_50">
 
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="right"
+        >
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/PC_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="저장"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/showCategoryLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
