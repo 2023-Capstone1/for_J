@@ -7,14 +7,15 @@ import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 
-import com.example.for_j.dbSchemaClass.TodoSchemaClass;
 import com.example.for_j.dialog.DatePickerFragment;
 import com.example.for_j.dialog.TodoPickCategoryDialog;
 
@@ -33,14 +34,17 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
     private Button TSDN_CategortBtn;
     // 반복주기 버튼
     //private Button TSDN_RepeatBtn;
+    // 취소 버튼
+    private AppCompatButton TSDN_Cancle;
+    // 저장 버튼
+    private AppCompatButton TSDN_Save;
 
-    // 투두 클래스 변수
-//    TodoSchemaClass todoSchemaClass;
+    // 투두 스키마 변수
     private String loginID = null;
     private String name = null;
     private String date = null;
     private String caName = null;
-    private String caColor = null;
+    //private String caColor = null;
     private int state = 0;
 
 
@@ -82,7 +86,7 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
 
         // 카테고리 버튼 xml 연동
         TSDN_CategortBtn = findViewById(R.id.TSDN_CategoryBtn);
-        // 타임 트래커 카테고리 다이얼로그 클릭
+        // 투두 카테고리 다이얼로그 클릭
         TSDN_CategortBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,8 +100,8 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
 
                         TSDN_CategortBtn.setText(cName);
                         Drawable btnDrawable;
-                        caName = cName;
-                        caColor = cColor;
+                        //caName = cName;
+                        //caColor = cColor;
                         // 컬러설정
                         switch(cColor){
                             case "pink":
@@ -146,6 +150,72 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
         });
 
 
+        // 저장 버튼
+        TSDN_Save = findViewById(R.id.TSDN_Save);
+        TSDN_Save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+                    private String loginID = null;
+                    private String name = null;
+                    private String date = null;
+                    private String caName = null;
+                    private String caColor = null;
+                    private int state = 0;
+                 */
+
+                // loginId는 123으로 통일
+                // 나중에 바꿀거임 여기 수정해야함!!!!!!!
+                loginID = "123";
+
+                // 투두 이름
+                if (TSDN_Title.getText() != null){
+                    name = TSDN_Title.getText().toString();
+                }
+
+                // 투두 날짜
+                if (date == null){
+                    date = "";
+                }
+
+                // 투두 카테고리 이름
+                if (TSDN_CategortBtn.getText() != null){
+                    caName = TSDN_CategortBtn.getText().toString();
+                }
+
+
+                if (name.length() == 0){
+                    Toast toast = Toast.makeText(TodoSetDateNew.this, "투두 타이틀을 입력하세요.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }else if (date.length() == 0){
+                    Toast toast = Toast.makeText(TodoSetDateNew.this, "날짜를 선택해주세요.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }else if (caName.length() == 0){
+                    Toast toast = Toast.makeText(TodoSetDateNew.this, "카테고리를 선택해주세요.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }else{
+                    ApiService todoApiService = new ApiService();
+                    String url = "http://203.250.133.156:8080/todoAPI/set_todo/" + loginID + "/" + name + "/" + date + "/" + caName + "/" + state;
+                    todoApiService.postUrl(url);
+
+                    if (todoApiService.getStatus()==200){
+                        finish();
+                    }
+                }
+            }
+        });
+
+        // 취소 버튼
+        TSDN_Cancle = findViewById(R.id.TSDN_Cancle);
+        TSDN_Cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+
+
         /*
         // 반복 주기 버튼 xml 연동
         TSDN_RepeatBtn = findViewById(R.id.TSDN_RepeatBtn);
@@ -173,7 +243,7 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
         // 선택된 날짜로 데이트 피커 업데이트
         String dateString = String.format(Locale.getDefault(), "%d-%02d-%02d", year, month + 1, day);
         TSDN_DateBtn.setText(dateString);
-
+        date = TSDN_DateBtn.getText().toString();
     }
 
 }

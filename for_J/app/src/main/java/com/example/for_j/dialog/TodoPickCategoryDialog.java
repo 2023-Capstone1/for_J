@@ -172,6 +172,7 @@ public class TodoPickCategoryDialog extends Dialog {
             }
         });
 
+        // 저장 눌렀을 때
         PC_save = findViewById(R.id.PC_save);
         PC_save.setOnClickListener(new View.OnClickListener() {
             @Override
