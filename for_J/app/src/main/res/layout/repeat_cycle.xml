@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_round_rectangle_10">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <!-- X -->
+        <ImageView
+            android:id="@+id/RC_Close"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_cancel" />
+
+        <!-- 오른쪽 정렬 -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- 저장 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/RC_Save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="#00ff0000"
+            android:text="저장"
+            android:textSize="23sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- 요일별로 반복 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/RC_DateofWeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/button_selector"
+            android:text="요일별로 반복"
+            android:textSize="20sp"
+            />
+
+        <!-- 주 n회 반복 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/RC_WeekNRepeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/button_selector"
+            android:text="주 n회 반복"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- 요일 별로 반복 -->
+        <LinearLayout
+            android:id="@+id/RC_DRC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/DRC_Sun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:text="일"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:background="@drawable/checkbox_selector"
+                android:button="@null"
+                android:layout_marginHorizontal="2dp"
+                />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/DRC_Mon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="월"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:background="@drawable/checkbox_selector"
+                android:button="@null"
+                android:layout_marginHorizontal="2dp"/>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/DRC_Tue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="화"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:background="@drawable/checkbox_selector"
+                android:button="@null"
+                android:layout_marginHorizontal="2dp"/>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/DRC_Wed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="수"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:background="@drawable/checkbox_selector"
+                android:button="@null"
+                android:layout_marginHorizontal="2dp"/>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/DRC_Thu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="목"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:background="@drawable/checkbox_selector"
+                android:button="@null"
+                android:layout_marginHorizontal="2dp"/>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/DRC_Fri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="금"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:background="@drawable/checkbox_selector"
+                android:button="@null"
+                android:layout_marginHorizontal="2dp"/>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/DRC_Sat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="토"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/checkbox_selector"
+                android:button="@null"
+                android:layout_marginHorizontal="2dp"/>
+        </LinearLayout>
+
+        <!-- 주 n회 반복 -->
+        <LinearLayout
+            android:id="@+id/RC_WNR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="주"
+                android:textSize="25sp"
+                android:layout_gravity="center"/>
+
+            <NumberPicker
+                android:id="@+id/RC_WNRnum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="회 이상 수행"
+                android:textSize="25sp"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

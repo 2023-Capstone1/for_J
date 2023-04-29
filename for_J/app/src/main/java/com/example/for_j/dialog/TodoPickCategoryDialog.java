@@ -177,7 +177,6 @@ public class TodoPickCategoryDialog extends Dialog {
         PC_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 for(int i = 0; i< cateNum; i++){
                     if (PC_categoryRB[i].isChecked()){
                         PickCategoryDialogListener.getCategoryData(cName[i], cColor[i]);

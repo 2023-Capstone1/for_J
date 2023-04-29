@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_round_rectangle_10"
+    android:backgroundTint="@color/blueGray_50"
+    android:gravity="center">
+
+
+    <RadioGroup
+        android:id="@+id/CP_RG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryPink"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="@drawable/category_pink_selector"
+                android:button="@null"
+                />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryCrimson"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="@drawable/category_crimson_selector"
+                android:button="@null"
+                />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryOrange"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="@drawable/category_orange_selector"
+                android:button="@null"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryYellow"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="@drawable/category_yellow_selector"
+                android:button="@null"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryLightGreen"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="@drawable/category_light_green_selector"
+                android:button="@null"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryTurquoise"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="@drawable/category_turquoise_selector"
+                android:button="@null"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryPastelBlue"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="@drawable/category_pastel_blue_selector"
+                android:button="@null"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryPastelPurple"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="@drawable/category_pastel_purple_selector"
+                android:button="@null"/>
+
+        </LinearLayout>
+
+    </RadioGroup>
+
+</LinearLayout>

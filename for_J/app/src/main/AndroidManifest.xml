@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <application
         android:allowBackup="true"
@@ -86,6 +87,12 @@
         <activity
             android:name=".TodoSetDateNew"
             android:exported="false" />
+        <activity
+            android:name=".HabitSetDateNew"
+            android:exported="false"/>
+        <activity
+            android:name=".RegisterNFC"
+            android:exported="false"/>
 
 
         <!--민형파트-->
@@ -94,7 +101,7 @@
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
-                android:value="" />
+                android:value="false" />
         </activity>
     </application>
 

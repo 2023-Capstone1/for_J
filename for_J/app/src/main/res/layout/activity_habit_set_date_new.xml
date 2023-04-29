@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HabitSetDateNew"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!-- 해빗 이름 입력란 -->
+        <EditText
+            android:id="@+id/HSDN_HabitTitle"
+            android:importantForAutofill="no"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:hint="Habit Title"
+            android:textSize="30sp"
+
+            android:singleLine="true"
+            android:lines="1"
+
+            android:inputType="text"
+            tools:ignore="VisualLintTextFieldSize"
+            />
+        <!-- 색상 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/HSDN_Color"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+
+            android:background="@drawable/circle"
+            android:layout_margin="15dp"
+
+            android:layout_gravity="right|center_vertical"
+            />
+    </FrameLayout>
+
+
+    <!-- 옵션 레이아웃 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 시작 날짜 -->
+        <!-- 날짜 img, text 왼쪽 정렬 / btn, switch 오른쪽 정렬 -->
+        <!-- 데이터 피커는 다이얼로그로 구현 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- 시작 날짜 img -->
+            <ImageView
+                android:id="@+id/HSDN_StartDateImg"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_calendar"
+                />
+
+            <!-- 시작 날짜 text -->
+            <TextView
+                android:id="@+id/HSDN_StartDateTxt"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+
+                android:textSize="25sp"
+
+                android:text="시작 날짜"/>
+
+
+            <!-- 오른쪽 정렬 -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+
+            <!-- 시작 날짜 btn (이거 속성값 invisible/ 누르면 데이트 피커 다이얼 로그 나오기)-->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/HSDN_StartDateBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                />
+
+            <!-- 시작 날짜 switch -->
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/HSDN_StartDateSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:checked="false"
+                android:thumb="@drawable/shape_switch_thumb"
+
+                app:switchMinWidth="60sp"
+                app:track="@drawable/selector_switch"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
+
+        <!-- 종료 날짜 -->
+        <!-- 종료 날짜 img, text 왼쪽 정렬 / btn, switch 오른쪽 정렬 -->
+        <!-- 데이터 피커는 다이얼로그로 구현 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- 종료 날짜 img -->
+            <ImageView
+                android:id="@+id/HSDN_EndDateImg"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_check_calendar"
+                />
+
+            <!-- 날짜 텍스트 -->
+            <TextView
+                android:id="@+id/HSDN_DateTxt"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+
+                android:textSize="25sp"
+
+                android:text="종료 날짜"/>
+
+            <!-- 오른쪽 정렬 -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+
+            <!-- 종료 날짜 btn (이거 속성값 invisible/ 누르면 데이트 피커 다이얼 로그 나오기)-->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/HSDN_EndDateBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                />
+
+            <!-- 종료 날짜 switch -->
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/HSDN_EndDateSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:checked="false"
+                android:thumb="@drawable/shape_switch_thumb"
+
+                app:switchMinWidth="60sp"
+                app:track="@drawable/selector_switch"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+        <!-- 알림 설정 레이아웃 -->
+        <!-- 알림설정 img, text 왼쪽 정렬 / btn switch 오른쪽 정렬 -->
+        <!-- 타임 피커는 다이얼로그로 구현 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- 알림 아이콘 -->
+            <ImageView
+                android:id="@+id/HSDN_BellAlarm"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_notification_bell_alarm"
+                />
+
+            <!-- 알림 텍스트 -->
+            <TextView
+                android:id="@+id/HSDN_AlarmTxt"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+
+                android:textSize="25sp"
+
+                android:text="알림"/>
+
+            <!-- 오른쪽 정렬 -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+
+            <!-- 알람 시간 설정 버튼 -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/HSDN_AlarmBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+
+            <!-- 알람 스위치 -->
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/HSDN_AlarmSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+
+                android:checked="false"
+                android:thumb="@drawable/shape_switch_thumb"
+
+
+                app:switchMinWidth="60sp"
+                app:track="@drawable/selector_switch"
+                tools:ignore="DuplicateSpeakableTextCheck" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+    <!-- 반복주기 레이아웃 -->
+    <!-- 반복주기 img, text 왼쪽 정렬 / 요일, 횟수 버튼 오른쪽 정렬 -->
+    <!-- 반복주기 선택은 다이얼로그로 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- 반복주기 아이콘 -->
+        <ImageView
+            android:id="@+id/HSDN_RepeatImg"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_repeat"
+            />
+
+        <!-- 반복주기 텍스트 -->
+        <TextView
+            android:id="@+id/HSDN_RepeatTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+
+            android:textSize="25sp"
+            android:text="반복 주기"/>
+
+        <!-- 오른쪽 정렬 -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <!-- 반복주기 btn -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/HSDN_RepeatBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+
+            android:background="@drawable/round_rectangle"
+            android:backgroundTint="#00ff0000"
+            />
+    </LinearLayout>
+
+    <!-- NFC 태그 -->
+    <!-- NFC 추가 설정 버튼 vertical -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- NFC img, text 왼쪽 정렬 / switch 오른쪽 정렬 -->
+        <!-- NFC 태그 다이얼로그로 구현 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- NFC 아이콘 -->
+            <ImageView
+                android:id="@+id/HSDN_NFCImg"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_nfc"
+                />
+
+            <!-- NFC 텍스트 -->
+            <TextView
+                android:id="@+id/HSDN_NFCTxt"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+
+                android:textSize="25sp"
+
+                android:text="NFC 태그"/>
+
+            <!-- 오른쪽 정렬 -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+
+            <!-- NFC 스위치 -->
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/HSDN_NFCSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+
+                android:checked="false"
+                android:thumb="@drawable/shape_switch_thumb"
+
+
+                app:switchMinWidth="60sp"
+                app:track="@drawable/selector_switch"
+                tools:ignore="DuplicateSpeakableTextCheck"
+
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+        <!-- NFC 설정 버튼 -->
+        <!-- 다이얼 로그 -->
+        <!-- 등록 되면 txt="nfc 값"으로 변경 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/HSDN_NFCBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginHorizontal="30dp"
+            android:layout_gravity="center"
+
+            android:text="NFC 등록"
+            />
+
+    </LinearLayout>
+    <!-- 하단 고정을 위한 공간 생성 -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <!-- 취소 / 저장 버튼 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/HSDN_Cancle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+
+            android:text="취소"
+            android:textSize="22sp"
+            android:padding="20dp"
+            />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/HSDN_Save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+
+            android:text="저장"
+            android:textSize="22sp"
+            android:padding="20dp"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

@@ -3,6 +3,7 @@ package com.example.for_j;
 import static com.example.for_j.CalendarUtill.selectedDate;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -45,6 +46,9 @@ public class HabitFragment extends Fragment {
     // 다이얼로그 관련
     HabitDialog dialog;
 
+    // + 버튼
+    ImageButton moveHabitSetDateNew;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     @Override
@@ -52,6 +56,18 @@ public class HabitFragment extends Fragment {
                              Bundle savedInstanceState) {
         // 헤빗 프래그먼트 뷰 생성
         View habitView = inflater.inflate(R.layout.fragment_habit, container, false);
+
+        // 해빗 리스트 추가 인텐트로 이동
+        moveHabitSetDateNew = habitView.findViewById(R.id.habit_listAddBtn);
+        moveHabitSetDateNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), HabitSetDateNew.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        });
+
 
         /*
          * 달력 관련 코드
