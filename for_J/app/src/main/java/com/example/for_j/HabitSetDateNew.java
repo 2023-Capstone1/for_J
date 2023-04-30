@@ -11,6 +11,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -79,8 +81,10 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
     String SrepeatDay = null;
     int SrepeatN = 0;
     String Shabit_color = null;
-    String Shabit_nfc = null;
+    String Shabit_nfc = "";
     int Shabit_state = 0;
+
+    boolean isRepeatNull = true;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -256,12 +260,9 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 
         // nfc 인텐트 연결
         HSDN_NFCBtn = findViewById(R.id.HSDN_NFCBtn);
-        HSDN_NFCBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent RNFCIntent = new Intent(HabitSetDateNew.this, RegisterNFC.class);
-                startActivity(RNFCIntent);
-            }
+        HSDN_NFCBtn.setOnClickListener(v -> {
+            Intent registerNFCIntent = new Intent(this, RegisterNFC.class);
+            registerNFCResultLauncher.launch(registerNFCIntent);
         });
 
         // rNFC에서 nfc 카드값 가져오기!!!!
@@ -331,7 +332,6 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 
                 // 해빗 반복 요일
                 // 해빗 반복 n회
-                boolean isRepeatNull = true;
                 try {
                     if (SrepeatDay == null && SrepeatN == 0) {
                         SrepeatDay = "";
@@ -365,9 +365,19 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 //                    toast.show();
                 }
 
-                // 해빗 컬러
+                // 해빗 컬러 // 위에서 이미 지정함
                 // 해빗 nfc 값
-                Shabit_nfc = "아직 구현 안함";
+//                try {
+//                    if (Shabit_nfc != null) {
+//                        System.out.println("HSDN_NFCBtn text: " + HSDN_NFCBtn.getText().toString());
+//                    }
+//                } catch (NullPointerException e) {
+//                    Shabit_nfc = "";
+//                    System.out.println("Shabit_nfc: " + Shabit_nfc);
+//                    System.out.println("nfc null exception");
+//                    toast = Toast.makeText(HabitSetDateNew.this, "nfc를 등록해주세요", Toast.LENGTH_SHORT);
+//                    toast.show();
+//                }
                 // 해빗 상태
                 Shabit_state = 0;
 
@@ -414,9 +424,12 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 //                            System.out.println("start date: " + SstartDate);
 //                            System.out.println("today: " + Stoday);
 //                            System.out.println("end date: " + SendDate);
-                            String url = "http://203.250.133.156:8080/todoAPI/set_todo/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
+                            String url = "http://203.250.133.156:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
                                     + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
                                     + Shabit_nfc + "/" + Shabit_state;
+                            Log.d("TAG", SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
+                                    + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
+                                    + Shabit_nfc + "/" + Shabit_state);
                             habitApiService.postUrl(url);
                             if (habitApiService.getStatus() == 200) {
                                 success += 1;
@@ -470,7 +483,7 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                                 System.out.println("start date: " + SstartDate);
                                 System.out.println("today: " + Stoday);
                                 System.out.println("end date: " + SendDate);
-                                String url = "http://203.250.133.156:8080/todoAPI/set_todo/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
+                                String url = "http://203.250.133.156:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
                                         + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
                                         + Shabit_nfc + "/" + Shabit_state;
                                 Log.d("TAG", SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
@@ -538,5 +551,18 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
         HSDN_AlarmBtn.setText(timeString);
     }
 
-
+    private final ActivityResultLauncher<Intent> registerNFCResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        Shabit_nfc = data.getStringExtra("habit_nfc");
+                        // Do something with habit_nfc value
+                        Toast.makeText(this, "nfc value: " + Shabit_nfc, Toast.LENGTH_SHORT).show();
+                        HSDN_NFCBtn.setText("NFC: " + Shabit_nfc);
+                    }
+                }
+            }
+    );
 }

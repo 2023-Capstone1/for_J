@@ -5,28 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center">
+
+
+
 
     <ImageView
         android:layout_width="350dp"
         android:layout_height="350dp"
         android:layout_marginTop="100dp"
-        android:layout_marginLeft="35dp"
+        android:layout_gravity="center"
         android:src="@drawable/ic_cardtag"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="태그하기를 눌려야 정상적으로 nfc가 등록됩니다."/>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/RNFC_TagBtn"
             android:layout_width="300dp"
             android:layout_height="55dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="30dp"
-            android:layout_marginLeft="55dp"
+            android:layout_gravity="center"
             android:background="#7986CB"
+            android:layout_marginTop="10dp"
             android:text="태그하기"
             android:textColor="@color/white"
             android:textSize="25dp"
