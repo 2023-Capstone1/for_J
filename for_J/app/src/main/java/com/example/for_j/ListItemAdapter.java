@@ -59,6 +59,18 @@ public class ListItemAdapter extends BaseAdapter {
         return items.get(position).getListName();
     }
 
+    public String getListToday(int position) {
+        return items.get(position).getListToday();
+    }
+
+    public String getListStartDate(int position) {
+        return items.get(position).getListStartDate();
+    }
+
+    public String getListEndDate(int position){
+        return items.get(position).getListEndDate();
+    }
+
     // items 배열 반환하는 메소드
     public ArrayList<ListItem> getListItem() { return items; }
 }

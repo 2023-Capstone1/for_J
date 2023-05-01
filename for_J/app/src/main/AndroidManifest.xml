@@ -90,6 +90,9 @@
             android:name=".TodoSetDateNew"
             android:exported="false" />
         <activity
+            android:name=".TodoSetDateModify"
+            android:exported="false" />
+        <activity
             android:name=".HabitSetDateNew"
             android:exported="false"/>
         <activity

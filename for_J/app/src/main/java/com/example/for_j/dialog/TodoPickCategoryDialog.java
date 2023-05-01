@@ -65,7 +65,7 @@ public class TodoPickCategoryDialog extends Dialog {
         loginID = "123";
 
 
-        String getCategoryUrl = "http://203.250.133.156:8080/categoryAPI/get_todo_category/" + loginID + "/" + isTodo;
+        String getCategoryUrl = "http://203.250.133.156:8080/categoryAPI/get_todo_category_all/" + loginID + "/" + isTodo;
         ApiService todoApiService = new ApiService();
         todoApiService.getUrl(getCategoryUrl);
 

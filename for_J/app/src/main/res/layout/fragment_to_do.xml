@@ -206,6 +206,8 @@
                     <!--디비 카테고리 테이블에서 투두 카테고리 개수 만틈 todoList_set 동적으로 생성-->
                     <!--todoList_add_position라는 리니어 레이아웃에 todoList_set레이아웃이 생성되어야함-->
                     <!--todoList_set 레이아웃 안에는 버튼이랑 리스트뷰 포함-->
+
+
                     <LinearLayout
                         android:id="@+id/todoList_set"
                         android:layout_width="match_parent"

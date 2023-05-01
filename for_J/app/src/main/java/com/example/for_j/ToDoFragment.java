@@ -35,9 +35,9 @@ public class ToDoFragment extends Fragment {
     ImageButton ToDoFragment_nextBtn; // 다음달 이동 버튼
 
     // 리스트뷰 관련 변수
-    ListView ToDoFragment_listView; // 이거 아래 생성부분에서 반복문으로 생성 돌린만큼 변수 늘려야함
-    ListView ToDoFragment_listView2;
-    ListItemAdapter ToDoFragment_listAdapter;
+//    ListView ToDoFragment_listView; // 이거 아래 생성부분에서 반복문으로 생성 돌린만큼 변수 늘려야함
+//    ListView ToDoFragment_listView2;
+//    ListItemAdapter ToDoFragment_listAdapter;
     // 리스트 개수를 보여주기위한 텍스트뷰
     TextView ToDoFragment_listCountText;
     // 리스트뷰 내부 아이템 클릭 시 클릭 위치 전역 변수로 선언 -> 다이얼로그에 일정 이름을 보여주기 위함
@@ -143,6 +143,13 @@ public class ToDoFragment extends Fragment {
 //        ToDoFragment_listView = scrollView.findViewWithTag("todo_category_list");
 
         // 리스트뷰 연결
+
+
+
+
+
+       //////////////////////////////////////////////////////////////////////////////////////////
+        /*
         ToDoFragment_listView = todoView.findViewById(R.id.todo_list);
         ToDoFragment_listView2 = todoView.findViewById(R.id.todo_list2);
         // 리스트뷰 어댑터 객체 생성
@@ -163,10 +170,12 @@ public class ToDoFragment extends Fragment {
         // 리스트뷰 오른쪽 위에 오늘 날짜 표시
         ToDoFragment_list_today = todoView.findViewById(R.id.todoToday);
         ToDoFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
+        */
 
         /*
          * 다이얼로그 관련
          * */
+        /*
         // 리스트뷰 아이템 체크박스 클릭하면 체크박스 다이얼로그 띄우기
         ToDoFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -193,6 +202,10 @@ public class ToDoFragment extends Fragment {
                 Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
             }
         });
+        */
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
+
 
         // Inflate the layout for this fragment
         return todoView;

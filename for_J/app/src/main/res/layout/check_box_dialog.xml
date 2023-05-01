@@ -21,12 +21,14 @@
             android:textSize="25dp"
             android:textStyle="bold" />
 
+        <!--
         <Button
             android:id="@+id/dialog_todo_list_modify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="todo 수정" />
+            -->
 
         <ImageButton
             android:id="@+id/dialog_exitBtn"
@@ -123,7 +125,7 @@
                 android:textStyle="bold"/>
 
             <Button
-                android:id="@+id/dialog_updateBtn"
+                android:id="@+id/dialog_todo_list_modify"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -3,6 +3,7 @@ package com.example.for_j;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -49,24 +50,44 @@ public class ToDoListDialog {
         todoName.setText(String.valueOf(listItemAdapter.getListName(clickedPosition)));
 
         // 다이얼로그 내 체크박스 이미지 선택 시 리스트의 체크박스 이미지 선택한 이미지로 변경
+        RadioGroup radioGroup = dialog.findViewById(R.id.dialog_checkRadioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int witch) {
+                modifyCheckBoxImg(radioGroup);
+            }
+        });
+
+
+
         Button todoListModifyBtn = dialog.findViewById(R.id.dialog_todo_list_modify);
         // todoListModifyBtn 클릭 이벤트 (다이얼로그에 있는 'TODO 수정'버튼 클릭 이벤트 -> 수진이 수정 화면으로)
         todoListModifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, TodoSetDateModify.class);
+                // 인텐트로 이름, 날짜 보내기
+                String name = String.valueOf(listItemAdapter.getListName(clickedPosition));
+                String today = String.valueOf(listItemAdapter.getListToday(clickedPosition));
+                intent.putExtra("title", name);
+                intent.putExtra("today", today);
+                context.startActivity(intent);
             }
         });
+
+
+
+
 
         // 다이얼로그 삭제/수정 버튼 클릭 이벤트
         // 삭제
         View deleteBtn = dialog.findViewById(R.id.dialog_deleteBtn);
         deleteBtn.setOnClickListener(v -> deleteListItem());
 
-        // 수정
-        RadioGroup radioGroup = dialog.findViewById(R.id.dialog_checkRadioGroup);
-        View updateBtn = dialog.findViewById(R.id.dialog_updateBtn);
-        updateBtn.setOnClickListener(v -> modifyCheckBoxImg(radioGroup));
+//        // 수정
+//        RadioGroup radioGroup = dialog.findViewById(R.id.dialog_checkRadioGroup);
+//        View updateBtn = dialog.findViewById(R.id.dialog_updateBtn);
+//        updateBtn.setOnClickListener(v -> modifyCheckBoxImg(radioGroup));
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
     }
