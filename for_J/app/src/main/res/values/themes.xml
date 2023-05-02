@@ -17,4 +17,15 @@
         <!-- 상태바 색 변경 ture = black, false = white -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
+
+    <style name="Theme.For_J.Fullscreen" parent="Theme.For_J">
+        <item name="android:actionBarStyle">@style/Widget.Theme.For_J.ActionBar.Fullscreen</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+
+    <style name="ThemeOverlay.For_J.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
+        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+    </style>
 </resources>

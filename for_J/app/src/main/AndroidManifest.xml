@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.NFC" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -19,8 +18,48 @@
         android:theme="@style/Theme.For_J"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
-        <!-- 회원 가입 파트 (준형) -->
+        <activity
+            android:name=".ProfileSecessionPw"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ProfileSecessionWd"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".SetTime"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Setting"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Profile"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Menu"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity> <!-- 회원 가입 파트 (준형) -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -82,10 +121,7 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-        </activity>
-
-
-        <!-- 새로운 목록 만들기 (수진) -->
+        </activity> <!-- 새로운 목록 만들기 (수진) -->
         <activity
             android:name=".TodoSetDateNew"
             android:exported="false" />
@@ -94,16 +130,13 @@
             android:exported="false" />
         <activity
             android:name=".HabitSetDateNew"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".RegisterNFC"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".TimeTrackerSetDateNew"
-            android:exported="false" />
-
-
-        <!--민형파트/다솔파트-->
+            android:exported="false" /> <!-- 민형파트/다솔파트 -->
         <activity
             android:name=".CalendarMainActivity"
             android:exported="false">
@@ -111,9 +144,6 @@
                 android:name="android.app.lib_name"
                 android:value="false" />
         </activity>
-
-
-
     </application>
 
 </manifest>

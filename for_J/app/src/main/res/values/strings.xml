@@ -83,4 +83,24 @@
     <string name="id_find_dialog_text">회원가입 시 사용한 아이디는</string>
     <string name="id_find_dialog_text2">입니다.</string>
     <string name="id_find_dialog_button">로그인</string>
+    <string name="setting_str">설정</string>
+    <string name="setting_알림푸시">알림 &amp; 푸쉬</string>
+    <string name="setting_알림">알림</string>
+    <string name="setting_Todo_알림">To do 알림</string>
+    <string name="setting_Habit_알림">Habit 알림</string>
+    <string name="setting_calendar_알림">calendar 알림</string>
+    <string name="setting_Time_알림">Time 1시간마다 알림</string>
+    <string name="setting_스타일">스타일</string>
+    <string name="setting_라이트모드">라이트 모드</string>
+    <string name="setting_기타">기타</string>
+    <string name="setting_전체삭제">전체 일정 삭제</string>
+    <string name="setting_Todo일정삭제">To to 일정 삭제</string>
+    <string name="setting_Habit_일정삭제">Habit 일정 삭제</string>
+    <string name="setting_calendar_일정삭제">calendar 일정 삭제</string>
+    <string name="setting_Time_tracker_일정삭제">Time tracker 일정 삭제</string>
+    <string name="set_time_check">확인</string>
+    <string name="set_time_cancle">취소</string>
+    <string name="title_activity_profile_secession_wd">ProfileSecessionWd</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
