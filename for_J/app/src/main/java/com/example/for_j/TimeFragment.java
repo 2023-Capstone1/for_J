@@ -7,12 +7,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +44,10 @@ public class TimeFragment extends Fragment {
     ListView TimeFragment_listView; // 이거 아래 생성부분에서 반복문으로 생성 돌린만큼 변수 늘려야함
     ListView TimeFragment_listView2;
     TimeListItemAdapter TimeFragment_listAdapter;
+    FrameLayout frame;
+    ImageView Play;
+    ImageView Pause;
+    Chronometer chrono;
     // 리스트 개수를 보여주기위한 텍스트뷰
     TextView TimeFragment_listCountText;
     // 리스트뷰 내부 아이템 클릭 시 클릭 위치 전역 변수로 선언 -> 다이얼로그에 일정 이름을 보여주기 위함
@@ -48,7 +56,7 @@ public class TimeFragment extends Fragment {
     TextView TimeFragment_list_today;
 
     // 다이얼로그 관련
-    // TimeTrackerListDialog dialog;
+    TimeTrackerListDialog dialog;
 
     // +버튼
     ImageButton moveTimeSetDateNew;
@@ -152,7 +160,6 @@ public class TimeFragment extends Fragment {
         TimeFragment_listAdapter = new TimeListItemAdapter();
 
         // 리스트뷰 테스트용 -디비에서 가져오는 걸로 바꿔야함
-        // to-do 일정 이름
         TimeFragment_listAdapter.addItem(new ListItem("안드로이드 과제 제출"));
         TimeFragment_listAdapter.addItem(new ListItem("캡스톤 회의"));
         TimeFragment_listView.setAdapter(TimeFragment_listAdapter);
@@ -161,23 +168,52 @@ public class TimeFragment extends Fragment {
         // toDoFragment_ListNumText 리스트 개수 출력 -db쿼리 카운트해서 가져오는게 좋을지 지금처럼 리스트뷰.getCount()하는게 좋을지 고민중
         TimeFragment_listCountText = timeView.findViewById(R.id.timeListCount);
         // 모든 투두리스트 개수 합쳐서 출력하기 위해 ToDoFragment_listCount변수 추가
-        TimeFragment_listCountText.setText(String.valueOf( TimeFragment_listView.getCount() + TimeFragment_listView2.getCount() )); // 두 리스트뷰 아이템 개수 합쳐서 출력
+        TimeFragment_listCountText.setText(String.valueOf(TimeFragment_listView.getCount() + TimeFragment_listView2.getCount())); // 두 리스트뷰 아이템 개수 합쳐서 출력
 
         // 리스트뷰 오른쪽 위에 오늘 날짜 표시
         TimeFragment_list_today = timeView.findViewById(R.id.timeToday);
         TimeFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
 
+
+        // 나중에 실행해볼것
+        /////////////////////////////////////////////////////
+        Play = timeView.findViewById(R.id.play);
+        Pause = timeView.findViewById(R.id.pause);
+        chrono = timeView.findViewById(R.id.timer);
+//
+//        TimeFragment_listView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                chrono.setBase(SystemClock.elapsedRealtime());
+//                chrono.start();
+//                Play.setVisibility(View.INVISIBLE);
+//                Pause.setVisibility(View.VISIBLE);
+//            }
+//        });
+//
+//        TimeFragment_listView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                chrono.stop();
+//                Play.setVisibility(View.VISIBLE);
+//                Pause.setVisibility(View.INVISIBLE);
+//            }
+//        });
+        /////////////////////////////////////////////////////
+
+
+
+
         /*
          * 다이얼로그 관련
          * */
-        // 리스트뷰 아이템 체크박스 클릭하면 체크박스 다이얼로그 띄우기
-        /*
+        // 리스트뷰 클릭하면 다이얼로그 띄우기
         TimeFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 clickedPosition = position; // 클릭 위치 전역변수로 넘김
 
-                dialog = new ToDoListDialog(getActivity(), ToDoFragment_listAdapter, ToDoFragment_listCountText, clickedPosition, "To-Do", ToDoFragment_listView);
+                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView);
                 dialog.show();
 
                 // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
@@ -185,19 +221,19 @@ public class TimeFragment extends Fragment {
             }
         });
 
-        ToDoFragment_listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        TimeFragment_listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 clickedPosition = position; // 클릭 위치 전역변수로 넘김
 
-                dialog = new ToDoListDialog(getActivity(), ToDoFragment_listAdapter, ToDoFragment_listCountText, clickedPosition, "To-Do", ToDoFragment_listView2);
+                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView2);
                 dialog.show();
 
                 // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
                 Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
             }
         });
-         */
+
 
         // Inflate the layout for this fragment
         return timeView;
@@ -210,6 +246,7 @@ public class TimeFragment extends Fragment {
         @SuppressLint({"NewApi", "LocalSuppress"}) DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월");
         return date.format(formatter);
     }
+
     // 리스트뷰 오른쪽 위에 있는 날짜 텍스트뷰
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String dayFormat(LocalDate date) {
@@ -254,7 +291,7 @@ public class TimeFragment extends Fragment {
         // 첫 날 요일 가져오기
         @SuppressLint({"NewApi", "LocalSuppress"}) int dayOfWeek = firstDay.getDayOfWeek().getValue();
 
-        for (int i = 1;i < 42;i++) {
+        for (int i = 1; i < 42; i++) {
             if (i <= dayOfWeek || i > lastDay + dayOfWeek) {
                 dayList.add(null);
             } else {
