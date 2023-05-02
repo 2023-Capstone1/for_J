@@ -54,10 +54,17 @@ public class Login extends AppCompatActivity {
 
                     // 다이얼로그 보여주기
                     dialog.show();
-                }else {
+                }else if(key == "login_pw_error") {
                     // url 만들어지고 PW 잘못될때 출력
                     // 메시지 설정
                     String message = "잘못된 비밀번호입니다.";
+                    dialog.setMessage(message);
+
+                    // 다이얼로그 보여주기
+                    dialog.show();
+                }else {
+                    // 메시지 설정
+                    String message = "서버 켜져있음?/와이파이 확인하삼";
                     dialog.setMessage(message);
 
                     // 다이얼로그 보여주기

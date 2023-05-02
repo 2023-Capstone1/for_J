@@ -13,7 +13,6 @@ import androidx.appcompat.widget.AppCompatButton;
 public class LoginPwChange extends AppCompatActivity {
     EditText LoginPwChange_Edit_Id, LoginPwChange_Edit_New_Pw, LoginPwChange_Edit_New_Pw_Check;
     AppCompatButton LoginPwChange_Check_Button;
-    String input_Now_Pw;
     ImageButton LoginPwChange_Back;
 
     @Override
@@ -45,7 +44,7 @@ public class LoginPwChange extends AppCompatActivity {
 
                 if(input_New_pw.equals(input_New_pw_check) && LoginPwChangeApiService.getStatus() == 200){
                     Toast.makeText(LoginPwChange.this, "비밀번호 변경에 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginPwChange.this, Login.class);
+                    Intent intent = new Intent(LoginPwChange.this, Menu.class);
                     startActivity(intent);
                 }else if(!input_New_pw.equals(input_New_pw_check) && LoginPwChangeApiService.getStatus() == 200){
                     Toast.makeText(LoginPwChange.this, "새로운 비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
