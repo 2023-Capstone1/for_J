@@ -155,50 +155,24 @@ public class ToDoFragment extends Fragment {
         ToDoFragment_list_today = todoView.findViewById(R.id.todoToday);
         ToDoFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // get_is_tuple_exist로 0이면 nothingMessage 띄우기
         // 1이면 아래꺼 실행하기
         checkTupleExistURL = "http://203.250.133.162:8080/todoAPI/get_is_tuple_exist/" + loginID + "/" + today;
         checkTupleExistAPI = new ApiService();
         checkTupleExistAPI.getUrl(checkTupleExistURL);
-        System.out.println("is_tuple_exit type: " + checkTupleExistAPI.getValue("is_tuple_exit").getClass().getTypeName());
-        System.out.println("is_tuple_exit: " + checkTupleExistAPI.getValue("is_tuple_exit"));
+        System.out.println("is_tuple_exit type: " + checkTupleExistAPI.getValue("is_tuple_exist").getClass().getTypeName());
+        System.out.println("is_tuple_exit: " + checkTupleExistAPI.getValue("is_tuple_exist"));
 
-//        if (checkTupleExistAPI.getValue("is_tuple_exit") == 0){
-//            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
-//            toast.show();
-//            nothingMessage = todoView.findViewById(R.id.nothingMessage);
-//            nothingMessage.setVisibility(View.VISIBLE);
-//        } else{
-//            getCategoryFromServer();
-//            getTodoFromServer();
-//            nothingMessage.setVisibility(View.GONE);
-//        }
+        if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
+            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
+            toast.show();
+            nothingMessage = todoView.findViewById(R.id.nothingMessage);
+            nothingMessage.setVisibility(View.VISIBLE);
+        } else{
+            getCategoryFromServer();
+            getTodoFromServer();
+            nothingMessage.setVisibility(View.GONE);
+        }
 
         // Inflate the layout for this fragment
         return todoView;
@@ -212,20 +186,21 @@ public class ToDoFragment extends Fragment {
         super.onResume();
         // Rerun the code from the beginning
 
-        listLayoutSet.removeAllViewsInLayout();
-        listLayoutSet.removeViewInLayout(listLayoutSet);
+        if (listLayoutSet != null){
+            listLayoutSet.removeAllViewsInLayout();
+            listLayoutSet.removeViewInLayout(listLayoutSet);
+            checkTupleExistAPI.getUrl(checkTupleExistURL);
 
-        checkTupleExistAPI.getUrl(checkTupleExistURL);
-
-        if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exit"), "0")){
-            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
-            toast.show();
-            nothingMessage = todoView.findViewById(R.id.nothingMessage);
-            nothingMessage.setVisibility(View.VISIBLE);
-        }else{
-            getCategoryFromServer();
-            getTodoFromServer();
-            nothingMessage.setVisibility(View.GONE);
+            if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exit"), "0")){
+                Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
+                toast.show();
+                nothingMessage = todoView.findViewById(R.id.nothingMessage);
+                nothingMessage.setVisibility(View.VISIBLE);
+            }else{
+                getCategoryFromServer();
+                getTodoFromServer();
+                nothingMessage.setVisibility(View.GONE);
+            }
         }
     }
 
