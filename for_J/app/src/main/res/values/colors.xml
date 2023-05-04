@@ -57,6 +57,16 @@
     <color name="pastel_blue">#89A4F1</color>
     <color name="pastel_purple">#B49EF0</color>
 
+    <!-- light color sheet -->
+    <color name="lighter_pink">#FFE3E3</color>
+    <color name="lighter_crimson">#FFEAE0</color>
+    <color name="lighter_orange">#FFF4E9</color>
+    <color name="lighter_yellow">#FFECDE</color>
+    <color name="lighter_light_green">#FBFFE3</color>
+    <color name="lighter_turquoise">#E6FFF4</color>
+    <color name="lighter_pastel_blue">#E2EAFF</color>
+    <color name="lighter_pastel_purple">#E8DFFF</color>
+
     <!-- stroke color -->
     <color name="stroke_pink">#BD5557</color>
     <color name="stroke_crimson">#D17857</color>

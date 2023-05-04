@@ -107,6 +107,7 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
         // 카테고리 버튼 xml 연동
         TSDN_CategortBtn = findViewById(R.id.TSDN_CategoryBtn);
         TSDN_CategortBtn.setText(todoApiService.getValue("todo_cName"));
+        caName = todoApiService.getValue("todo_cName");
         // get_todo_category_by_name API로 읽어오기
         url = "http://203.250.133.156:8080/categoryAPI/get_todo_category/" + loginID + "/" + caName + "/" + isTodo;
         todoCateApiService.getUrl(url);
@@ -253,9 +254,8 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
                     Toast toast = Toast.makeText(TodoSetDateModify.this, "카테고리를 선택해주세요.", Toast.LENGTH_SHORT);
                     toast.show();
                 }else{
-                    url = "http://203.250.133.156:8080/todoAPI/set_todo/" + loginID + "/" + name + "/" + date + "/" + caName + "/" + state;
+                    url = "http://203.250.133.156:8080/todoAPI/update_todo/" + loginID + "/" + name + "/" + date + "/" + caName + "/" + state;
                     todoApiService.postUrl(url);
-
                     if (todoApiService.getStatus()==200){
                         finish();
                     }

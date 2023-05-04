@@ -202,63 +202,74 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/nothingMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="새로운 TO-DO를 입력해주세요"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:textSize="30sp"
+                        android:layout_marginTop="100dp"
+                        android:visibility="gone"
+                        />
+
                     <!--카테고리별 리스트뷰는 자바로 구현 부탁부탁-->
                     <!--디비 카테고리 테이블에서 투두 카테고리 개수 만틈 todoList_set 동적으로 생성-->
                     <!--todoList_add_position라는 리니어 레이아웃에 todoList_set레이아웃이 생성되어야함-->
                     <!--todoList_set 레이아웃 안에는 버튼이랑 리스트뷰 포함-->
 
 
-                    <LinearLayout
-                        android:id="@+id/todoList_set"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/todoList_set"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical">-->
 
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:dividerHeight="10dp"
-                            android:divider="@color/white"
-                            android:text="Personal"/>
+<!--                        <Button-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_margin="5dp"-->
+<!--                            android:dividerHeight="10dp"-->
+<!--                            android:divider="@color/white"-->
+<!--                            android:text="Personal"/>-->
 
-                        <!--여기 layout_height를 아이템 개수 확인해서 동적으로 바꿔줘야할 듯-->
-                        <!--투두 테이블에서 해당 카테고리의 투두리스트+여분공간 계산해서 높이 동적으로 줘야함-->
-                        <ListView
-                            android:id="@+id/todo_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="135dp"
-                            android:dividerHeight="10dp"
-                            android:divider="@color/white"
-                            android:nestedScrollingEnabled="false">
+<!--                        &lt;!&ndash;여기 layout_height를 아이템 개수 확인해서 동적으로 바꿔줘야할 듯&ndash;&gt;-->
+<!--                        &lt;!&ndash;투두 테이블에서 해당 카테고리의 투두리스트+여분공간 계산해서 높이 동적으로 줘야함&ndash;&gt;-->
+<!--                        <ListView-->
+<!--                            android:id="@+id/todo_list"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="135dp"-->
+<!--                            android:dividerHeight="10dp"-->
+<!--                            android:divider="@color/white"-->
+<!--                            android:nestedScrollingEnabled="false">-->
 
-                        </ListView>
+<!--                        </ListView>-->
 
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical">-->
 
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:dividerHeight="10dp"
-                            android:divider="@color/white"
-                            android:text="Personal"/>
+<!--                        <Button-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_margin="5dp"-->
+<!--                            android:dividerHeight="10dp"-->
+<!--                            android:divider="@color/white"-->
+<!--                            android:text="Personal"/>-->
 
-                        <ListView
-                            android:id="@+id/todo_list2"
-                            android:layout_width="match_parent"
-                            android:layout_height="135dp"
-                            android:dividerHeight="10dp"
-                            android:divider="@color/white">
+<!--                        <ListView-->
+<!--                            android:id="@+id/todo_list2"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="135dp"-->
+<!--                            android:dividerHeight="10dp"-->
+<!--                            android:divider="@color/white">-->
 
-                        </ListView>
+<!--                        </ListView>-->
 
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
                 </LinearLayout>
             </ScrollView>
 

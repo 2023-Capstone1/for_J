@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 
@@ -52,6 +54,7 @@ public class TodoPickCategoryDialog extends Dialog {
     private String[] cName;
     private String[] cColor;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +81,7 @@ public class TodoPickCategoryDialog extends Dialog {
         // 200 일 때만 카테고리 라디오 버튼 생성
         if(todoApiService.getStatus() == 200){
             // 메소드에서 todo_total 값 int형으로 가져오기   // 모든 메소드 리턴값은 string
-            cateNum = Integer.parseInt(todoApiService.getValue("todo_total"));
+            cateNum = Integer.parseInt(todoApiService.getValue("todo_category_total"));
 
             // todo_total 만큼 라디오 버튼 만들기
 
@@ -91,6 +94,7 @@ public class TodoPickCategoryDialog extends Dialog {
 
 
             Drawable btnDrawable;
+            int colorValue;
             for (int i = 0; i < cateNum; i++){
                 PC_categoryRB[i] = new RadioButton(context);    // 카테고리 라디오 버튼 생성
                 PC_categoryRB[i].setText(todoApiService.getValue("category_name"+i));   // db에서 받아온 이름이랑 똑같이 setText
@@ -106,34 +110,50 @@ public class TodoPickCategoryDialog extends Dialog {
                     case "pink":
                         btnDrawable = ContextCompat.getDrawable(context, R.drawable.category_pink_selector);
                         PC_categoryRB[i].setBackground(btnDrawable);
+                        colorValue = context.getColor(R.color.lighter_pink);
+                        PC_categoryRB[i].setTextColor(colorValue);
                         break;
                     case "crimson":
                         btnDrawable = ContextCompat.getDrawable(context, R.drawable.category_crimson_selector);
                         PC_categoryRB[i].setBackground(btnDrawable);
+                        colorValue = context.getColor(R.color.lighter_crimson);
+                        PC_categoryRB[i].setTextColor(colorValue);
                         break;
                     case "orange":
                         btnDrawable = ContextCompat.getDrawable(context, R.drawable.category_orange_selector);
                         PC_categoryRB[i].setBackground(btnDrawable);
+                        colorValue = context.getColor(R.color.lighter_orange);
+                        PC_categoryRB[i].setTextColor(colorValue);
                         break;
                     case "yellow":
                         btnDrawable = ContextCompat.getDrawable(context, R.drawable.category_yellow_selector);
                         PC_categoryRB[i].setBackground(btnDrawable);
+                        colorValue = context.getColor(R.color.lighter_yellow);
+                        PC_categoryRB[i].setTextColor(colorValue);
                         break;
                     case "light_green":
                         btnDrawable = ContextCompat.getDrawable(context, R.drawable.category_light_green_selector);
                         PC_categoryRB[i].setBackground(btnDrawable);
+                        colorValue = context.getColor(R.color.lighter_light_green);
+                        PC_categoryRB[i].setTextColor(colorValue);
                         break;
                     case "turquoise":
                         btnDrawable = ContextCompat.getDrawable(context, R.drawable.category_turquoise_selector);
                         PC_categoryRB[i].setBackground(btnDrawable);
+                        colorValue = context.getColor(R.color.lighter_turquoise);
+                        PC_categoryRB[i].setTextColor(colorValue);
                         break;
                     case "pastel_blue":
                         btnDrawable = ContextCompat.getDrawable(context, R.drawable.category_pastel_blue_selector);
                         PC_categoryRB[i].setBackground(btnDrawable);
+                        colorValue = context.getColor(R.color.lighter_pastel_blue);
+                        PC_categoryRB[i].setTextColor(colorValue);
                         break;
                     case "pastel_purple":
                         btnDrawable = ContextCompat.getDrawable(context, R.drawable.category_pastel_purple_selector);
                         PC_categoryRB[i].setBackground(btnDrawable);
+                        colorValue = context.getColor(R.color.lighter_pastel_purple);
+                        PC_categoryRB[i].setTextColor(colorValue);
                         break;
                 }
 

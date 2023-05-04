@@ -4,21 +4,17 @@ package com.example.for_j;
 public class ListItem {
     private String listName;
     private String listToday;
-    private String listStartDate;
-    private String listEndDate;
+    private String listCName;
+    private String listColor;
 
     ListItem(String listName) {
         this.listName = listName;
     }
-    ListItem(String listName, String listToday){
+    ListItem(String listName, String listToday, String listCName, String listColor){
         this.listName = listName;
         this.listToday = listToday;
-    }
-    ListItem(String listName, String listToday, String listStartDate, String listEndDate){
-        this.listName = listName;
-        this.listToday = listToday;
-        this.listStartDate = listStartDate;
-        this.listEndDate = listEndDate;
+        this.listCName = listCName;
+        this.listColor = listColor;
     }
 
     public String getListName() {
@@ -29,14 +25,13 @@ public class ListItem {
         return listToday;
     }
 
-    public String getListStartDate() {
-        return listStartDate;
+    public String getListCName() {
+        return listCName;
     }
 
-    public String getListEndDate(){
-        return listEndDate;
+    public String getListColor() {
+        return listColor;
     }
-
 
     public void setListName(String listName) {
         this.listName = listName;
@@ -46,12 +41,12 @@ public class ListItem {
         this.listToday = listToday;
     }
 
-    public void setListStartDate(String listStartDate){
-        this.listStartDate = listStartDate;
+    public void setListCName(String listCName) {
+        this.listCName = listCName;
     }
 
-    public void setListEndDate(String listEndDate){
-        this.listEndDate = listEndDate;
+    public void setListColor(String listColor){
+        this.listColor = listColor;
     }
 
 

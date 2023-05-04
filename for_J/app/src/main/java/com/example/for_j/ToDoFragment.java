@@ -3,20 +3,24 @@ package com.example.for_j;
 import static com.example.for_j.CalendarUtill.selectedDate;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +29,12 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class ToDoFragment extends Fragment {
 
@@ -34,14 +44,9 @@ public class ToDoFragment extends Fragment {
     private ImageButton ToDoFragment_prevBtn; // 이전달 이동 버튼
     private ImageButton ToDoFragment_nextBtn; // 다음달 이동 버튼
 
-    // 리스트뷰 관련 변수
-    ListView ToDoFragment_listView; // 이거 아래 생성부분에서 반복문으로 생성 돌린만큼 변수 늘려야함
-    ListView ToDoFragment_listView2;
-    ListItemAdapter ToDoFragment_listAdapter;
-
-
     // 리스트 개수를 보여주기위한 텍스트뷰
     private TextView ToDoFragment_listCountText;
+    private TextView nothingMessage;
     // 리스트뷰 내부 아이템 클릭 시 클릭 위치 전역 변수로 선언 -> 다이얼로그에 일정 이름을 보여주기 위함
     private int clickedPosition = -1;
     // 리스트뷰 오른쪽 상단에 있는 오늘 날짜 표시 텍스트뷰
@@ -54,9 +59,28 @@ public class ToDoFragment extends Fragment {
     private ImageButton moveTodoSetDateNew;
 
     // 서버 통신 관련 변수
-    private ApiService todoApiService;
-    String getCategoryUrl;
-    String todoUrl;
+    private ApiService getTodoDateCateAPI;
+    private ApiService getTodoCateColorAPI;
+    private String getCategoryUrl;
+    private ApiService getTodoListAPI;
+    private String todoUrl;
+    private Calendar calendar = Calendar.getInstance();
+    private String loginID = "123";
+    @SuppressLint("DefaultLocale")
+    private String today = calendar.get(Calendar.YEAR) + "-" + String.format("%02d", calendar.get(Calendar.MONTH)+1) + "-" + String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH));
+    private int cateNum = 0;
+    private int[] todoNum;
+    private int isTodo = 1;
+
+    private LinearLayout listLayoutSet;
+    private LinearLayout[] listlayoutarr;
+    private List<String> distinctCNameList;
+    private List<String> distinctCColorlist;
+    private View todoView;
+
+
+    private ListView[] todoFragment_listView;
+    private ListItemAdapter[] todoFragment_listAdapter;
 
     @SuppressLint({"MissingInflatedId", "ResourceType"})
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -64,7 +88,7 @@ public class ToDoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // 투두 프래그먼트 뷰 생성
-        View todoView = inflater.inflate(R.layout.fragment_to_do, container, false);
+        todoView = inflater.inflate(R.layout.fragment_to_do, container, false);
 
         // 투두 리스트 추가 인텐트로 이동
         moveTodoSetDateNew = todoView.findViewById(R.id.todo_listAddBtn);
@@ -113,132 +137,266 @@ public class ToDoFragment extends Fragment {
             }
         });
 
-//        // 카테고리랑 리스트뷰를 묶은 리니어레이아웃 추가 --> 디비에서 투두 카테고리 개수 가져와서 아래 생성 부분
-//        /*
-//        * 생성 부분
-//        * */
-//        // LinearLayout 생성
-//        LinearLayout linearLayout = new LinearLayout(getContext());
-//        linearLayout.setOrientation(LinearLayout.VERTICAL);
-//        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        linearLayout.setTag("linear_layout_todo"); // setId 대신 태그 설정해서 태그로 참조하기
-//
-//        // Button을 생성하고 LinearLayout에 추가합니다.
-//        Button button = new Button(getContext());
-//        button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        button.setPadding(5, 5, 5, 5);
-//        button.setText("Personal"); // 카테고리 디비 테이블에서 투두 카테고리 이름 가져와서 setText 수정해야함
-//        button.setTag("todo_category");
-//        linearLayout.addView(button);
-//
-//        // ListView를 생성하고 LinearLayout에 추가합니다.
-//        ListView listView = new ListView(getContext());
-//        listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        listView.setDividerHeight(10);
-//        listView.setDivider(ContextCompat.getDrawable(getContext(), R.drawable.list_item_divider));
-//        listView.setTag("todo_category_list");
-//        linearLayout.addView(listView);
-//
-//        // ScrollView에 LinearLayout을 추가합니다.
-//        ScrollView scrollView = todoView.findViewById(R.id.todo_listScrollView);
-//        scrollView.addView(linearLayout);
-//
-//        /*
-//        * 리스트뷰 관련 코드
-//        * */
-//        // 리스트뷰 연결 -> 위 코드처럼 xml자바로 추가했을 때 사용
-//        ToDoFragment_listView = scrollView.findViewWithTag("todo_category_list");
-
-        // 리스트뷰 연결
-
-
-
-
-        // 리스트뷰 관련 변수
-//    ListView ToDoFragment_listView; // 이거 아래 생성부분에서 반복문으로 생성 돌린만큼 변수 늘려야함
-//    ListView ToDoFragment_listView2;
-//    ListItemAdapter ToDoFragment_listAdapter;
-
-
-        /*
-        // 서버에서 카테고리 가지고 오기
-        getCategoryUrl = "http://203.250.133.156:8080/";
-        todoApiService = new ApiService();
-        todoApiService.getUrl(getCategoryUrl);
-
-        // 중복 카테고리 중복 처리
-
-
-
-
-
-        // 서버에서 투두 리스트 가지고 와서 카테고리 별로 분리해서 리스트에 추가하기
-        todoUrl = "http://203.250.133.156:8080/";
-        todoApiService.getUrl(todoUrl);
-*/
-
-       //////////////////////////////////////////////////////////////////////////////////////////
-
-        ToDoFragment_listView = todoView.findViewById(R.id.todo_list);
-        ToDoFragment_listView2 = todoView.findViewById(R.id.todo_list2);
-        // 리스트뷰 어댑터 객체 생성
-        ToDoFragment_listAdapter = new ListItemAdapter();
-
-        // 리스트뷰 테스트용 -디비에서 가져오는 걸로 바꿔야함
-        // to-do 일정 이름
-        ToDoFragment_listAdapter.addItem(new ListItem("안드로이드 과제 제출"));
-        ToDoFragment_listAdapter.addItem(new ListItem("캡스톤 회의"));
-        ToDoFragment_listView.setAdapter(ToDoFragment_listAdapter);
-        ToDoFragment_listView2.setAdapter(ToDoFragment_listAdapter);
-
-        // toDoFragment_ListNumText 리스트 개수 출력 -db쿼리 카운트해서 가져오는게 좋을지 지금처럼 리스트뷰.getCount()하는게 좋을지 고민중
-        ToDoFragment_listCountText = todoView.findViewById(R.id.todoListCount);
-        // 모든 투두리스트 개수 합쳐서 출력하기 위해 ToDoFragment_listCount변수 추가
-        ToDoFragment_listCountText.setText(String.valueOf( ToDoFragment_listView.getCount() + ToDoFragment_listView2.getCount() )); // 두 리스트뷰 아이템 개수 합쳐서 출력
-
         // 리스트뷰 오른쪽 위에 오늘 날짜 표시
         ToDoFragment_list_today = todoView.findViewById(R.id.todoToday);
         ToDoFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
 
+        // 오늘날짜에 해당되는 카테고리 화면에 띄우기
+        getCategoryFromServer();
+        // 카테고리별 리스트 화면에 띄우기
+        getTodoFromServer();
+
 
         /*
-         * 다이얼로그 관련
-         * */
-
-        // 리스트뷰 아이템 체크박스 클릭하면 체크박스 다이얼로그 띄우기
-        ToDoFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                clickedPosition = position; // 클릭 위치 전역변수로 넘김
-
-                dialog = new ToDoListDialog(getActivity(), ToDoFragment_listAdapter, ToDoFragment_listCountText, clickedPosition, "To-Do", ToDoFragment_listView);
-                dialog.show();
-
-                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        ToDoFragment_listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                clickedPosition = position; // 클릭 위치 전역변수로 넘김
-
-                dialog = new ToDoListDialog(getActivity(), ToDoFragment_listAdapter, ToDoFragment_listCountText, clickedPosition, "To-Do", ToDoFragment_listView2);
-                dialog.show();
-
-                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-
-
+        if (getTodoDateCateAPI.getKey("unexpected error") == "unexpected error"){
+            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
+            toast.show();
+            nothingMessage = todoView.findViewById(R.id.nothingMessage);
+            nothingMessage.setVisibility(todoView.VISIBLE);
+        }else{
+            getTodoFromServer();
+            nothingMessage.setVisibility(todoView.GONE);
+        }*/
 
         // Inflate the layout for this fragment
         return todoView;
     }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Rerun the code from the beginning
+
+        listLayoutSet.removeAllViewsInLayout();
+        listLayoutSet.removeViewInLayout(listLayoutSet);
+        getCategoryFromServer();
+        getTodoFromServer();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void getCategoryFromServer(){
+        // 서버에서 카테고리 가지고 오기
+        getCategoryUrl = "http://203.250.133.156:8080/todoAPI/get_todo_date_category/" + loginID + "/" + today;
+        getTodoDateCateAPI = new ApiService();
+        getTodoDateCateAPI.getUrl(getCategoryUrl);
+
+        // 디비에 아무것도 없을 때 텍스트 뷰로 "새로운 todo를 추가 해주세요" 띄우기
+        if(getTodoDateCateAPI.getStatus() != 200){
+            // 서버에서 값 못 읽어 왔을 때 처리
+            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
+            toast.show();
+        } /*else if (Objects.equals(getTodoDateCateAPI.getKey("unexpected error"), "unexpected error")){
+            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }*/
+
+        // 중복 카테고리 중복 처리
+        String[] cName = new String[Integer.parseInt(getTodoDateCateAPI.getValue("todo_category_total"))];
+        for (int i = 0; i < Integer.parseInt(getTodoDateCateAPI.getValue("todo_category_total")); i++){
+            cName[i] = getTodoDateCateAPI.getValue("todo_cName"+i);
+        }
+        Set<String> setDistinctCName = new HashSet<>(Arrays.asList(cName));
+        cateNum = setDistinctCName.size();
+
+        // 중복 처리된 카테고리 리스트
+        distinctCNameList = new ArrayList<>(setDistinctCName);
+        distinctCColorlist = new ArrayList<>();
+
+        // 리스트뷰가 들어가야하는 리니어 레이아웃 연결
+        listLayoutSet = todoView.findViewById(R.id.todoList_add_position);
+        listlayoutarr = new LinearLayout[cateNum];
+
+        for (int i = 0; i < listlayoutarr.length; i++) {
+            listlayoutarr[i] = new LinearLayout(todoView.getContext());
+
+            // set the layout parameters and properties of the LinearLayout
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            listlayoutarr[i].setLayoutParams(layoutParams);
+            listlayoutarr[i].setOrientation(LinearLayout.VERTICAL);
+
+            listLayoutSet.addView(listlayoutarr[i]);
+        }
+
+        // 카테고리 버튼 만들기 (clickable = false)
+        for (int i = 0; i < cateNum; i++){
+            AppCompatButton button = new AppCompatButton(todoView.getContext());
+            button.setText(distinctCNameList.get(i)); // 버튼 텍스트 설정
+            button.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    120
+            );
+            params.setMargins(20, 20, 20, 20); // set margin values in pixels
+
+            button.setLayoutParams(params);
+            button.setTypeface(null, Typeface.BOLD);
+
+            GradientDrawable shape = new GradientDrawable();
+            shape.setShape(GradientDrawable.RECTANGLE);
+            shape.setCornerRadii(new float[] { 16, 16, 16, 16, 16, 16, 16, 16 }); // set corner radii
+
+            getCategoryUrl = "http://203.250.133.156:8080/categoryAPI/get_todo_category/" + loginID + "/" + distinctCNameList.get(i) + "/" + isTodo;
+            getTodoCateColorAPI = new ApiService();
+            getTodoCateColorAPI.getUrl(getCategoryUrl);
+//            System.out.println(getCategoryUrl);
+
+            button.setClickable(false);
+            int colorValue;
+            switch (getTodoCateColorAPI.getValue("todo_category_color")){
+                case "pink":
+                    colorValue = todoView.getContext().getColor(R.color.pink);
+                    shape.setColor(colorValue);
+                    colorValue = todoView.getContext().getColor(R.color.lighter_pink);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("pink");
+                    break;
+                case "crimson":
+                    colorValue = todoView.getContext().getColor(R.color.crimson);
+                    shape.setColor(colorValue);
+                    colorValue = todoView.getContext().getColor(R.color.lighter_crimson);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("crimson");
+                    break;
+                case "orange":
+                    colorValue = todoView.getContext().getColor(R.color.orange);
+                    shape.setColor(colorValue);
+                    colorValue = todoView.getContext().getColor(R.color.lighter_orange);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("orange");
+                    break;
+                case "yellow":
+                    colorValue = todoView.getContext().getColor(R.color.yellow);
+                    shape.setColor(colorValue);
+                    colorValue = todoView.getContext().getColor(R.color.lighter_yellow);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("yellow");
+                    break;
+                case "light_green":
+                    colorValue = todoView.getContext().getColor(R.color.light_green);
+                    shape.setColor(colorValue);
+                    colorValue = todoView.getContext().getColor(R.color.lighter_light_green);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("light_green");
+                    break;
+                case "turquoise":
+                    colorValue = todoView.getContext().getColor(R.color.turquoise);
+                    shape.setColor(colorValue);
+                    colorValue = todoView.getContext().getColor(R.color.lighter_turquoise);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("turquoise");
+                    break;
+                case "pastel_blue":
+                    colorValue = todoView.getContext().getColor(R.color.pastel_blue);
+                    shape.setColor(colorValue);
+                    colorValue = todoView.getContext().getColor(R.color.lighter_pastel_blue);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("pastel_blue");
+                    break;
+                case "pastel_purple":
+                    colorValue = todoView.getContext().getColor(R.color.pastel_purple);
+                    shape.setColor(colorValue);
+                    colorValue = todoView.getContext().getColor(R.color.lighter_pastel_purple);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("pastel_purple");
+                    break;
+            }
+            button.setBackground(shape);
+            listlayoutarr[i].addView(button); // 버튼을 LinearLayout에 추가
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void getTodoFromServer() {
+
+        // 서버에서 투두 리스트 가지고 와서 카테고리 별로 분리해서 리스트에 추가하기
+        todoUrl = "http://203.250.133.156:8080/todoAPI/get_todo_list/" + loginID + "/" + today;
+        getTodoListAPI = new ApiService();
+        getTodoListAPI.getUrl(todoUrl);
+
+
+//        ListView[] todoFragment_listView;   // 카테고리 하나에 포함되어 있는 리스트뷰 배열
+//        ListItemAdapter[] todoFragment_listAdapter; // 카테고리 하나에 포함되어 있는 리스트어뎁터 배열
+//        LinearLayout[] listlayoutarr;   // 카테고리별 레이아웃
+//        List<String> distinctCNameList; // 카테고리 리스트
+//        private int[] todoNum;  // 카테고리별 투두 수
+
+        // toDoFragment_ListNumText 리스트 개수 출력
+        ToDoFragment_listCountText = todoView.findViewById(R.id.todoListCount);
+        // 모든 투두리스트 개수 합쳐서 출력하기 위해 ToDoFragment_listCount변수 추가
+        ToDoFragment_listCountText.setText(getTodoListAPI.getValue("todo_total"));
+
+
+        // 카테고리 개수만큼의 리스트뷰 배열 만들기
+        todoFragment_listView = new ListView[cateNum];
+        todoFragment_listAdapter = new ListItemAdapter[cateNum];
+        todoNum = new int[cateNum];
+
+        // 각각 카테고리에 포함되어 있는 리스트 가지고 생성
+        for (int i = 0; i < cateNum; i++){
+            todoFragment_listAdapter[i] = new ListItemAdapter();
+            todoFragment_listView[i] = new ListView(getContext());
+            todoFragment_listView[i].setNestedScrollingEnabled(false);
+            todoFragment_listView[i].setDivider(null); // 디바이더 제거
+            todoFragment_listView[i].setDividerHeight(20);
+            for (int j = 0; j < Integer.parseInt(getTodoListAPI.getValue("todo_total")); j++){
+                if (Objects.equals(distinctCNameList.get(i), getTodoListAPI.getValue("todo_cName" + j))){
+                    todoFragment_listAdapter[i].addItem(
+                            new ListItem(getTodoListAPI.getValue("todo_name"+j), today,
+                            distinctCNameList.get(i), distinctCColorlist.get(i)));
+
+                }
+            }
+            // 리스트 어뎁터 연결
+            todoFragment_listView[i].setAdapter(todoFragment_listAdapter[i]);
+
+            listlayoutarr[i].addView(todoFragment_listView[i]);
+        }
+
+
+        // 스크롤 뷰와 리스트뷰 충돌방지 용 리스트뷰 높이 지정
+        for (int i = 0; i < cateNum; i++){
+            int totalHeight = 0;
+            for (int j = 0; j < todoFragment_listAdapter[i].getCount(); j++){
+                    // 모든 항목을 표시하기 위해 리스트뷰의 높이를 계산
+                    View listItem = todoFragment_listAdapter[i].getView(j, null, todoFragment_listView[i]);
+                    listItem.measure(0,0);
+                    totalHeight += listItem.getMeasuredHeight();
+            }
+            // 리스트뷰의 높이를 고정
+            ViewGroup.LayoutParams params = todoFragment_listView[i].getLayoutParams();
+            params.height = totalHeight + (todoFragment_listView[i].getDividerHeight() * (todoFragment_listAdapter[i].getCount() - 1));
+            todoFragment_listView[i].setLayoutParams(params);
+        }
+
+        for (int i = 0; i < cateNum; i++){
+            final int listViewPage = i;
+            todoFragment_listView[listViewPage].setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    clickedPosition = position; // 클릭 위치 전역변수로 넘김
+
+                    System.out.println("listViewPage: " + listViewPage);
+                    dialog = new ToDoListDialog(getActivity(), todoFragment_listAdapter[listViewPage], clickedPosition, "To-Do", todoFragment_listView[listViewPage]);
+                    dialog.show();
+                    // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
+                    Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+
+
+
 
     // 날짜 타입 설정
     // 년월 텍스트뷰

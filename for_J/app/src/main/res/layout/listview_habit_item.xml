@@ -21,6 +21,19 @@
             android:textColor="@color/black"
             android:text=""/>
 
+        <!--리스트 반복 횟수 텍스트뷰-->
+        <!--일정 추가할 때 반복 횟수 설정한 리스트만 이 텍스트뷰 보이게 설정해야함-->
+        <!--카테고리 리스트의 경우 아래 텍스트뷰 안보이게 해야됨-->
+        <TextView
+            android:id="@+id/listRepetition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/listName"
+            android:layout_marginLeft="10dp"
+            android:text="0"
+            android:textColor="@color/blueGray_900"
+            android:textSize="20dp" />
+
         <ImageView
             android:id="@+id/listCheckBtn"
             android:layout_width="25dp"

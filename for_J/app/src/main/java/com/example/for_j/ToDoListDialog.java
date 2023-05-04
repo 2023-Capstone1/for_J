@@ -21,15 +21,13 @@ public class ToDoListDialog {
     private final Dialog dialog;
     private final Context context;
     private final ListItemAdapter listItemAdapter;
-    private final TextView listCountText;
     private final int clickedPosition;
     private final String dialogTitle;
     private final ListView listView;
 
-    public ToDoListDialog(Context context, ListItemAdapter listItemAdapter, TextView listCountText, int clickedPosition, String dialogTitle, ListView listView) {
+    public ToDoListDialog(Context context, ListItemAdapter listItemAdapter, int clickedPosition, String dialogTitle, ListView listView) {
         this.context = context;
         this.listItemAdapter = listItemAdapter;
-        this.listCountText = listCountText;
         this.clickedPosition = clickedPosition;
         this.dialogTitle = dialogTitle;
 
@@ -72,6 +70,7 @@ public class ToDoListDialog {
                 intent.putExtra("title", name);
                 intent.putExtra("today", today);
                 context.startActivity(intent);
+                dialog.dismiss();
             }
         });
 
@@ -101,7 +100,7 @@ public class ToDoListDialog {
 
         listItems.remove(clickedPosition);
         listItemAdapter.notifyDataSetChanged();
-        listCountText.setText(String.valueOf(listItemAdapter.getCount()));
+        //listCountText.setText(String.valueOf(listItemAdapter.getCount()));
 
         dialog.dismiss();
     }
@@ -132,7 +131,7 @@ public class ToDoListDialog {
         ImageView itemImgView = listItemView.findViewById(R.id.listCheckBtn); // 지금 클릭한 리스트 아이템의 체크박스 라디오버튼 연결
 
         itemImgView.setImageDrawable(selectedImg);
-        itemImgView.setBackgroundColor(Color.parseColor("#D9D9D9"));
+//        itemImgView.setBackgroundColor(Color.parseColor("#D9D9D9"));
 
         dialog.dismiss();
     }
