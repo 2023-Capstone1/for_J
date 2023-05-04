@@ -47,6 +47,7 @@ public class ToDoFragment extends Fragment {
     // 리스트 개수를 보여주기위한 텍스트뷰
     private TextView ToDoFragment_listCountText;
     private TextView nothingMessage;
+
     // 리스트뷰 내부 아이템 클릭 시 클릭 위치 전역 변수로 선언 -> 다이얼로그에 일정 이름을 보여주기 위함
     private int clickedPosition = -1;
     // 리스트뷰 오른쪽 상단에 있는 오늘 날짜 표시 텍스트뷰
@@ -58,7 +59,18 @@ public class ToDoFragment extends Fragment {
     // +버튼
     private ImageButton moveTodoSetDateNew;
 
+
+
+
+
+
+
+
+
+
     // 서버 통신 관련 변수
+    private ApiService checkTupleExistAPI;
+    private String checkTupleExistURL;
     private ApiService getTodoDateCateAPI;
     private ApiService getTodoCateColorAPI;
     private String getCategoryUrl;
@@ -72,12 +84,14 @@ public class ToDoFragment extends Fragment {
     private int[] todoNum;
     private int isTodo = 1;
 
+
+
+
     private LinearLayout listLayoutSet;
     private LinearLayout[] listlayoutarr;
     private List<String> distinctCNameList;
     private List<String> distinctCColorlist;
     private View todoView;
-
 
     private ListView[] todoFragment_listView;
     private ListItemAdapter[] todoFragment_listAdapter;
@@ -141,22 +155,50 @@ public class ToDoFragment extends Fragment {
         ToDoFragment_list_today = todoView.findViewById(R.id.todoToday);
         ToDoFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
 
-        // 오늘날짜에 해당되는 카테고리 화면에 띄우기
-        getCategoryFromServer();
-        // 카테고리별 리스트 화면에 띄우기
-        getTodoFromServer();
 
 
-        /*
-        if (getTodoDateCateAPI.getKey("unexpected error") == "unexpected error"){
-            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
-            toast.show();
-            nothingMessage = todoView.findViewById(R.id.nothingMessage);
-            nothingMessage.setVisibility(todoView.VISIBLE);
-        }else{
-            getTodoFromServer();
-            nothingMessage.setVisibility(todoView.GONE);
-        }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // get_is_tuple_exist로 0이면 nothingMessage 띄우기
+        // 1이면 아래꺼 실행하기
+        checkTupleExistURL = "http://203.250.133.162:8080/todoAPI/get_is_tuple_exist/" + loginID + "/" + today;
+        checkTupleExistAPI = new ApiService();
+        checkTupleExistAPI.getUrl(checkTupleExistURL);
+        System.out.println("is_tuple_exit type: " + checkTupleExistAPI.getValue("is_tuple_exit").getClass().getTypeName());
+        System.out.println("is_tuple_exit: " + checkTupleExistAPI.getValue("is_tuple_exit"));
+
+//        if (checkTupleExistAPI.getValue("is_tuple_exit") == 0){
+//            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
+//            toast.show();
+//            nothingMessage = todoView.findViewById(R.id.nothingMessage);
+//            nothingMessage.setVisibility(View.VISIBLE);
+//        } else{
+//            getCategoryFromServer();
+//            getTodoFromServer();
+//            nothingMessage.setVisibility(View.GONE);
+//        }
 
         // Inflate the layout for this fragment
         return todoView;
@@ -172,14 +214,25 @@ public class ToDoFragment extends Fragment {
 
         listLayoutSet.removeAllViewsInLayout();
         listLayoutSet.removeViewInLayout(listLayoutSet);
-        getCategoryFromServer();
-        getTodoFromServer();
+
+        checkTupleExistAPI.getUrl(checkTupleExistURL);
+
+        if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exit"), "0")){
+            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
+            toast.show();
+            nothingMessage = todoView.findViewById(R.id.nothingMessage);
+            nothingMessage.setVisibility(View.VISIBLE);
+        }else{
+            getCategoryFromServer();
+            getTodoFromServer();
+            nothingMessage.setVisibility(View.GONE);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void getCategoryFromServer(){
         // 서버에서 카테고리 가지고 오기
-        getCategoryUrl = "http://203.250.133.156:8080/todoAPI/get_todo_date_category/" + loginID + "/" + today;
+        getCategoryUrl = "http://203.250.133.162:8080/todoAPI/get_todo_date_category/" + loginID + "/" + today;
         getTodoDateCateAPI = new ApiService();
         getTodoDateCateAPI.getUrl(getCategoryUrl);
 
@@ -244,7 +297,7 @@ public class ToDoFragment extends Fragment {
             shape.setShape(GradientDrawable.RECTANGLE);
             shape.setCornerRadii(new float[] { 16, 16, 16, 16, 16, 16, 16, 16 }); // set corner radii
 
-            getCategoryUrl = "http://203.250.133.156:8080/categoryAPI/get_todo_category/" + loginID + "/" + distinctCNameList.get(i) + "/" + isTodo;
+            getCategoryUrl = "http://203.250.133.162:8080/categoryAPI/get_todo_category/" + loginID + "/" + distinctCNameList.get(i) + "/" + isTodo;
             getTodoCateColorAPI = new ApiService();
             getTodoCateColorAPI.getUrl(getCategoryUrl);
 //            System.out.println(getCategoryUrl);
@@ -318,7 +371,7 @@ public class ToDoFragment extends Fragment {
     private void getTodoFromServer() {
 
         // 서버에서 투두 리스트 가지고 와서 카테고리 별로 분리해서 리스트에 추가하기
-        todoUrl = "http://203.250.133.156:8080/todoAPI/get_todo_list/" + loginID + "/" + today;
+        todoUrl = "http://203.250.133.162:8080/todoAPI/get_todo_list/" + loginID + "/" + today;
         getTodoListAPI = new ApiService();
         getTodoListAPI.getUrl(todoUrl);
 
