@@ -38,7 +38,7 @@ public class LoginPwChange extends AppCompatActivity {
                 String input_New_pw_check = LoginPwChange_Edit_New_Pw_Check.getText().toString();
 
                 // url 작성
-                String url = "http://203.250.133.156:8080/usersAPI/pw_update/" + inputId +  "/" + input_New_pw + "/" + input_New_pw_check;
+                String url = "http://203.250.133.162:8080/usersAPI/pw_update/" + inputId +  "/" + input_New_pw + "/" + input_New_pw_check;
                 ApiService LoginPwChangeApiService = new ApiService();
                 LoginPwChangeApiService.putUrl(url);
 

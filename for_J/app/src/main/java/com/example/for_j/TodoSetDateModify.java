@@ -71,7 +71,7 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
         name = getIntent().getStringExtra("title");
         date = getIntent().getStringExtra("today");
         loginID = "123"; // 이거 나중에 다시 설정해야함!!!!!! 임의로 넣은 값임!!!!!
-        url = "http://203.250.133.156:8080/todoAPI/get_todo_to_update/" + loginID + "/" + name + "/" + date;
+        url = "http://203.250.133.162:8080/todoAPI/get_todo_to_update/" + loginID + "/" + name + "/" + date;
         todoApiService.getUrl(url);
 
 
@@ -109,7 +109,7 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
         TSDN_CategortBtn.setText(todoApiService.getValue("todo_cName"));
         caName = todoApiService.getValue("todo_cName");
         // get_todo_category_by_name API로 읽어오기
-        url = "http://203.250.133.156:8080/categoryAPI/get_todo_category/" + loginID + "/" + caName + "/" + isTodo;
+        url = "http://203.250.133.162:8080/categoryAPI/get_todo_category/" + loginID + "/" + caName + "/" + isTodo;
         todoCateApiService.getUrl(url);
         String Color = todoCateApiService.getValue("todo_category_color");
         switch(Color){
@@ -254,7 +254,7 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
                     Toast toast = Toast.makeText(TodoSetDateModify.this, "카테고리를 선택해주세요.", Toast.LENGTH_SHORT);
                     toast.show();
                 }else{
-                    url = "http://203.250.133.156:8080/todoAPI/update_todo/" + loginID + "/" + name + "/" + date + "/" + caName + "/" + state;
+                    url = "http://203.250.133.162:8080/todoAPI/update_todo/" + loginID + "/" + name + "/" + date + "/" + caName + "/" + state;
                     todoApiService.postUrl(url);
                     if (todoApiService.getStatus()==200){
                         finish();

@@ -424,7 +424,7 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 //                            System.out.println("start date: " + SstartDate);
 //                            System.out.println("today: " + Stoday);
 //                            System.out.println("end date: " + SendDate);
-                            String url = "http://203.250.133.156:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
+                            String url = "http://203.250.133.162:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
                                     + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
                                     + Shabit_nfc + "/" + Shabit_state;
                             Log.d("TAG", SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
@@ -483,7 +483,7 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                                 System.out.println("start date: " + SstartDate);
                                 System.out.println("today: " + Stoday);
                                 System.out.println("end date: " + SendDate);
-                                String url = "http://203.250.133.156:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
+                                String url = "http://203.250.133.162:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
                                         + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
                                         + Shabit_nfc + "/" + Shabit_state;
                                 Log.d("TAG", SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"

@@ -195,7 +195,7 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
                     toast.show();
                 }else{
                     ApiService todoApiService = new ApiService();
-                    String url = "http://203.250.133.156:8080/todoAPI/set_todo/" + loginID + "/" + name + "/" + date + "/" + caName + "/" + state;
+                    String url = "http://203.250.133.162:8080/todoAPI/set_todo/" + loginID + "/" + name + "/" + date + "/" + caName + "/" + state;
                     todoApiService.postUrl(url);
 
                     if (todoApiService.getStatus()==200){

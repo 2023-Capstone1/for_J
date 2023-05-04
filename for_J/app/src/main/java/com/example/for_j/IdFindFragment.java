@@ -62,7 +62,7 @@ public class IdFindFragment extends Fragment {
 
                 // url 작성
                 ApiService IdFindApiService = new ApiService();
-                String url = "http://203.250.133.156:8080/usersAPI/id_find/" + Name + "/" + Email;
+                String url = "http://203.250.133.162:8080/usersAPI/id_find/" + Name + "/" + Email;
                 IdFindApiService.getUrl(url);
 
                 // 인증번호 받기 버튼을 누르지 않았을 경우
@@ -101,7 +101,7 @@ public class IdFindFragment extends Fragment {
 
                 // url 작성
                 ApiService MailApiService = new ApiService();
-                String url = "http://203.250.133.156:8080/usersAPI/get_certification_number/" + Mail;
+                String url = "http://203.250.133.162:8080/usersAPI/get_certification_number/" + Mail;
                 MailApiService.postUrl(url);
 
                 if(MailApiService.getStatus() == 200){
@@ -136,7 +136,7 @@ public class IdFindFragment extends Fragment {
 
                 // url 작성
                 ApiService CnApiService = new ApiService();
-                String url = "http://203.250.133.156:8080/usersAPI/check_verification/" + Mail + "/" + Cn;
+                String url = "http://203.250.133.162:8080/usersAPI/check_verification/" + Mail + "/" + Cn;
                 CnApiService.getUrl(url);
 
                 if(CnApiService.getStatus() == 200){

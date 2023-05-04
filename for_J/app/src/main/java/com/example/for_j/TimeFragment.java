@@ -208,31 +208,31 @@ public class TimeFragment extends Fragment {
          * 다이얼로그 관련
          * */
         // 리스트뷰 클릭하면 다이얼로그 띄우기
-        TimeFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                clickedPosition = position; // 클릭 위치 전역변수로 넘김
-
-                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView);
-                dialog.show();
-
-                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        TimeFragment_listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                clickedPosition = position; // 클릭 위치 전역변수로 넘김
-
-                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView2);
-                dialog.show();
-
-                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        TimeFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                clickedPosition = position; // 클릭 위치 전역변수로 넘김
+//
+//                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView);
+//                dialog.show();
+//
+//                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
+//                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        TimeFragment_listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                clickedPosition = position; // 클릭 위치 전역변수로 넘김
+//
+//                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView2);
+//                dialog.show();
+//
+//                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
+//                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
         // Inflate the layout for this fragment

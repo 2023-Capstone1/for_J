@@ -36,7 +36,7 @@ public class Login extends AppCompatActivity {
                 CustomDialog dialog = new CustomDialog(Login.this);
 
                 // url 작성
-                String url = "http://203.250.133.156:8080/usersAPI/login/" + inputId + "/" +  inputPw;
+                String url = "http://203.250.133.162:8080/usersAPI/login/" + inputId + "/" +  inputPw;
                 ApiService loginApiService = new ApiService();
                 loginApiService.getUrl(url);
 

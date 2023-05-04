@@ -179,7 +179,7 @@ public class ToDoFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void getCategoryFromServer(){
         // 서버에서 카테고리 가지고 오기
-        getCategoryUrl = "http://203.250.133.156:8080/todoAPI/get_todo_date_category/" + loginID + "/" + today;
+        getCategoryUrl = "http://203.250.133.162:8080/todoAPI/get_todo_date_category/" + loginID + "/" + today;
         getTodoDateCateAPI = new ApiService();
         getTodoDateCateAPI.getUrl(getCategoryUrl);
 
@@ -244,7 +244,7 @@ public class ToDoFragment extends Fragment {
             shape.setShape(GradientDrawable.RECTANGLE);
             shape.setCornerRadii(new float[] { 16, 16, 16, 16, 16, 16, 16, 16 }); // set corner radii
 
-            getCategoryUrl = "http://203.250.133.156:8080/categoryAPI/get_todo_category/" + loginID + "/" + distinctCNameList.get(i) + "/" + isTodo;
+            getCategoryUrl = "http://203.250.133.162:8080/categoryAPI/get_todo_category/" + loginID + "/" + distinctCNameList.get(i) + "/" + isTodo;
             getTodoCateColorAPI = new ApiService();
             getTodoCateColorAPI.getUrl(getCategoryUrl);
 //            System.out.println(getCategoryUrl);
@@ -318,7 +318,7 @@ public class ToDoFragment extends Fragment {
     private void getTodoFromServer() {
 
         // 서버에서 투두 리스트 가지고 와서 카테고리 별로 분리해서 리스트에 추가하기
-        todoUrl = "http://203.250.133.156:8080/todoAPI/get_todo_list/" + loginID + "/" + today;
+        todoUrl = "http://203.250.133.162:8080/todoAPI/get_todo_list/" + loginID + "/" + today;
         getTodoListAPI = new ApiService();
         getTodoListAPI.getUrl(todoUrl);
 

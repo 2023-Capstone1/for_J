@@ -268,7 +268,7 @@ public class TimeAddCategory extends Dialog{
                 }
                 else {
                     // url 작성
-                    String url = "http://203.250.133.156:8080/categoryAPI/set_time_category/" + categorySchema.getLoginID() + "/" + categorySchema.getName() + "/" + categorySchema.getColor() + "/" + categorySchema.getIsTodo();
+                    String url = "http://203.250.133.162:8080/categoryAPI/set_time_category/" + categorySchema.getLoginID() + "/" + categorySchema.getName() + "/" + categorySchema.getColor() + "/" + categorySchema.getIsTodo();
                     ApiService categoryApiService = new ApiService();
                     categoryApiService.postUrl(url);
 
