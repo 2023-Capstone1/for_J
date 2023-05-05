@@ -2,19 +2,27 @@
 package com.example.for_j;
 
 public class ListItem {
+    private String listId;
     private String listName;
     private String listToday;
     private String listCName;
     private String listColor;
+    private int listState;
 
     ListItem(String listName) {
         this.listName = listName;
     }
-    ListItem(String listName, String listToday, String listCName, String listColor){
+    ListItem(String listId, String listName, String listToday, String listCName, String listColor, int listState){
+        this.listId = listId;
         this.listName = listName;
         this.listToday = listToday;
         this.listCName = listCName;
         this.listColor = listColor;
+        this.listState = listState;
+    }
+
+    public String getListId() {
+        return listId;
     }
 
     public String getListName() {
@@ -33,6 +41,14 @@ public class ListItem {
         return listColor;
     }
 
+    public int getListState() {
+        return listState;
+    }
+
+    public void setListId(String listId) {
+        this.listId = listId;
+    }
+
     public void setListName(String listName) {
         this.listName = listName;
     }
@@ -47,6 +63,10 @@ public class ListItem {
 
     public void setListColor(String listColor){
         this.listColor = listColor;
+    }
+
+    public void setListState(int listState) {
+        this.listState = listState;
     }
 
 

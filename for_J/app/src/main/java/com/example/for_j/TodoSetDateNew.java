@@ -1,7 +1,9 @@
 package com.example.for_j;
 
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -72,9 +75,9 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
             @Override
             public void onClick(View v) {
                 // 현재 날짜 가져오기
-                int year = selectedDate.get(Calendar.YEAR);
-                int month = selectedDate.get(Calendar.MONTH);
-                int day = selectedDate.get(Calendar.DAY_OF_MONTH);
+//                int year = selectedDate.get(Calendar.YEAR);
+//                int month = selectedDate.get(Calendar.MONTH);
+//                int day = selectedDate.get(Calendar.DAY_OF_MONTH);
 
                 // Pass the selected date to the DatePickerFragment
                 // 현재 날짜 데이트 피커로 보내기
@@ -92,6 +95,7 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
             public void onClick(View v) {
                 // pickCategory 띄우기
                 TodoPickCategoryDialog PCD = new TodoPickCategoryDialog(TodoSetDateNew.this, new TodoPickCategoryDialog.PickCategoryDialogListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void getCategoryData(String cName, String cColor) {
                         // 카테고리 색, 이름 가지고 오기
@@ -99,6 +103,9 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
                         //todoSchemaClass.setCColor(cColor);
 
                         TSDN_CategortBtn.setText(cName);
+                        TSDN_CategortBtn.setTypeface(null, Typeface.BOLD);
+                        // 텍스트 색상
+                        int colorValue;
                         Drawable btnDrawable;
                         //caName = cName;
                         //caColor = cColor;
@@ -107,34 +114,49 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
                             case "pink":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_pink_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_pink);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "crimson":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_crimson_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_crimson);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "orange":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_orange_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
-                                break;
+                                colorValue = getColor(R.color.lighter_orange);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                             case "yellow":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_yellow_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_yellow);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "light_green":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_light_green_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_light_green);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "turquoise":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_turquoise_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_turquoise);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "pastel_blue":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_pastel_blue_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_pastel_blue);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "pastel_purple":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateNew.this, R.drawable.category_pastel_purple_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_pastel_purple);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                         }
                     }

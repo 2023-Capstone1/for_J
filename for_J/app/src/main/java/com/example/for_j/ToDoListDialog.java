@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -24,6 +25,20 @@ public class ToDoListDialog {
     private final int clickedPosition;
     private final String dialogTitle;
     private final ListView listView;
+
+    // 서버 통신 변수
+    private String getStateURL;
+    private String setStateURL;
+    private String deleteURL;
+    private ApiService getStateAPI;
+    private ApiService setStateAPI;
+    private ApiService deleteAPI;
+
+    private String loginId = "123";
+    private String name;
+    private String today;
+    private String id;
+    private int state;
 
     public ToDoListDialog(Context context, ListItemAdapter listItemAdapter, int clickedPosition, String dialogTitle, ListView listView) {
         this.context = context;
@@ -47,8 +62,41 @@ public class ToDoListDialog {
         title.setText(dialogTitle);
         todoName.setText(String.valueOf(listItemAdapter.getListName(clickedPosition)));
 
+
         // 다이얼로그 내 체크박스 이미지 선택 시 리스트의 체크박스 이미지 선택한 이미지로 변경
         RadioGroup radioGroup = dialog.findViewById(R.id.dialog_checkRadioGroup);
+        RadioButton complete = dialog.findViewById(R.id.dialog_checkComplete);
+        RadioButton delay = dialog.findViewById(R.id.dialog_checkDelay);
+        RadioButton incomplete = dialog.findViewById(R.id.dialog_checkIncomplete);
+        RadioButton empty = dialog.findViewById(R.id.dialog_checkEmpty);
+
+        // 서버에서 state 가지고 와서 버튼 이미지 바꾸기
+        name = String.valueOf(listItemAdapter.getListName(clickedPosition));
+        today = String.valueOf(listItemAdapter.getListToday(clickedPosition));
+        id = String.valueOf(listItemAdapter.getListId(clickedPosition));
+
+        getStateURL = "http://203.250.133.162:8080/todoAPI/get_todo_list_state/" + loginId + "/" + id + "/" + name + "/" + today;
+        getStateAPI = new ApiService();
+        getStateAPI.getUrl(getStateURL);
+
+        state = Integer.parseInt(getStateAPI.getValue("todo_state"));
+        System.out.println("상태: " + state);
+
+        switch (state){
+            case 0:
+                empty.setChecked(true);
+                break;
+            case 1:
+                delay.setChecked(true);
+                break;
+            case 2:
+                incomplete.setChecked(true);
+                break;
+            case 3:
+                complete.setChecked(true);
+                break;
+        }
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int witch) {
@@ -67,13 +115,14 @@ public class ToDoListDialog {
                 // 인텐트로 이름, 날짜 보내기
                 String name = String.valueOf(listItemAdapter.getListName(clickedPosition));
                 String today = String.valueOf(listItemAdapter.getListToday(clickedPosition));
+                String id = String.valueOf(listItemAdapter.getListId(clickedPosition));
                 intent.putExtra("title", name);
                 intent.putExtra("today", today);
+                intent.putExtra("id", id);
                 context.startActivity(intent);
                 dialog.dismiss();
             }
         });
-
 
 
 
@@ -96,10 +145,14 @@ public class ToDoListDialog {
     }
 
     private void deleteListItem() {
-        ArrayList<ListItem> listItems = listItemAdapter.getListItem();
+        deleteURL = "http://203.250.133.162:8080/todoAPI/todo_delete/" + loginId + "/" + id;
+        deleteAPI = new ApiService();
+        deleteAPI.deleteUrl(deleteURL);
 
-        listItems.remove(clickedPosition);
-        listItemAdapter.notifyDataSetChanged();
+//        ArrayList<ListItem> listItems = listItemAdapter.getListItem();
+//
+//        listItems.remove(clickedPosition);
+//        listItemAdapter.notifyDataSetChanged();
         //listCountText.setText(String.valueOf(listItemAdapter.getCount()));
 
         dialog.dismiss();
@@ -111,26 +164,31 @@ public class ToDoListDialog {
 
         switch (selectedRadio) {
             case R.id.dialog_checkComplete:
-                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_complete);
+                state = 3;
                 break;
             case R.id.dialog_checkDelay:
-                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_delay);
+                state = 1;
                 break;
             case R.id.dialog_checkIncomplete:
-                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_incomplete);
+                state = 2;
                 break;
             case R.id.dialog_checkEmpty:
-                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_empty);
+                state = 0;
                 break;
             default:
-                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_empty);
+                state = 0;
                 break;
         }
 
-        View listItemView = listView.getChildAt(clickedPosition); // 매개변수로 받은 listView에서 지금 클릭한 리스트 아이템 찾기
-        ImageView itemImgView = listItemView.findViewById(R.id.listCheckBtn); // 지금 클릭한 리스트 아이템의 체크박스 라디오버튼 연결
+        // 디비 상태값 업데이트
+        setStateURL = "http://203.250.133.162:8080/todoAPI/update_todo_list_state/" + loginId + "/" + id + "/" + name + "/" + today + "/" + state;
+        setStateAPI = new ApiService();
+        setStateAPI.postUrl(setStateURL);
 
-        itemImgView.setImageDrawable(selectedImg);
+//        View listItemView = listView.getChildAt(clickedPosition); // 매개변수로 받은 listView에서 지금 클릭한 리스트 아이템 찾기
+//        ImageView itemImgView = listItemView.findViewById(R.id.listCheckBtn); // 지금 클릭한 리스트 아이템의 체크박스 라디오버튼 연결
+//
+//        itemImgView.setImageDrawable(selectedImg);
 //        itemImgView.setBackgroundColor(Color.parseColor("#D9D9D9"));
 
         dialog.dismiss();

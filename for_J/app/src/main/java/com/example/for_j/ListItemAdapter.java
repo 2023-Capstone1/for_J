@@ -3,6 +3,7 @@ package com.example.for_j;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,10 +95,46 @@ public class ListItemAdapter extends BaseAdapter {
         // 데이터 set
         listNameText.setText(listItem.getListName());
 
+        /*
+        0: 빈칸 1: 다음날 2: 안함 3: 체크
+         */
+        // 서버에서 state 가지고 와서 버튼 이미지 바꾸기
+        String loginId = "123";
+        String name = items.get(position).getListName();
+        String today = items.get(position).getListToday();
+        String id = items.get(position).getListId();
+        int state = items.get(position).getListState();
+
+        String getStateURL = "http://203.250.133.162:8080/todoAPI/get_todo_list_state/" + loginId + "/" + id + "/" + name + "/" + today;
+        ApiService getStateAPI = new ApiService();
+        getStateAPI.getUrl(getStateURL);
+        state = Integer.parseInt(getStateAPI.getValue("todo_state"));
+        items.get(position).setListState(state);
 
 
+        Drawable selectedImg = null;
 
+        switch (state) {
+            case 0:
+                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_empty);
+                break;
+            case 1:
+                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_delay);
+                break;
+            case 2:
+                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_incomplete);
+                break;
+            case 3:
+                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_complete);
+                break;
+            default:
+                state = 0;
+                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_empty);
+                break;
+        }
         ImageView imageView = convertView.findViewById(R.id.listCheckBtn);
+        imageView.setImageDrawable(selectedImg);
+
         // ImageView에 OnClickListener 추가
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +148,10 @@ public class ListItemAdapter extends BaseAdapter {
 
     public void addItem(ListItem item) {
         items.add(item);
+    }
+
+    public String getListId(int position){
+        return items.get(position).getListId();
     }
 
     // 리스트 이름 반환
@@ -128,6 +169,10 @@ public class ListItemAdapter extends BaseAdapter {
 
     public String getListColor(int position){
         return items.get(position).getListColor();
+    }
+
+    public void setListId(int position, String id){
+        items.get(position).setListId(id);
     }
 
     public void setListName(int position, String listName) {

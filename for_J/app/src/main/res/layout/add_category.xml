@@ -57,80 +57,87 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginBottom="10dp"
         >
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/categoryPink"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/pink"/>
+        <RadioGroup
+            android:id="@+id/AC_CateRG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="10dp">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/categoryCrimson"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/crimson"/>
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryPink"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:background="@drawable/category_pink_selector"
+                android:button="@null"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/categoryOrange"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/orange"/>
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryCrimson"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:background="@drawable/category_crimson_selector"
+                android:button="@null"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/categoryYellow"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/yellow"/>
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryOrange"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:background="@drawable/category_orange_selector"
+                android:button="@null"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/categoryLightGreen"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/light_green"/>
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryYellow"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:background="@drawable/category_yellow_selector"
+                android:button="@null"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/categoryTurquoise"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/turquoise"/>
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryLightGreen"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:background="@drawable/category_light_green_selector"
+                android:button="@null"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/categoryPastelBlue"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/pastel_blue"/>
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryTurquoise"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:background="@drawable/category_turquoise_selector"
+                android:button="@null"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/categoryPastelPurple"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/pastel_purple"/>
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryPastelBlue"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:background="@drawable/category_pastel_blue_selector"
+                android:button="@null"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/categoryPastelPurple"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:background="@drawable/category_pastel_purple_selector"
+                android:button="@null"/>
+        </RadioGroup>
     </LinearLayout>
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.for_j.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -54,11 +56,17 @@ public class TodoPickCategoryDialog extends Dialog {
     private String[] cName;
     private String[] cColor;
 
+    private LinearLayout PC_layout;
+
+    @SuppressLint("MissingInflatedId")
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pick_category);
+
+        PC_layout = findViewById(R.id.PC_layout);
+
         
         // 디비에서 카테고리 모든 튜플 가지고 와서 라디오 버튼 만들기
         // showCategoryLayout 안에 for문으로 라디오 버튼 만들기
@@ -168,7 +176,22 @@ public class TodoPickCategoryDialog extends Dialog {
             }
         }
 
+        // 버튼 눌리면 이전으로
+        PC_listRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                for(int i = 0; i< cateNum; i++){
+                    if (PC_categoryRB[i].getId() == checkedId){
+                        PickCategoryDialogListener.getCategoryData(cName[i], cColor[i]);
+                        dismiss();
+                        break; // exit the loop once a match is found
+                    }
+                }
+            }
+        });
 
+
+//
         // 추가 눌렀을 때
         addCategory = findViewById(R.id.PC_Add);
         addCategory.setOnClickListener(new View.OnClickListener() {
@@ -193,24 +216,19 @@ public class TodoPickCategoryDialog extends Dialog {
         });
 
         // 저장 눌렀을 때
-        PC_save = findViewById(R.id.PC_save);
-        PC_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for(int i = 0; i< cateNum; i++){
-                    if (PC_categoryRB[i].isChecked()){
-                        PickCategoryDialogListener.getCategoryData(cName[i], cColor[i]);
-//                        PickCategoryDialogListener.getCategoryData(categorySchemaClass[i].getName(), categorySchemaClass[i].getColor());
-                    }
-                }
-                dismiss();
-            }
-        });
-
-
-
-
-
+//        PC_save = findViewById(R.id.PC_save);
+//        PC_save.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                for(int i = 0; i< cateNum; i++){
+//                    if (PC_categoryRB[i].isChecked()){
+//                        PickCategoryDialogListener.getCategoryData(cName[i], cColor[i]);
+////                        PickCategoryDialogListener.getCategoryData(categorySchemaClass[i].getName(), categorySchemaClass[i].getColor());
+//                    }
+//                }
+//                dismiss();
+//            }
+//        });
 
         // 카테고리 눌렀을 때 카테고리 이름, 색상 반환
         // 버튼 눌렀을 때 밑꺼 참고해서 만들기
@@ -250,14 +268,6 @@ public class TodoPickCategoryDialog extends Dialog {
             }
         });
          */
-
-
-
-
-
-
-
-
-
     }
 }
+

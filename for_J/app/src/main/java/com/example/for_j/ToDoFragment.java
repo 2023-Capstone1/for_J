@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,7 @@ public class ToDoFragment extends Fragment {
 
     // 리스트 개수를 보여주기위한 텍스트뷰
     private TextView ToDoFragment_listCountText;
-    private TextView nothingMessage;
+    private RelativeLayout nothingMessage;
 
     // 리스트뷰 내부 아이템 클릭 시 클릭 위치 전역 변수로 선언 -> 다이얼로그에 일정 이름을 보여주기 위함
     private int clickedPosition = -1;
@@ -58,13 +59,6 @@ public class ToDoFragment extends Fragment {
 
     // +버튼
     private ImageButton moveTodoSetDateNew;
-
-
-
-
-
-
-
 
 
 
@@ -155,23 +149,30 @@ public class ToDoFragment extends Fragment {
         ToDoFragment_list_today = todoView.findViewById(R.id.todoToday);
         ToDoFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
 
+        listLayoutSet = todoView.findViewById(R.id.todoList_add_position);
+        listLayoutSet.setVisibility(View.VISIBLE);
+        nothingMessage = todoView.findViewById(R.id.nothingMessage);
+//        System.out.println("onCreate에서 nothingMessage 연결");
+
         // get_is_tuple_exist로 0이면 nothingMessage 띄우기
         // 1이면 아래꺼 실행하기
         checkTupleExistURL = "http://203.250.133.162:8080/todoAPI/get_is_tuple_exist/" + loginID + "/" + today;
         checkTupleExistAPI = new ApiService();
         checkTupleExistAPI.getUrl(checkTupleExistURL);
-        System.out.println("is_tuple_exit type: " + checkTupleExistAPI.getValue("is_tuple_exist").getClass().getTypeName());
-        System.out.println("is_tuple_exit: " + checkTupleExistAPI.getValue("is_tuple_exist"));
+//        System.out.println("is_tuple_exist type: " + checkTupleExistAPI.getValue("is_tuple_exist").getClass().getTypeName());
+//        System.out.println("is_tuple_exist: " + checkTupleExistAPI.getValue("is_tuple_exist"));
+
 
         if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
-            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
-            toast.show();
-            nothingMessage = todoView.findViewById(R.id.nothingMessage);
             nothingMessage.setVisibility(View.VISIBLE);
+//            System.out.println("onCreate에서 nothingMessage VISIBLE 실행");
+//            Toast toast = Toast.makeText(todoView.getContext(),"onCreate 서버에 값 없음", Toast.LENGTH_SHORT);
+//            toast.show();
         } else{
+            nothingMessage.setVisibility(View.GONE);
+//            System.out.println("onCreate에서 nothingMessage Gone 실행");
             getCategoryFromServer();
             getTodoFromServer();
-            nothingMessage.setVisibility(View.GONE);
         }
 
         // Inflate the layout for this fragment
@@ -186,20 +187,27 @@ public class ToDoFragment extends Fragment {
         super.onResume();
         // Rerun the code from the beginning
 
+        if (nothingMessage == null){
+            nothingMessage = todoView.findViewById(R.id.nothingMessage);
+//            System.out.println("onResume에서 nothingMessage 연결");
+        }
+
         if (listLayoutSet != null){
             listLayoutSet.removeAllViewsInLayout();
             listLayoutSet.removeViewInLayout(listLayoutSet);
             checkTupleExistAPI.getUrl(checkTupleExistURL);
 
-            if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exit"), "0")){
-                Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
-                toast.show();
-                nothingMessage = todoView.findViewById(R.id.nothingMessage);
+            if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
                 nothingMessage.setVisibility(View.VISIBLE);
+//                System.out.println("onResume에서 nothingMessage visible 실행");
+//                Toast toast = Toast.makeText(todoView.getContext(),"Resume 서버에 값 없음", Toast.LENGTH_SHORT);
+//                toast.show();
+
             }else{
+                nothingMessage.setVisibility(View.GONE);
+//                System.out.println("onResume에서 nothingMessage Gone 실행");
                 getCategoryFromServer();
                 getTodoFromServer();
-                nothingMessage.setVisibility(View.GONE);
             }
         }
     }
@@ -211,16 +219,6 @@ public class ToDoFragment extends Fragment {
         getTodoDateCateAPI = new ApiService();
         getTodoDateCateAPI.getUrl(getCategoryUrl);
 
-        // 디비에 아무것도 없을 때 텍스트 뷰로 "새로운 todo를 추가 해주세요" 띄우기
-        if(getTodoDateCateAPI.getStatus() != 200){
-            // 서버에서 값 못 읽어 왔을 때 처리
-            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
-            toast.show();
-        } /*else if (Objects.equals(getTodoDateCateAPI.getKey("unexpected error"), "unexpected error")){
-            Toast toast = Toast.makeText(todoView.getContext(),"서버에 값 없음", Toast.LENGTH_SHORT);
-            toast.show();
-            return;
-        }*/
 
         // 중복 카테고리 중복 처리
         String[] cName = new String[Integer.parseInt(getTodoDateCateAPI.getValue("todo_category_total"))];
@@ -235,7 +233,9 @@ public class ToDoFragment extends Fragment {
         distinctCColorlist = new ArrayList<>();
 
         // 리스트뷰가 들어가야하는 리니어 레이아웃 연결
-        listLayoutSet = todoView.findViewById(R.id.todoList_add_position);
+        if (listLayoutSet == null){
+            listLayoutSet = todoView.findViewById(R.id.todoList_add_position);
+        }
         listlayoutarr = new LinearLayout[cateNum];
 
         for (int i = 0; i < listlayoutarr.length; i++) {
@@ -378,8 +378,8 @@ public class ToDoFragment extends Fragment {
             for (int j = 0; j < Integer.parseInt(getTodoListAPI.getValue("todo_total")); j++){
                 if (Objects.equals(distinctCNameList.get(i), getTodoListAPI.getValue("todo_cName" + j))){
                     todoFragment_listAdapter[i].addItem(
-                            new ListItem(getTodoListAPI.getValue("todo_name"+j), today,
-                            distinctCNameList.get(i), distinctCColorlist.get(i)));
+                            new ListItem(getTodoListAPI.getValue("todo_list_id"+j), getTodoListAPI.getValue("todo_name"+j), today,
+                            distinctCNameList.get(i), distinctCColorlist.get(i), Integer.parseInt(getTodoListAPI.getValue("todo_state"+j))));
 
                 }
             }
@@ -416,7 +416,7 @@ public class ToDoFragment extends Fragment {
                     dialog = new ToDoListDialog(getActivity(), todoFragment_listAdapter[listViewPage], clickedPosition, "To-Do", todoFragment_listView[listViewPage]);
                     dialog.show();
                     // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-                    Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
                 }
             });
         }

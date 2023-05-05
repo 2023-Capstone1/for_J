@@ -1,8 +1,10 @@
 package com.example.for_j;
 
 import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -43,6 +46,7 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
     private AppCompatButton TSDN_Save;
 
     // 투두 스키마 변수
+    private String listId = null;
     private String loginID = null;
     private String name = null;
     private String date = null;
@@ -58,6 +62,7 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,8 +75,10 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
         // 이전 인텐트에서 받아온 값 읽어오기
         name = getIntent().getStringExtra("title");
         date = getIntent().getStringExtra("today");
+        listId = getIntent().getStringExtra("id");
+
         loginID = "123"; // 이거 나중에 다시 설정해야함!!!!!! 임의로 넣은 값임!!!!!
-        url = "http://203.250.133.162:8080/todoAPI/get_todo_to_update/" + loginID + "/" + name + "/" + date;
+        url = "http://203.250.133.162:8080/todoAPI/get_todo_to_update/" + loginID+ "/" + listId + "/" + name + "/" + date;
         todoApiService.getUrl(url);
 
 
@@ -107,43 +114,62 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
         // 카테고리 버튼 xml 연동
         TSDN_CategortBtn = findViewById(R.id.TSDN_CategoryBtn);
         TSDN_CategortBtn.setText(todoApiService.getValue("todo_cName"));
+        TSDN_CategortBtn.setTypeface(null, Typeface.BOLD);
+
         caName = todoApiService.getValue("todo_cName");
         // get_todo_category_by_name API로 읽어오기
         url = "http://203.250.133.162:8080/categoryAPI/get_todo_category/" + loginID + "/" + caName + "/" + isTodo;
         todoCateApiService.getUrl(url);
         String Color = todoCateApiService.getValue("todo_category_color");
+        int colorValue;
         switch(Color){
             case "pink":
                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_pink_selector);
                 TSDN_CategortBtn.setBackground(btnDrawable);
+                colorValue = getColor(R.color.lighter_pink);
+                TSDN_CategortBtn.setTextColor(colorValue);
                 break;
             case "crimson":
                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_crimson_selector);
                 TSDN_CategortBtn.setBackground(btnDrawable);
+                colorValue = getColor(R.color.lighter_crimson);
+                TSDN_CategortBtn.setTextColor(colorValue);
                 break;
             case "orange":
                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_orange_selector);
                 TSDN_CategortBtn.setBackground(btnDrawable);
+                colorValue = getColor(R.color.lighter_orange);
+                TSDN_CategortBtn.setTextColor(colorValue);
                 break;
             case "yellow":
                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_yellow_selector);
                 TSDN_CategortBtn.setBackground(btnDrawable);
+                colorValue = getColor(R.color.lighter_yellow);
+                TSDN_CategortBtn.setTextColor(colorValue);
                 break;
             case "light_green":
                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_light_green_selector);
                 TSDN_CategortBtn.setBackground(btnDrawable);
+                colorValue = getColor(R.color.lighter_light_green);
+                TSDN_CategortBtn.setTextColor(colorValue);
                 break;
             case "turquoise":
                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_turquoise_selector);
                 TSDN_CategortBtn.setBackground(btnDrawable);
+                colorValue = getColor(R.color.lighter_turquoise);
+                TSDN_CategortBtn.setTextColor(colorValue);
                 break;
             case "pastel_blue":
                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_pastel_blue_selector);
                 TSDN_CategortBtn.setBackground(btnDrawable);
+                colorValue = getColor(R.color.lighter_pastel_blue);
+                TSDN_CategortBtn.setTextColor(colorValue);
                 break;
             case "pastel_purple":
                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_pastel_purple_selector);
                 TSDN_CategortBtn.setBackground(btnDrawable);
+                colorValue = getColor(R.color.lighter_pastel_purple);
+                TSDN_CategortBtn.setTextColor(colorValue);
                 break;
         }
 
@@ -163,38 +189,55 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
                         //caName = cName;
                         //caColor = cColor;
                         // 컬러설정
+                        int colorValue;
                         switch(cColor){
                             case "pink":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_pink_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_pink);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "crimson":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_crimson_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_crimson);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "orange":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_orange_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_orange);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "yellow":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_yellow_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_yellow);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "light_green":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_light_green_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_light_green);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "turquoise":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_turquoise_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_turquoise);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "pastel_blue":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_pastel_blue_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_pastel_blue);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                             case "pastel_purple":
                                 btnDrawable = ContextCompat.getDrawable(TodoSetDateModify.this, R.drawable.category_pastel_purple_selector);
                                 TSDN_CategortBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_pastel_purple);
+                                TSDN_CategortBtn.setTextColor(colorValue);
                                 break;
                         }
                     }
@@ -254,7 +297,7 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
                     Toast toast = Toast.makeText(TodoSetDateModify.this, "카테고리를 선택해주세요.", Toast.LENGTH_SHORT);
                     toast.show();
                 }else{
-                    url = "http://203.250.133.162:8080/todoAPI/update_todo/" + loginID + "/" + name + "/" + date + "/" + caName + "/" + state;
+                    url = "http://203.250.133.162:8080/todoAPI/update_todo/" + loginID + "/" + listId + "/" + name + "/" + date + "/" + caName + "/" + state;
                     todoApiService.postUrl(url);
                     if (todoApiService.getStatus()==200){
                         finish();
