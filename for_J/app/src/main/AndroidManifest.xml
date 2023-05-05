@@ -136,7 +136,11 @@
             android:exported="false" />
         <activity
             android:name=".TimeTrackerSetDateNew"
-            android:exported="false" /> <!-- 민형파트/다솔파트 -->
+            android:exported="false" />
+        <activity
+            android:name=".TimeTrackerTimeTable"
+            android:exported="false" />
+        <!-- 민형파트/다솔파트 -->
         <activity
             android:name=".CalendarMainActivity"
             android:exported="false">
@@ -144,6 +148,7 @@
                 android:name="android.app.lib_name"
                 android:value="false" />
         </activity>
+
     </application>
 
 </manifest>
