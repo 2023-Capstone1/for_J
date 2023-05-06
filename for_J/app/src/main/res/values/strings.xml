@@ -94,7 +94,7 @@
     <string name="setting_라이트모드">라이트 모드</string>
     <string name="setting_기타">기타</string>
     <string name="setting_전체삭제">전체 일정 삭제</string>
-    <string name="setting_Todo일정삭제">To to 일정 삭제</string>
+    <string name="setting_Todo일정삭제">To do 일정 삭제</string>
     <string name="setting_Habit_일정삭제">Habit 일정 삭제</string>
     <string name="setting_calendar_일정삭제">calendar 일정 삭제</string>
     <string name="setting_Time_tracker_일정삭제">Time tracker 일정 삭제</string>
