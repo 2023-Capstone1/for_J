@@ -40,7 +40,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".Setting"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -61,7 +61,7 @@
                 android:value="" />
         </activity> <!-- 회원 가입 파트 (준형) -->
         <activity
-            android:name=".Setting"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
