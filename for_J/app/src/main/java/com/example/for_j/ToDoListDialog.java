@@ -164,31 +164,37 @@ public class ToDoListDialog {
 
         switch (selectedRadio) {
             case R.id.dialog_checkComplete:
+                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_complete);
                 state = 3;
                 break;
             case R.id.dialog_checkDelay:
+                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_delay);
                 state = 1;
                 break;
             case R.id.dialog_checkIncomplete:
+                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_incomplete);
                 state = 2;
                 break;
             case R.id.dialog_checkEmpty:
+                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_empty);
                 state = 0;
                 break;
             default:
+                selectedImg = context.getResources().getDrawable(R.drawable.ic_check_box_empty);
                 state = 0;
                 break;
         }
 
+
         // 디비 상태값 업데이트
         setStateURL = "http://203.250.133.162:8080/todoAPI/update_todo_list_state/" + loginId + "/" + id + "/" + name + "/" + today + "/" + state;
         setStateAPI = new ApiService();
-        setStateAPI.postUrl(setStateURL);
+        setStateAPI.putUrl(setStateURL);
 
-//        View listItemView = listView.getChildAt(clickedPosition); // 매개변수로 받은 listView에서 지금 클릭한 리스트 아이템 찾기
-//        ImageView itemImgView = listItemView.findViewById(R.id.listCheckBtn); // 지금 클릭한 리스트 아이템의 체크박스 라디오버튼 연결
-//
-//        itemImgView.setImageDrawable(selectedImg);
+        View listItemView = listView.getChildAt(clickedPosition); // 매개변수로 받은 listView에서 지금 클릭한 리스트 아이템 찾기
+        ImageView itemImgView = listItemView.findViewById(R.id.listCheckBtn); // 지금 클릭한 리스트 아이템의 체크박스 라디오버튼 연결
+
+        itemImgView.setImageDrawable(selectedImg);
 //        itemImgView.setBackgroundColor(Color.parseColor("#D9D9D9"));
 
         dialog.dismiss();

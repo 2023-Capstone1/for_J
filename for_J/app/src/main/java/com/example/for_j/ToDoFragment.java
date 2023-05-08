@@ -156,7 +156,7 @@ public class ToDoFragment extends Fragment {
 
         // get_is_tuple_exist로 0이면 nothingMessage 띄우기
         // 1이면 아래꺼 실행하기
-        checkTupleExistURL = "http://203.250.133.162:8080/todoAPI/get_is_tuple_exist/" + loginID + "/" + today;
+        checkTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "todo" + "/" + today;
         checkTupleExistAPI = new ApiService();
         checkTupleExistAPI.getUrl(checkTupleExistURL);
 //        System.out.println("is_tuple_exist type: " + checkTupleExistAPI.getValue("is_tuple_exist").getClass().getTypeName());

@@ -134,6 +134,7 @@ public class ListItemAdapter extends BaseAdapter {
         }
         ImageView imageView = convertView.findViewById(R.id.listCheckBtn);
         imageView.setImageDrawable(selectedImg);
+        System.out.println("어뎁터에서 이미지 바뀌는거 실행됨");
 
         // ImageView에 OnClickListener 추가
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -143,6 +144,7 @@ public class ListItemAdapter extends BaseAdapter {
                 dialog.show();
             }
         });
+
         return convertView;
     }
 

@@ -1,7 +1,9 @@
 // 리사이클러뷰에 들어가는 날짜 어댑터 -풀캘린더 어댑터
 package com.example.for_j;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
@@ -51,7 +54,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             // 현재 날짜 색상 칠하기
             if (day.equals(CalendarUtill.selectedDate)) {
                 holder.dayText.setTextColor(Color.WHITE); // 오늘 날짜 숫자 색상은 하얀색
-                holder.parentView.setBackgroundColor(Color.BLACK); // 오늘 날짜 배경 색상은 검정색
+                holder.parentView.setBackgroundResource(R.drawable.today_background_shape); //오늘 날짜 배경 모양
+
             } else {
                 holder.dayText.setTextColor(Color.BLACK); // 오늘 날짜 제외한 나머지 날짜 -> 기본 날짜 색 검정으로 지정
             }

@@ -170,8 +170,8 @@
                 android:textColor="@color/purple_200"
                 android:layout_margin="10dp"/>
 
-            <TextView
-                android:id="@+id/todoToday"
+            <android.widget.Button
+                android:id="@+id/habitToday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -181,7 +181,8 @@
                 android:textSize="25dp"
                 android:textStyle="bold"
                 android:textColor="@color/blueGray_900"
-                android:background="@drawable/list_item_background" />
+                android:background="@drawable/list_item_background"
+                />
         </LinearLayout>
 
         <!--리스트뷰랑 추가 버튼-->

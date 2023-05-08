@@ -50,7 +50,7 @@ public class HalfCalendarAdapter extends RecyclerView.Adapter<HalfCalendarAdapte
             // 현재 날짜 색상 칠하기
             if (day.equals(CalendarUtill.selectedDate)) {
                 holder.dayText.setTextColor(Color.WHITE); // 오늘 날짜 숫자 색상은 하얀색
-                holder.parentView.setBackgroundColor(Color.BLACK); // 오늘 날짜 배경 색상은 검정색
+                holder.parentView.setBackgroundResource(R.drawable.today_background_shape); //오늘 날짜 배경 모양
             } else {
                 holder.dayText.setTextColor(Color.BLACK); // 오늘 날짜 제외한 나머지 날짜 -> 기본 날짜 색 검정으로 지정
             }

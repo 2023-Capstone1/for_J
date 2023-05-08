@@ -124,7 +124,7 @@ public class HabitFragment extends Fragment {
         HabitFragment_ListCountText.setText(String.valueOf(HabitFragment_listView.getCount()));
 
         // 리스트뷰 오른쪽 위에 오늘 날짜 표시
-        HabitFragment_list_today = habitView.findViewById(R.id.todoToday);
+        HabitFragment_list_today = habitView.findViewById(R.id.habitToday);
         HabitFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
 
         // habit은 달성여부를 사용자가 체크하는게 아니고 nfc 태그 이용해서 체크해야됨 -> 다이얼로그 관련 코드 일단 주석처리 -> nfc 체크o 아이콘은 drawable/nfc_check.png 사용

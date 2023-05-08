@@ -298,7 +298,7 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
                     toast.show();
                 }else{
                     url = "http://203.250.133.162:8080/todoAPI/update_todo/" + loginID + "/" + listId + "/" + name + "/" + date + "/" + caName + "/" + state;
-                    todoApiService.postUrl(url);
+                    todoApiService.putUrl(url);
                     if (todoApiService.getStatus()==200){
                         finish();
                     }
