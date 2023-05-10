@@ -1,17 +1,29 @@
 package com.example.for_j;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class TimeTrackerTimeTable extends AppCompatActivity {
 
+    //상단바 관련 변수
+    private ImageView BackButton;
+    private TextView TimeTable_monthDateText;
+    private ImageView Time_Calendar;
+    private ImageView Pre_Date;
+    private ImageView Next_Date;
+
+    // 타임 테이블 형태
     private GridLayout gridLayout;
     private final int ROWS = 30;
     private final int COLS = 7;
@@ -22,6 +34,23 @@ public class TimeTrackerTimeTable extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timetable);
 
+        //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TimeFragment()).addToBackStack(null).commit();
+
+        TimeTable_monthDateText = findViewById(R.id.monthDateText);
+        Time_Calendar = findViewById(R.id.timecalender);
+        Pre_Date = findViewById(R.id.back_pointer);
+        Next_Date = findViewById(R.id.next_pointer);
+
+        BackButton = findViewById(R.id.setting_back_button);
+        BackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(TimeTrackerTimeTable.this, TimeFragment.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+
+        });
         gridLayout = findViewById(R.id.gridLayout);
 
         TextView[][] textViews = new TextView[ROWS][COLS];

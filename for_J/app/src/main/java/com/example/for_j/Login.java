@@ -40,13 +40,14 @@ public class Login extends AppCompatActivity {
                 ApiService loginApiService = new ApiService();
                 loginApiService.getUrl(url);
 
-                String key = loginApiService.getKey("login_id_pw_error");
+                String id_error = loginApiService.getKey("login_id_pw_error");
+                String pw_error = loginApiService.getKey("login_pw_error");
 
                 if(loginApiService.getStatus() == 200){
                     Toast.makeText(Login.this, "로그인 성공하였습니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Login.this, CalendarMainActivity.class);
                     startActivity(intent);
-                }else if(key == "login_id_pw_error") {
+                }else if(id_error == "login_id_pw_error") {
                     // url 만들어지고 ID 잘못될때 출력
                     // 메시지 설정
                     String message = "잘못된 아이디입니다.";
@@ -54,10 +55,26 @@ public class Login extends AppCompatActivity {
 
                     // 다이얼로그 보여주기
                     dialog.show();
-                }else if(key == "login_pw_error") {
+                }else if(pw_error == "login_pw_error") {
                     // url 만들어지고 PW 잘못될때 출력
                     // 메시지 설정
                     String message = "잘못된 비밀번호입니다.";
+                    dialog.setMessage(message);
+
+                    // 다이얼로그 보여주기
+                    dialog.show();
+                }else if(inputId.trim().equals("")) {
+                    // Id 빈값일 경우
+                    // 메시지 설정
+                    String message = "아이디를 입력해주세요.";
+                    dialog.setMessage(message);
+
+                    // 다이얼로그 보여주기
+                    dialog.show();
+                }else if(inputPw.trim().equals("")) {
+                    // Pw 빈값인 경우
+                    // 메시지 설정
+                    String message = "비밀번호를 입력해주세요.";
                     dialog.setMessage(message);
 
                     // 다이얼로그 보여주기

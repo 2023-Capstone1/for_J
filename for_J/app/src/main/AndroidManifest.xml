@@ -132,13 +132,22 @@
             android:name=".HabitSetDateNew"
             android:exported="false" />
         <activity
-            android:name=".RegisterNFC"
+            android:name=".HabitSetDateModify"
+            android:exported="false" />
+        <activity
+            android:name=".HabitRegisterNFC"
+            android:exported="false" />
+        <activity
+            android:name=".TimeRegisterNFC"
             android:exported="false" />
         <activity
             android:name=".TimeTrackerSetDateNew"
             android:exported="false" />
         <activity
             android:name=".TimeTrackerTimeTable"
+            android:exported="false" />
+        <activity
+            android:name=".TimeFragment"
             android:exported="false" />
         <!-- 민형파트/다솔파트 -->
         <activity

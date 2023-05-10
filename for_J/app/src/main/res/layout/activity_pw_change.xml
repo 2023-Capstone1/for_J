@@ -101,7 +101,7 @@
                     android:hint="@string/pw_change_now_pw_hint"
                     android:text=""
                     android:autofillHints=""
-                    android:inputType=""
+                    android:inputType="textPassword"
                     android:singleLine="true"/>
                 <TextView
                     android:layout_width="match_parent"
@@ -125,7 +125,7 @@
                     android:hint="@string/pw_change_new_pw_hint"
                     android:text=""
                     android:autofillHints=""
-                    android:inputType=""
+                    android:inputType="textPassword"
                     android:singleLine="true" />
                 <TextView
                     android:layout_width="match_parent"
@@ -148,7 +148,7 @@
                     android:hint="@string/pw_change_new_pw_check_hint"
                     android:text=""
                     android:autofillHints=""
-                    android:inputType=""
+                    android:inputType="textPassword"
                     android:singleLine="true"/>
             </LinearLayout>
         </ScrollView>

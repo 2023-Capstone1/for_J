@@ -7,6 +7,8 @@ public class ListItem {
     private String listToday;
     private String listCName;
     private String listColor;
+    private String listStartDate;
+    private String listEndDate;
     private int listState;
 
     ListItem(String listName) {
@@ -20,6 +22,16 @@ public class ListItem {
         this.listColor = listColor;
         this.listState = listState;
     }
+    ListItem(String listId, String listName, String listToday, String listColor, String listStartDate, String listEndDate, int listState){
+        this.listId = listId;
+        this.listName = listName;
+        this.listToday = listToday;
+        this.listColor = listColor;
+        this.listStartDate = listStartDate;
+        this.listEndDate = listEndDate;
+        this.listState = listState;
+    }
+
 
     public String getListId() {
         return listId;
@@ -40,6 +52,10 @@ public class ListItem {
     public String getListColor() {
         return listColor;
     }
+
+    public String getListStartDate() {return listStartDate;}
+
+    public String getListEndDate() {return listEndDate;}
 
     public int getListState() {
         return listState;
@@ -69,7 +85,9 @@ public class ListItem {
         this.listState = listState;
     }
 
+    public void setListStartDate(String listStartDate) {this.listStartDate = listStartDate;}
 
+    public void setListEndDate(String listEndDate) {this.listEndDate = listEndDate;}
 
 
 }

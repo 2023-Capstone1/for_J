@@ -63,7 +63,7 @@
                 android:textStyle="bold"/>
 
             <Button
-                android:id="@+id/habitDialog_updateBtn"
+                android:id="@+id/habitDialog_modifyBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

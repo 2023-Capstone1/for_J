@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,34 +22,62 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
 
-public class HabitFragment extends Fragment {
+public class HabitFragment extends Fragment implements HabitListAdapter.HabitListAdapterListener{
 
     // 달력 관련 변수
-    TextView HabitFragment_monthYearText; // 년월 텍스트뷰
-    RecyclerView HabitFragment_recyclerView; // RecyclerView 객체 생성
-    ImageButton HabitFragment_prevBtn;
-    ImageButton HabitFragment_nextBtn;
+    private TextView HabitFragment_monthYearText; // 년월 텍스트뷰
+    private RecyclerView HabitFragment_recyclerView; // RecyclerView 객체 생성
+    private ImageButton HabitFragment_prevBtn;
+    private ImageButton HabitFragment_nextBtn;
+    private DateTimeFormatter formatter; // 달력 날짜 포맷
 
-    // 리스트뷰관련 변수
-    ListView HabitFragment_listView;
-    HabitListAdapter HabitFragment_listAdapter;
+
     // 리스트 개수를 보여주기위한 텍스트뷰
-    TextView HabitFragment_ListCountText;
+    private TextView HabitFragment_ListCountText;
+    private RelativeLayout nothingMessage;
     // 리스트뷰 내부 아이템 클릭 시 클릭 위치 전역 변수로 선언 -> 다이얼로그에 일정 이름을 보여주기 위함
     private int clickedPosition = -1;
     // 리스트뷰 오른쪽 상단에 있는 오늘 날짜 표시 텍스트뷰
-    TextView HabitFragment_list_today;
+    private TextView HabitFragment_list_today;
 
     // 다이얼로그 관련
-    HabitDialog dialog;
+    private HabitDialog dialog;
 
     // + 버튼
-    ImageButton moveHabitSetDateNew;
+    private ImageButton moveHabitSetDateNew;
+
+
+    // 서버 통신 관련 변수
+    private ApiService checkTupleExistAPI;
+    private String checkTupleExistURL;
+    private ApiService getHabitListAPI;
+    String habitURL;
+    private Calendar calendar = Calendar.getInstance();
+    private String loginID = "123";
+    private String selectedDateStr;
+
+    private LinearLayout listLayout;
+    private View habitView;
+
+    // 리스트뷰관련 변수
+    private ListView HabitFragment_listView;
+    private HabitListAdapter HabitFragment_listAdapter;
+
+
+    // 리스트뷰관련 변수
+//    ListView HabitFragment_listView;
+//    HabitListAdapter HabitFragment_listAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
@@ -82,7 +112,7 @@ public class HabitFragment extends Fragment {
         selectedDate = LocalDate.now();
 
         // 화면 설정
-        setMonthView();
+//        setMonthView();
 
         // 이전달 버튼 이벤트
         HabitFragment_prevBtn.setOnClickListener(new View.OnClickListener() {
@@ -105,48 +135,168 @@ public class HabitFragment extends Fragment {
             }
         });
 
-        /*
-         * 리스트뷰 관련 코드
-         * */
-        // 리스트뷰 연결
-        HabitFragment_listView = habitView.findViewById(R.id.habit_habitList);
-        // 리스트뷰 어뎁터
-        HabitFragment_listAdapter = new HabitListAdapter();
-
-        // 리스트뷰 테스트 -디비에서 가져오는 걸로 바꿔야함
-        HabitFragment_listAdapter.addItem(new ListItem("물 1L 이상 마시기"));
-        HabitFragment_listAdapter.addItem(new ListItem("운동 30분"));
-        HabitFragment_listAdapter.addItem(new ListItem("영양제 챙겨 먹기"));
-        HabitFragment_listView.setAdapter(HabitFragment_listAdapter);
-
-        // 개수 텍스트뷰에 리스트 아이템 개수 출력 -db쿼리 카운트해서 가져오는게 좋을지 지금처럼 리스트뷰.getCount()하는게 좋을지 고민중
-        HabitFragment_ListCountText = habitView.findViewById(R.id.habitListcount);
-        HabitFragment_ListCountText.setText(String.valueOf(HabitFragment_listView.getCount()));
-
         // 리스트뷰 오른쪽 위에 오늘 날짜 표시
         HabitFragment_list_today = habitView.findViewById(R.id.habitToday);
-        HabitFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
+        HabitFragment_list_today.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
 
-        // habit은 달성여부를 사용자가 체크하는게 아니고 nfc 태그 이용해서 체크해야됨 -> 다이얼로그 관련 코드 일단 주석처리 -> nfc 체크o 아이콘은 drawable/nfc_check.png 사용
-        /*
-         * 다이얼로그 관련
-         * */
-        // 리스트뷰 아이템 체크박스 클릭하면 체크박스 다이얼로그 띄우기
-        HabitFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        HabitFragment_ListCountText = habitView.findViewById(R.id.habitListcount);
+
+        HabitFragment_list_today.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                clickedPosition = position; // 클릭 위치 전역변수로 넘김
+            public void onClick(View view) {
+                Date date = calendar.getTime();
+                Instant instant = date.toInstant();
+                ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+                LocalDate calendarDate = zonedDateTime.toLocalDate();
 
-                dialog = new HabitDialog(getActivity(), HabitFragment_listAdapter, HabitFragment_ListCountText, clickedPosition, "To-Do", HabitFragment_listView);
-                dialog.show();
+                selectedDate = calendarDate;
 
-                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
+                onResume();
             }
         });
 
-        // Inflate the layout for this fragment
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        selectedDateStr = selectedDate.format(formatter);
+
+        listLayout = habitView.findViewById(R.id.todoList_add_position);
+        listLayout.setVisibility(View.VISIBLE);
+        nothingMessage = habitView.findViewById(R.id.nothingMessage);
+
+
+
+//        /*
+//         * 리스트뷰 관련 코드
+//         * */
+//        // 리스트뷰 연결
+//        HabitFragment_listView = habitView.findViewById(R.id.habit_habitList);
+//        // 리스트뷰 어뎁터
+//        HabitFragment_listAdapter = new HabitListAdapter();
+//
+//        // 리스트뷰 테스트 -디비에서 가져오는 걸로 바꿔야함
+//        HabitFragment_listAdapter.addItem(new ListItem("물 1L 이상 마시기"));
+//        HabitFragment_listAdapter.addItem(new ListItem("운동 30분"));
+//        HabitFragment_listAdapter.addItem(new ListItem("영양제 챙겨 먹기"));
+//        HabitFragment_listView.setAdapter(HabitFragment_listAdapter);
+//
+//        // 개수 텍스트뷰에 리스트 아이템 개수 출력 -db쿼리 카운트해서 가져오는게 좋을지 지금처럼 리스트뷰.getCount()하는게 좋을지 고민중
+//        HabitFragment_ListCountText = habitView.findViewById(R.id.habitListcount);
+//        HabitFragment_ListCountText.setText(String.valueOf(HabitFragment_listView.getCount()));
+//
+//
+//        // habit은 달성여부를 사용자가 체크하는게 아니고 nfc 태그 이용해서 체크해야됨 -> 다이얼로그 관련 코드 일단 주석처리 -> nfc 체크o 아이콘은 drawable/nfc_check.png 사용
+//        /*
+//         * 다이얼로그 관련
+//         * */
+//        // 리스트뷰 아이템 체크박스 클릭하면 체크박스 다이얼로그 띄우기
+//        HabitFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                clickedPosition = position; // 클릭 위치 전역변수로 넘김
+//
+//                dialog = new HabitDialog(getActivity(), HabitFragment_listAdapter, HabitFragment_ListCountText, clickedPosition, "To-Do", HabitFragment_listView);
+//                dialog.show();
+//
+//                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
+//                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        // Inflate the layout for this fragment
         return habitView;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        setMonthView();
+
+        if (nothingMessage == null){
+            nothingMessage = habitView.findViewById(R.id.nothingMessage);
+//            System.out.println("onResume에서 nothingMessage 연결");
+        }
+
+        if (HabitFragment_ListCountText == null){
+            HabitFragment_ListCountText = habitView.findViewById(R.id.habitListcount);
+        }
+
+        if (listLayout != null){
+            listLayout.removeAllViewsInLayout();
+            listLayout.removeViewInLayout(listLayout);
+
+            selectedDateStr = selectedDate.format(formatter);
+
+            checkTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "habit" + "/" + selectedDateStr;
+            checkTupleExistAPI = new ApiService();
+            checkTupleExistAPI.getUrl(checkTupleExistURL);
+
+            if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
+                nothingMessage.setVisibility(View.VISIBLE);
+                // 모든 투두리스트 개수 합쳐서 출력하기 위해 HabitFragment_ListCountText변수 추가
+                HabitFragment_ListCountText.setText(checkTupleExistAPI.getValue("is_tuple_exist"));
+            }else{
+                nothingMessage.setVisibility(View.GONE);
+//                System.out.println("onResume에서 nothingMessage Gone 실행");
+                getHabitFromServer();
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void getHabitFromServer() {
+        habitURL = "http://203.250.133.162:8080/habitAPI/get_habit_today/" + loginID + "/" + selectedDateStr;
+        getHabitListAPI = new ApiService();
+        getHabitListAPI.getUrl(habitURL);
+
+        HabitFragment_ListCountText.setText(getHabitListAPI.getValue("habit_today_total"));
+        System.out.println("해빗 토탈: " + getHabitListAPI.getValue("habit_today_total"));
+
+        HabitFragment_listAdapter = new HabitListAdapter();
+        HabitFragment_listAdapter.setListener(HabitFragment.this);
+        HabitFragment_listView = new ListView(getContext());
+
+        HabitFragment_listView.setNestedScrollingEnabled(false);
+        HabitFragment_listView.setDivider(null);    // 디바이더 제거
+        HabitFragment_listView.setDividerHeight(20);
+
+        for (int i = 0; i < Integer.parseInt(getHabitListAPI.getValue("habit_today_total")); i++){
+            HabitFragment_listAdapter.addItem(
+                    new ListItem(getHabitListAPI.getValue("habit_list_id"+i), getHabitListAPI.getValue("habit_name"+i), selectedDateStr,
+                            getHabitListAPI.getValue("habit_color"+i), getHabitListAPI.getValue("habit_startDate"+i),
+                            getHabitListAPI.getValue("habit_endDate"+i), Integer.parseInt(getHabitListAPI.getValue("habit_state"+i)))
+            );
+        }
+        HabitFragment_listView.setAdapter(HabitFragment_listAdapter);
+        listLayout.addView(HabitFragment_listView);
+
+        // 스크롤 뷰와 리스트뷰 충돌방지 용 리스트뷰 높이 지정
+        int totalHeight = 0;
+        ViewGroup.LayoutParams params;
+        for (int i = 0; i < Integer.parseInt(getHabitListAPI.getValue("habit_today_total")); i++){
+            // 모든 항목을 표시하기 위해 리스트뷰의 높이를 계산
+            View listItem = HabitFragment_listAdapter.getView(i, null, HabitFragment_listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        // 리스트뷰의 높이를 고정
+        params = HabitFragment_listView.getLayoutParams();
+        params.height = totalHeight + (HabitFragment_listView.getDividerHeight() * (HabitFragment_listAdapter.getCount() - 1));
+        HabitFragment_listView.setLayoutParams(params);
+
+        HabitFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                System.out.println("이거 실행됨");
+                clickedPosition = position;
+
+                dialog = new HabitDialog(getActivity(), HabitFragment_listAdapter, clickedPosition, "HABIT", HabitFragment_listView);
+                dialog.setParentFragment(HabitFragment.this);
+                dialog.show();
+            }
+        });
+
     }
 
     // 날짜 타입 설정
@@ -173,6 +323,7 @@ public class HabitFragment extends Fragment {
         ArrayList<LocalDate> dayList = daysInMonthArray(CalendarUtill.selectedDate);
 
         HalfCalendarAdapter halfAdapter = new HalfCalendarAdapter(dayList);
+        halfAdapter.setParentFragment(HabitFragment.this);
 
         // 레이아웃 설정 (열 7개)
         RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity().getApplicationContext(), 7);
@@ -208,5 +359,12 @@ public class HabitFragment extends Fragment {
             }
         }
         return dayList;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onCheckButtonClicked(int position, HabitDialog habitDialog) {
+        // Handle check button click event
+        habitDialog.setParentFragment(HabitFragment.this);
     }
 }

@@ -11,16 +11,23 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 
 import com.example.for_j.dialog.TimePickCategoryDialog;
 
 public class TimeTrackerSetDateNew extends AppCompatActivity {
 
-    private EditText TRSDN_Title;   // 타임트래커 타이틀
-    private Button TRSDN_CategortBtn;   // 타임트래커 카테고리 버튼
-    private Button TRSDN_Cancle, TRSDN_Save;    // 타임트래커 저장, 취소 버튼
-    private Button TRSDN_NFCBtn;
+    // 타임트래커 타이틀
+    private EditText TRSDN_Title;
+    // 타임트래커 카테고리 버튼
+    private Button TRSDN_CategortBtn;
+    // 타임트래커 nfc 등록 버튼
+    private AppCompatButton TRSDN_NFCBtn;
+    // 타임트래커 취소 버튼
+    private AppCompatButton TRSDN_Cancle;
+    // 타임트래커 저장 버튼
+    private AppCompatButton TRSDN_Save;
 
     private String loginID = null;
     private String name = null;
@@ -113,7 +120,7 @@ public class TimeTrackerSetDateNew extends AppCompatActivity {
         TRSDN_NFCBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent RNFCIntent = new Intent(TimeTrackerSetDateNew.this, RegisterNFC.class);
+                Intent RNFCIntent = new Intent(TimeTrackerSetDateNew.this, HabitRegisterNFC.class);
                 startActivity(RNFCIntent);
             }
         });

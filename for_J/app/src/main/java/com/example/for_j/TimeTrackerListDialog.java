@@ -14,20 +14,28 @@ public class TimeTrackerListDialog {
     private final Dialog dialog;
     private final Context context;
     private final TimeListItemAdapter listItemAdapter;
-    private final TextView listCountText;
     private final int clickedPosition;
     private final String dialogTitle;
     private final ListView listView;
+    //private final TextView listCountText;
 
+    // 서버 통신 변수
+    private String deleteURL;
+    private ApiService deleteAPI;
 
-    public TimeTrackerListDialog(Context context, TimeListItemAdapter listItemAdapter, TextView listCountText, int clickedPosition, String dialogTitle, ListView listView) {
+    private String loginId = "123";
+    private String id;
+    //private int state;
+
+    //public TimeTrackerListDialog(Context context, TimeListItemAdapter listItemAdapter, TextView listCountText, int clickedPosition, String dialogTitle, ListView listView) {
+    public TimeTrackerListDialog(Context context, TimeListItemAdapter listItemAdapter, int clickedPosition, String dialogTitle, ListView listView) {
         this.context = context;
         this.listItemAdapter = listItemAdapter;
-        this.listCountText = listCountText;
+        //this.listCountText = listCountText;
         this.clickedPosition = clickedPosition;
         this.dialogTitle = dialogTitle;
 
-        // 다이얼로그 객체 생성 -  checK_box_dialog.xml설정
+        // 다이얼로그 객체 생성 -  time_dialog.xml설정
         dialog = new Dialog(context);
         this.listView = listView;
         dialog.setContentView(R.layout.time_dialog);
@@ -37,9 +45,14 @@ public class TimeTrackerListDialog {
         exitBtn.setOnClickListener(v -> dialog.dismiss());
 
         // 다이얼로그 텍스트뷰 설정
+        TextView title = dialog.findViewById(R.id.dialog_categoryTitle);
         TextView timeName = dialog.findViewById(R.id.timeDialog_listTitle);
 
+        title.setText(dialogTitle);
         timeName.setText(String.valueOf(listItemAdapter.getListName(clickedPosition)));
+
+
+        id = String.valueOf(listItemAdapter.getListId(clickedPosition));
 
         // 다이얼로그 삭제/수정 버튼 클릭 이벤트
         // 삭제
@@ -47,8 +60,8 @@ public class TimeTrackerListDialog {
         deleteBtn.setOnClickListener(v -> deleteListItem());
 
         // 수정
-        View updateBtn = dialog.findViewById(R.id.timeDialog_updateBtn);
-        updateBtn.setOnClickListener(v -> modifyCHabitList());
+//        View updateBtn = dialog.findViewById(R.id.timeDialog_updateBtn);
+//        updateBtn.setOnClickListener(v -> modifyCHabitList());
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
@@ -57,11 +70,15 @@ public class TimeTrackerListDialog {
     }
 
     private void deleteListItem() {
-        ArrayList<ListItem> listItems = listItemAdapter.getListItem();
+        deleteURL = "http://203.250.133.162:8080/timeAPI/time_delete/" + loginId + "/" + id;
+        deleteAPI = new ApiService();
+        deleteAPI.deleteUrl(deleteURL);
 
-        listItems.remove(clickedPosition);
-        listItemAdapter.notifyDataSetChanged();
-        listCountText.setText(String.valueOf(listItemAdapter.getCount()));
+//        ArrayList<ListItem> listItems = listItemAdapter.getListItem();
+//
+//        listItems.remove(clickedPosition);
+//        listItemAdapter.notifyDataSetChanged();
+        //listCountText.setText(String.valueOf(listItemAdapter.getCount()));
 
         dialog.dismiss();
     }

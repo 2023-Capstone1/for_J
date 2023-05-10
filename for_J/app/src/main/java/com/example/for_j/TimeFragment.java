@@ -3,26 +3,23 @@ package com.example.for_j;
 import static com.example.for_j.CalendarUtill.selectedDate;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.Chronometer;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,46 +28,75 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class TimeFragment extends Fragment {
 
     // 달력 관련 변수
-    TextView TimeFragment_monthYearText; // 년월 텍스트뷰
-    RecyclerView TimeFragment_recyclerView; // RecyclerView 객체 생성
-    ImageButton TimeFragment_prevBtn; // 이전달 이동 버튼
-    ImageButton TimeFragment_nextBtn; // 다음달 이동 버튼
+    private TextView TimeFragment_monthYearText; // 년월 텍스트뷰
+    private RecyclerView TimeFragment_recyclerView; // RecyclerView 객체 생성
+    private ImageButton TimeFragment_prevBtn; // 이전달 이동 버튼
+    private ImageButton TimeFragment_nextBtn; // 다음달 이동 버튼
 
-    // 리스트뷰 관련 변수
-    ListView TimeFragment_listView; // 이거 아래 생성부분에서 반복문으로 생성 돌린만큼 변수 늘려야함
-    ListView TimeFragment_listView2;
-    TimeListItemAdapter TimeFragment_listAdapter;
-    FrameLayout frame;
-    ImageView Play;
-    ImageView Pause;
-    Chronometer chrono;
     // 리스트 개수를 보여주기위한 텍스트뷰
-    TextView TimeFragment_listCountText;
+    private TextView TimeFragment_listCountText;
+    private RelativeLayout nothingMessage;
+
     // 리스트뷰 내부 아이템 클릭 시 클릭 위치 전역 변수로 선언 -> 다이얼로그에 일정 이름을 보여주기 위함
     private int clickedPosition = -1;
     // 리스트뷰 오른쪽 상단에 있는 오늘 날짜 표시 텍스트뷰
-    TextView TimeFragment_list_today;
+    private TextView TimeFragment_list_today;
 
     // 다이얼로그 관련
-    TimeTrackerListDialog dialog;
+    private TimeTrackerListDialog dialog;
 
     // +버튼
-    ImageButton moveTimeSetDateNew;
+    private ImageButton moveTimeSetDateNew;
 
+
+
+    // 서버 통신 관련 변수
+    private ApiService checkTupleExistAPI;
+    private String checkTupleExistURL;
+    private ApiService getTimeDateCateAPI;
+    private ApiService getTimeCateColorAPI;
+    private String getCategoryUrl;
+    private ApiService getTimeListAPI;
+    private String timeUrl;
+    private Calendar calendar = Calendar.getInstance();
+    private String loginID = "123";
+    @SuppressLint("DefaultLocale")
+    private String today = calendar.get(Calendar.YEAR) + "-" + String.format("%02d", calendar.get(Calendar.MONTH)+1) + "-" + String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH));
+    private int cateNum = 0;
+    private int[] timeNum;
+    private int isTodo = 0;
+
+
+
+
+    private LinearLayout listLayoutSet;
+    private LinearLayout[] listlayoutarr;
+    private List<String> distinctCNameList;
+    private List<String> distinctCColorlist;
+    private View timeView;
+
+    private ListView[] timeFragment_listView;
+    private TimeListItemAdapter[] timeFragment_listAdapter;
 
     @SuppressLint({"MissingInflatedId", "ResourceType"})
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // 투두 프래그먼트 뷰 생성
-        View timeView = inflater.inflate(R.layout.fragment_time, container, false);
+        // 타임 프래그먼트 뷰 생성
+        timeView = inflater.inflate(R.layout.fragment_time, container, false);
 
-        // 투두 리스트 추가 인텐트로 이동
+        // 타임 리스트 추가 인텐트로 이동
         moveTimeSetDateNew = timeView.findViewById(R.id.time_listAddBtn);
         moveTimeSetDateNew.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,90 +179,367 @@ public class TimeFragment extends Fragment {
 //        // 리스트뷰 연결 -> 위 코드처럼 xml자바로 추가했을 때 사용
 //        ToDoFragment_listView = scrollView.findViewWithTag("todo_category_list");
 
-        // 리스트뷰 연결
-        TimeFragment_listView = timeView.findViewById(R.id.time_list);
-        TimeFragment_listView2 = timeView.findViewById(R.id.time_list2);
-        // 리스트뷰 어댑터 객체 생성
-        TimeFragment_listAdapter = new TimeListItemAdapter();
-
-        // 리스트뷰 테스트용 -디비에서 가져오는 걸로 바꿔야함
-        TimeFragment_listAdapter.addItem(new ListItem("안드로이드 과제 제출"));
-        TimeFragment_listAdapter.addItem(new ListItem("캡스톤 회의"));
-        TimeFragment_listView.setAdapter(TimeFragment_listAdapter);
-        TimeFragment_listView2.setAdapter(TimeFragment_listAdapter);
-
-        // toDoFragment_ListNumText 리스트 개수 출력 -db쿼리 카운트해서 가져오는게 좋을지 지금처럼 리스트뷰.getCount()하는게 좋을지 고민중
-        TimeFragment_listCountText = timeView.findViewById(R.id.timeListCount);
-        // 모든 투두리스트 개수 합쳐서 출력하기 위해 ToDoFragment_listCount변수 추가
-        TimeFragment_listCountText.setText(String.valueOf(TimeFragment_listView.getCount() + TimeFragment_listView2.getCount())); // 두 리스트뷰 아이템 개수 합쳐서 출력
+//        // 리스트뷰 연결
+//        TimeFragment_listView = timeView.findViewById(R.id.time_list);
+//        TimeFragment_listView2 = timeView.findViewById(R.id.time_list2);
+//        // 리스트뷰 어댑터 객체 생성
+//        TimeFragment_listAdapter = new TimeListItemAdapter();
+//
+//        // 리스트뷰 테스트용 -디비에서 가져오는 걸로 바꿔야함
+//        TimeFragment_listAdapter.addItem(new TimeListItem("안드로이드 과제 제출"));
+//        TimeFragment_listAdapter.addItem(new TimeListItem("캡스톤 회의"));
+//        TimeFragment_listView.setAdapter(TimeFragment_listAdapter);
+//        TimeFragment_listView2.setAdapter(TimeFragment_listAdapter);
+//
+//        // toDoFragment_ListNumText 리스트 개수 출력 -db쿼리 카운트해서 가져오는게 좋을지 지금처럼 리스트뷰.getCount()하는게 좋을지 고민중
+//        TimeFragment_listCountText = timeView.findViewById(R.id.timeListCount);
+//        // 모든 투두리스트 개수 합쳐서 출력하기 위해 ToDoFragment_listCount변수 추가
+//        TimeFragment_listCountText.setText(String.valueOf(TimeFragment_listView.getCount() + TimeFragment_listView2.getCount())); // 두 리스트뷰 아이템 개수 합쳐서 출력
+//
+//        // 리스트뷰 오른쪽 위에 오늘 날짜 표시
+//        TimeFragment_list_today = timeView.findViewById(R.id.timeToday);
+//        TimeFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
+//
+//
+//        // 나중에 실행해볼것
+//        /////////////////////////////////////////////////////
+//        Play = timeView.findViewById(R.id.play);
+//        Pause = timeView.findViewById(R.id.pause);
+//        chrono = timeView.findViewById(R.id.timer);
+////
+////        TimeFragment_listView.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View view) {
+////                chrono.setBase(SystemClock.elapsedRealtime());
+////                chrono.start();
+////                Play.setVisibility(View.INVISIBLE);
+////                Pause.setVisibility(View.VISIBLE);
+////            }
+////        });
+////
+////        TimeFragment_listView.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View view) {
+////                chrono.stop();
+////                Play.setVisibility(View.VISIBLE);
+////                Pause.setVisibility(View.INVISIBLE);
+////            }
+////        });
+//        /////////////////////////////////////////////////////
+//
+//
+//
+//
+//        /*
+//         * 다이얼로그 관련
+//         * */
+//        // 리스트뷰 클릭하면 다이얼로그 띄우기
+////        TimeFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+////            @Override
+////            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////                clickedPosition = position; // 클릭 위치 전역변수로 넘김
+////
+////                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView);
+////                dialog.show();
+////
+////                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
+////                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
+////            }
+////        });
+////
+////        TimeFragment_listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+////            @Override
+////            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////                clickedPosition = position; // 클릭 위치 전역변수로 넘김
+////
+////                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView2);
+////                dialog.show();
+////
+////                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
+////                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
+////            }
+////        });
 
         // 리스트뷰 오른쪽 위에 오늘 날짜 표시
         TimeFragment_list_today = timeView.findViewById(R.id.timeToday);
         TimeFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
 
+        listLayoutSet = timeView.findViewById(R.id.timeList_add_position);
+        listLayoutSet.setVisibility(View.VISIBLE);
+        nothingMessage = timeView.findViewById(R.id.nothingMessage);
+//        System.out.println("onCreate에서 nothingMessage 연결");
 
-        // 나중에 실행해볼것
-        /////////////////////////////////////////////////////
-        Play = timeView.findViewById(R.id.play);
-        Pause = timeView.findViewById(R.id.pause);
-        chrono = timeView.findViewById(R.id.timer);
-//
-//        TimeFragment_listView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                chrono.setBase(SystemClock.elapsedRealtime());
-//                chrono.start();
-//                Play.setVisibility(View.INVISIBLE);
-//                Pause.setVisibility(View.VISIBLE);
-//            }
-//        });
-//
-//        TimeFragment_listView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                chrono.stop();
-//                Play.setVisibility(View.VISIBLE);
-//                Pause.setVisibility(View.INVISIBLE);
-//            }
-//        });
-        /////////////////////////////////////////////////////
+        // get_is_tuple_exist로 0이면 nothingMessage 띄우기
+        // 1이면 아래꺼 실행하기
+        checkTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "time" + "/" + today;
+        checkTupleExistAPI = new ApiService();
+        checkTupleExistAPI.getUrl(checkTupleExistURL);
+//        System.out.println("is_tuple_exist type: " + checkTupleExistAPI.getValue("is_tuple_exist").getClass().getTypeName());
+//        System.out.println("is_tuple_exist: " + checkTupleExistAPI.getValue("is_tuple_exist"));
 
 
-
-
-        /*
-         * 다이얼로그 관련
-         * */
-        // 리스트뷰 클릭하면 다이얼로그 띄우기
-//        TimeFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                clickedPosition = position; // 클릭 위치 전역변수로 넘김
-//
-//                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView);
-//                dialog.show();
-//
-//                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-//                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        TimeFragment_listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                clickedPosition = position; // 클릭 위치 전역변수로 넘김
-//
-//                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView2);
-//                dialog.show();
-//
-//                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-//                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
+            nothingMessage.setVisibility(View.VISIBLE);
+//            System.out.println("onCreate에서 nothingMessage VISIBLE 실행");
+//            Toast toast = Toast.makeText(todoView.getContext(),"onCreate 서버에 값 없음", Toast.LENGTH_SHORT);
+//            toast.show();
+        } else{
+            nothingMessage.setVisibility(View.GONE);
+//            System.out.println("onCreate에서 nothingMessage Gone 실행");
+            getCategoryFromServer();
+            getTimeFromServer();
+        }
 
 
         // Inflate the layout for this fragment
         return timeView;
+    }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Rerun the code from the beginning
+
+        if (nothingMessage == null){
+            nothingMessage = timeView.findViewById(R.id.nothingMessage);
+//            System.out.println("onResume에서 nothingMessage 연결");
+        }
+
+        if (listLayoutSet != null){
+            listLayoutSet.removeAllViewsInLayout();
+            listLayoutSet.removeViewInLayout(listLayoutSet);
+            checkTupleExistAPI.getUrl(checkTupleExistURL);
+
+            if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
+                nothingMessage.setVisibility(View.VISIBLE);
+//                System.out.println("onResume에서 nothingMessage visible 실행");
+//                Toast toast = Toast.makeText(todoView.getContext(),"Resume 서버에 값 없음", Toast.LENGTH_SHORT);
+//                toast.show();
+
+            }else{
+                nothingMessage.setVisibility(View.GONE);
+//                System.out.println("onResume에서 nothingMessage Gone 실행");
+                getCategoryFromServer();
+                getTimeFromServer();
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void getCategoryFromServer(){
+        // 서버에서 카테고리 가지고 오기
+        getCategoryUrl = "http://203.250.133.162:8080/timeAPI/get_time_date_category/" + loginID + "/" + today + "/" + isTodo;
+        getTimeDateCateAPI = new ApiService();
+        getTimeDateCateAPI.getUrl(getCategoryUrl);
+
+
+        // 중복 카테고리 중복 처리
+        String[] cName = new String[Integer.parseInt(getTimeDateCateAPI.getValue("time_category_total"))];
+        int categoryCount = 0;
+        if (getTimeDateCateAPI.getValue("time_category_total") != null && !getTimeDateCateAPI.getValue("time_category_total").isEmpty()) {
+            categoryCount = Integer.parseInt(getTimeDateCateAPI.getValue("time_category_total"));
+        }
+        for (int i = 0; i < Integer.parseInt(getTimeDateCateAPI.getValue("time_category_total")); i++){
+            cName[i] = getTimeDateCateAPI.getValue("time_cName"+i);
+        }
+        Set<String> setDistinctCName = new HashSet<>(Arrays.asList(cName));
+        cateNum = setDistinctCName.size();
+
+        // 중복 처리된 카테고리 리스트
+        distinctCNameList = new ArrayList<>(setDistinctCName);
+        distinctCColorlist = new ArrayList<>();
+
+        // 리스트뷰가 들어가야하는 리니어 레이아웃 연결
+        if (listLayoutSet == null){
+            listLayoutSet = timeView.findViewById(R.id.timeList_add_position);
+        }
+        listlayoutarr = new LinearLayout[cateNum];
+
+        for (int i = 0; i < listlayoutarr.length; i++) {
+            listlayoutarr[i] = new LinearLayout(timeView.getContext());
+
+            // set the layout parameters and properties of the LinearLayout
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            listlayoutarr[i].setLayoutParams(layoutParams);
+            listlayoutarr[i].setOrientation(LinearLayout.VERTICAL);
+
+            listLayoutSet.addView(listlayoutarr[i]);
+        }
+
+        // 카테고리 버튼 만들기 (clickable = false)
+        for (int i = 0; i < cateNum; i++){
+            AppCompatButton button = new AppCompatButton(timeView.getContext());
+            button.setText(distinctCNameList.get(i)); // 버튼 텍스트 설정
+            button.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    120
+            );
+            params.setMargins(20, 20, 20, 20); // set margin values in pixels
+
+            button.setLayoutParams(params);
+            button.setTypeface(null, Typeface.BOLD);
+
+            GradientDrawable shape = new GradientDrawable();
+            shape.setShape(GradientDrawable.RECTANGLE);
+            shape.setCornerRadii(new float[] { 16, 16, 16, 16, 16, 16, 16, 16 }); // set corner radii
+
+            getCategoryUrl = "http://203.250.133.162:8080/categoryAPI/get_time_category/" + loginID + "/" + distinctCNameList.get(i) + "/" + isTodo;
+            getTimeCateColorAPI = new ApiService();
+            getTimeCateColorAPI.getUrl(getCategoryUrl);
+//            System.out.println(getCategoryUrl);
+
+            button.setClickable(false);
+            int colorValue;
+            switch (getTimeCateColorAPI.getValue("time_category_color")){
+                case "pink":
+                    colorValue = timeView.getContext().getColor(R.color.pink);
+                    shape.setColor(colorValue);
+                    colorValue = timeView.getContext().getColor(R.color.lighter_pink);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("pink");
+                    break;
+                case "crimson":
+                    colorValue = timeView.getContext().getColor(R.color.crimson);
+                    shape.setColor(colorValue);
+                    colorValue = timeView.getContext().getColor(R.color.lighter_crimson);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("crimson");
+                    break;
+                case "orange":
+                    colorValue = timeView.getContext().getColor(R.color.orange);
+                    shape.setColor(colorValue);
+                    colorValue = timeView.getContext().getColor(R.color.lighter_orange);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("orange");
+                    break;
+                case "yellow":
+                    colorValue = timeView.getContext().getColor(R.color.yellow);
+                    shape.setColor(colorValue);
+                    colorValue = timeView.getContext().getColor(R.color.lighter_yellow);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("yellow");
+                    break;
+                case "light_green":
+                    colorValue = timeView.getContext().getColor(R.color.light_green);
+                    shape.setColor(colorValue);
+                    colorValue = timeView.getContext().getColor(R.color.lighter_light_green);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("light_green");
+                    break;
+                case "turquoise":
+                    colorValue = timeView.getContext().getColor(R.color.turquoise);
+                    shape.setColor(colorValue);
+                    colorValue = timeView.getContext().getColor(R.color.lighter_turquoise);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("turquoise");
+                    break;
+                case "pastel_blue":
+                    colorValue = timeView.getContext().getColor(R.color.pastel_blue);
+                    shape.setColor(colorValue);
+                    colorValue = timeView.getContext().getColor(R.color.lighter_pastel_blue);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("pastel_blue");
+                    break;
+                case "pastel_purple":
+                    colorValue = timeView.getContext().getColor(R.color.pastel_purple);
+                    shape.setColor(colorValue);
+                    colorValue = timeView.getContext().getColor(R.color.lighter_pastel_purple);
+                    button.setTextColor(colorValue);
+                    distinctCColorlist.add("pastel_purple");
+                    break;
+            }
+            button.setBackground(shape);
+            listlayoutarr[i].addView(button); // 버튼을 LinearLayout에 추가
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void getTimeFromServer() {
+
+        // 서버에서 타임 리스트 가지고 와서 카테고리 별로 분리해서 리스트에 추가하기
+        timeUrl = "http://203.250.133.162:8080/timeAPI/get_time_list/" + loginID + "/" + today;
+        getTimeListAPI = new ApiService();
+        getTimeListAPI.getUrl(timeUrl);
+
+
+//        ListView[] timeFragment_listView;   // 카테고리 하나에 포함되어 있는 리스트뷰 배열
+//        TimeListItemAdapter[] timeFragment_listAdapter; // 카테고리 하나에 포함되어 있는 리스트어뎁터 배열
+//        LinearLayout[] listlayoutarr;   // 카테고리별 레이아웃
+//        List<String> distinctCNameList; // 카테고리 리스트
+//        private int[] timeNum;  // 카테고리별 투두 수
+
+        // timeFragment_ListNumText 리스트 개수 출력
+        TimeFragment_listCountText = timeView.findViewById(R.id.timeListCount);
+        // 모든 타임리스트 개수 합쳐서 출력하기 위해 TimeFragment_listCount변수 추가
+        TimeFragment_listCountText.setText(getTimeListAPI.getValue("time_total"));
+
+
+        // 카테고리 개수만큼의 리스트뷰 배열 만들기
+        timeFragment_listView = new ListView[cateNum];
+        timeFragment_listAdapter = new TimeListItemAdapter[cateNum];
+        timeNum = new int[cateNum];
+
+        // 각각 카테고리에 포함되어 있는 리스트 가지고 생성
+        for (int i = 0; i < cateNum; i++){
+            timeFragment_listAdapter[i] = new TimeListItemAdapter();
+            timeFragment_listView[i] = new ListView(getContext());
+            timeFragment_listView[i].setNestedScrollingEnabled(false);
+            timeFragment_listView[i].setDivider(null); // 디바이더 제거
+            timeFragment_listView[i].setDividerHeight(20);
+            for (int j = 0; j < Integer.parseInt(getTimeListAPI.getValue("time_total")); j++){
+                if (Objects.equals(distinctCNameList.get(i), getTimeListAPI.getValue("time_cName" + j))){
+                    timeFragment_listAdapter[i].addItem(
+                            new TimeListItem(getTimeListAPI.getValue("time_list_id"+j), getTimeListAPI.getValue("time_name"+j), today,
+                                    distinctCNameList.get(i), distinctCColorlist.get(i)));
+
+                }
+            }
+            // 리스트 어뎁터 연결
+            timeFragment_listView[i].setAdapter(timeFragment_listAdapter[i]);
+
+            listlayoutarr[i].addView(timeFragment_listView[i]);
+        }
+
+
+        // 스크롤 뷰와 리스트뷰 충돌방지 용 리스트뷰 높이 지정
+        for (int i = 0; i < cateNum; i++){
+            int totalHeight = 0;
+            for (int j = 0; j < timeFragment_listAdapter[i].getCount(); j++){
+                // 모든 항목을 표시하기 위해 리스트뷰의 높이를 계산
+                View listItem = timeFragment_listAdapter[i].getView(j, null, timeFragment_listView[i]);
+                listItem.measure(0,0);
+                totalHeight += listItem.getMeasuredHeight();
+            }
+            // 리스트뷰의 높이를 고정
+            ViewGroup.LayoutParams params = timeFragment_listView[i].getLayoutParams();
+            params.height = totalHeight + (timeFragment_listView[i].getDividerHeight() * (timeFragment_listAdapter[i].getCount() - 1));
+            timeFragment_listView[i].setLayoutParams(params);
+        }
+
+        for (int i = 0; i < cateNum; i++){
+            final int listViewPage = i;
+            timeFragment_listView[listViewPage].setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    clickedPosition = position; // 클릭 위치 전역변수로 넘김
+
+                    System.out.println("listViewPage: " + listViewPage);
+                    dialog = new TimeTrackerListDialog(getActivity(), timeFragment_listAdapter[listViewPage], clickedPosition, "Time", timeFragment_listView[listViewPage]);
+                    dialog.show();
+                    // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
+//                    Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     // 날짜 타입 설정

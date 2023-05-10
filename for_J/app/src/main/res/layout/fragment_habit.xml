@@ -172,15 +172,14 @@
 
             <android.widget.Button
                 android:id="@+id/habitToday"
-                android:layout_width="match_parent"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:layout_weight="3.5"
                 android:gravity="center"
                 android:text="29"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold"
-                android:textColor="@color/blueGray_900"
+                android:textColor="@color/indigo_400"
                 android:background="@drawable/list_item_background"
                 />
         </LinearLayout>
@@ -196,14 +195,29 @@
                 android:layout_height="match_parent"
                 android:fillViewport="true">
 
-                <ListView
-                    android:id="@+id/habit_habitList"
+                <LinearLayout
+                    android:id="@+id/todoList_add_position"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:dividerHeight="10dp"
-                    android:divider="@color/white">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="visible">
 
-                </ListView>
+                    <RelativeLayout
+                        android:id="@+id/nothingMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:visibility="gone">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="새로운 HABIT을 입력해주세요"
+                            android:layout_gravity="center"
+                            android:textSize="15sp"
+                            android:visibility="visible"
+                            />
+                    </RelativeLayout>
+                </LinearLayout>
             </ScrollView>
 
             <!--추가버튼 클릭 시 일정 추가 화면으로 이동-->

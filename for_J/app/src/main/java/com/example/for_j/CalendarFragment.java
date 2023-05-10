@@ -120,6 +120,7 @@ public class CalendarFragment extends Fragment {
         ArrayList<LocalDate> dayList = daysInMonthArray(CalendarUtill.selectedDate);
 
         CalendarAdapter adapter = new CalendarAdapter(dayList);
+        adapter.setParentFragment(CalendarFragment.this);
 
         // 레이아웃 설정 (열 7개)
         RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity().getApplicationContext(), 7);

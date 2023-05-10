@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,7 +16,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import androidx.annotation.RequiresApi;
 
 
 public class ToDoListDialog {
@@ -40,6 +41,13 @@ public class ToDoListDialog {
     private String id;
     private int state;
 
+    private ToDoFragment parentFragment;
+
+    public void setParentFragment(ToDoFragment parentFragment){
+        this.parentFragment = parentFragment;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public ToDoListDialog(Context context, ListItemAdapter listItemAdapter, int clickedPosition, String dialogTitle, ListView listView) {
         this.context = context;
         this.listItemAdapter = listItemAdapter;
@@ -144,16 +152,21 @@ public class ToDoListDialog {
         dialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void deleteListItem() {
         deleteURL = "http://203.250.133.162:8080/todoAPI/todo_delete/" + loginId + "/" + id;
         deleteAPI = new ApiService();
         deleteAPI.deleteUrl(deleteURL);
 
+        if (parentFragment != null){
+            parentFragment.onResume();
+        }
+
 //        ArrayList<ListItem> listItems = listItemAdapter.getListItem();
 //
 //        listItems.remove(clickedPosition);
 //        listItemAdapter.notifyDataSetChanged();
-        //listCountText.setText(String.valueOf(listItemAdapter.getCount()));
+//        listCountText.setText(String.valueOf(listItemAdapter.getCount()));
 
         dialog.dismiss();
     }

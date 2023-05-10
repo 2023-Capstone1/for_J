@@ -133,9 +133,60 @@
         android:layout_height="wrap_content"
         android:background="#efefef" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+
+        >
+
+        <ScrollView
+            android:id="@+id/todo_listScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:id="@+id/habitList_add_position"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <!--android:background="@color/white"-->
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/nothing"
+                    android:gravity="center"
+                    android:visibility="gone">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="없음"
+                        android:gravity="center"
+                        android:textSize="15sp"
+                        android:visibility="visible"/>
+
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
+
+
+
     <!--일정, habit, to-do 목록 자리-->
     <!--확장 리스트뷰 ExpandableListView-->
     <!--일정-->
+
+    <!--
+
     <ListView
         android:id="@+id/HalfCalendar_ScheduleList"
         android:layout_width="match_parent"
@@ -143,9 +194,12 @@
         android:background="@color/white">
 
 
-    </ListView>
+    </ListView> -->
 
     <!--리스트뷰랑 추가 버튼-->
+
+    <!--
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -163,18 +217,24 @@
                 android:dividerHeight="10dp"
                 android:divider="@color/white">
 
+
+
             </ListView>
-        </ScrollView>
 
-        <!--추가버튼 클릭 시 일정 추가 화면으로 이동-->
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom"
-            android:src="@drawable/plus_btn"
-            android:background="#000ff000">
+        </ScrollView> -->
 
-        </ImageButton>
-    </FrameLayout>
+    <!--추가버튼 클릭 시 일정 추가 화면으로 이동-->
+
+    <!--
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:src="@drawable/plus_btn"
+        android:background="#000ff000">
+
+    </ImageButton>
+</FrameLayout> -->
 
 </LinearLayout>

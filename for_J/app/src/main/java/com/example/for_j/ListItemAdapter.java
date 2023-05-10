@@ -24,6 +24,18 @@ public class ListItemAdapter extends BaseAdapter {
     public ArrayList<ListItem> items = new ArrayList<>();
     Context context;
 
+    private ToDoFragment parentFragment;
+
+    public interface ToDoListAdapterListener {
+        void onCheckButtonClicked(int position, ToDoListDialog toDoListDialog);
+    }
+
+    private ListItemAdapter.ToDoListAdapterListener mListener;
+
+    public void setListener(ListItemAdapter.ToDoListAdapterListener listener) {
+        mListener = listener;
+    }
+
     @Override
     public int getCount() {
         return items.size();
@@ -138,10 +150,17 @@ public class ListItemAdapter extends BaseAdapter {
 
         // ImageView에 OnClickListener 추가
         imageView.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 ToDoListDialog dialog = new ToDoListDialog(context, ListItemAdapter.this, position, "To-Do", (ListView)parent);
-                dialog.show();
+                System.out.println("mListener 투두 쪽 실행됨1");
+                if (mListener != null) {
+                    System.out.println("mListener 투두 쪽 실행됨2");
+                    mListener.onCheckButtonClicked(position, dialog);
+                    dialog.show();
+
+                }
             }
         });
 

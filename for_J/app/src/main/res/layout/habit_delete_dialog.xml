@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/HDD_layout"
+    android:layout_height="wrap_content"
+    android:layout_width="250dp"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_round_rectangle_10"
+    android:backgroundTint="@color/blueGray_50"
+    android:gravity="center"
+    >
+    <TextView
+        android:id="@+id/deletePositionCurrent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="현재 날짜 해빗 삭제"
+        android:layout_margin="8dp"/>
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@drawable/divider"
+        android:backgroundTint="@color/blueGray_700"/>
+    <TextView
+        android:id="@+id/deletePositionPre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="현재 날짜 포함 이전 해빗 삭제"
+        android:layout_margin="8dp"/>
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@drawable/divider"
+        android:backgroundTint="@color/blueGray_700"/>
+    <TextView
+        android:id="@+id/deletePositionNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="현재 날짜 포함 이후 해빗 삭제"
+        android:layout_margin="8dp"/>
+
+</LinearLayout>

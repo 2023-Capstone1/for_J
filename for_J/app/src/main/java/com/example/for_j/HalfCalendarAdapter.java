@@ -7,14 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class HalfCalendarAdapter extends RecyclerView.Adapter<HalfCalendarAdapter.CalendarViewHolder> {
     // 하프캘린더 날짜 어뎁터 만들기
@@ -22,6 +28,27 @@ public class HalfCalendarAdapter extends RecyclerView.Adapter<HalfCalendarAdapte
 
     // 클릭 이벤트
     public HalfCalendarAdapter(ArrayList<LocalDate> dayList) {this.dayList = dayList;}
+
+    private Calendar calendar = Calendar.getInstance();
+
+    private ToDoFragment todoParentFragment;
+    private HabitFragment habitParentFragment;
+    private Fragment parentFragment;
+
+    public void setParentFragment(ToDoFragment parentFragment){
+//        this.todoParentFragment = parentFragment;
+        this.parentFragment = parentFragment;
+
+    }
+
+    public void setParentFragment(HabitFragment parentFragment){
+//        this.habitParentFragment = parentFragment;
+        this.parentFragment = parentFragment;
+    }
+
+    public void setParentFragment(TimeFragment parentFragment){
+        this.parentFragment = parentFragment;
+    }
 
     // 화면 연결
     @NonNull
@@ -40,6 +67,14 @@ public class HalfCalendarAdapter extends RecyclerView.Adapter<HalfCalendarAdapte
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
         // 날짜 변수에 담기
         LocalDate day = dayList.get(position);
+
+
+        // Calendar를 LocalDate와 비교하기 형태 맞추기
+        Date date = calendar.getTime();
+        Instant instant = date.toInstant();
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        LocalDate calendarDate = zonedDateTime.toLocalDate();
+
         // 날짜 지정
         if (day == null) {
             holder.dayText.setText("");
@@ -47,35 +82,58 @@ public class HalfCalendarAdapter extends RecyclerView.Adapter<HalfCalendarAdapte
             // 해당 일자 넣기
             holder.dayText.setText(String.valueOf(day.getDayOfMonth()));
 
-            // 현재 날짜 색상 칠하기
+            // 선택 날짜 색상 칠하기
             if (day.equals(CalendarUtill.selectedDate)) {
-                holder.dayText.setTextColor(Color.WHITE); // 오늘 날짜 숫자 색상은 하얀색
-                holder.parentView.setBackgroundResource(R.drawable.today_background_shape); //오늘 날짜 배경 모양
+//                System.out.println(day + " " + calendar.getTime());
+                if (day.equals(calendarDate)){
+                    // 오늘날짜
+                    holder.dayText.setTextColor(ContextCompat.getColor(parentFragment.getContext(), R.color.indigo_100)); // 오늘 날짜 숫자 색상은 하얀색
+                    holder.parentView.setBackgroundResource(R.drawable.selected_today_background_shape); //오늘 날짜 배경 모양
+                } else{
+                    // 다른 날짜
+                    holder.dayText.setTextColor(ContextCompat.getColor(parentFragment.getContext(), R.color.indigo_400)); // 오늘 날짜 숫자 색상은 하얀색
+                    holder.parentView.setBackgroundResource(R.drawable.selected_date_background_shape); //오늘 날짜 배경 모양
+                }
+            }
+            // 토, 일 날짜 글씨 색 지정
+            else if ((position + 1) % 7 == 0) { // 토요일
+                holder.dayText.setTextColor(Color.BLUE); // 파랑
+//                System.out.println("파란색 토요일");
+            } else if (position == 0 || position % 7 == 0) { // 일요일
+                holder.dayText.setTextColor(Color.RED); // 빨강
+//                System.out.println("빨간색 일요일");
             } else {
-                holder.dayText.setTextColor(Color.BLACK); // 오늘 날짜 제외한 나머지 날짜 -> 기본 날짜 색 검정으로 지정
+                if (day.equals(calendarDate)){
+                    // 오늘날짜
+                    holder.dayText.setTextColor(ContextCompat.getColor(parentFragment.getContext(), R.color.indigo_100)); // 오늘 날짜 숫자 색상은 하얀색
+                    holder.parentView.setBackgroundResource(R.drawable.unselected_today_background_shape); //오늘 날짜 배경 모양
+                } else{
+                    holder.dayText.setTextColor(Color.BLACK); // 선택 날짜 제외한 나머지 날짜 -> 기본 날짜 색 검정으로 지정
+                }
             }
         }
 
-        // 토, 일 날짜 글씨 색 지정
-        if ((position + 1) % 7 == 0) { // 토요일
-            holder.dayText.setTextColor(Color.BLUE); // 파랑
-        } else if (position == 0 || position % 7 == 0) { // 일요일
-            holder.dayText.setTextColor(Color.RED); // 빨강
-        }
+
 
         // 날짜 클릭 이벤트
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 인터페이스 사용 안하는 방법 - 직접 메세지 기능 구현
-                int iYear = day.getYear(); // 년
-                int iMonth = day.getMonthValue(); // 월
-                int iDay = day.getDayOfMonth(); // 일
+                // Get the date of the clicked holder
+//                System.out.println(holder.getAdapterPosition());
+                LocalDate clickedDate = dayList.get(holder.getAdapterPosition());
 
-                String yearMonDay = iYear + "년" + iMonth + "월" + iDay + "일";
+                if (clickedDate != null){
+                    // Set the selected date to the clicked date
+                    CalendarUtill.selectedDate = clickedDate;
 
-                Toast.makeText(holder.itemView.getContext(), yearMonDay, Toast.LENGTH_SHORT).show();
+                    // Update the views to reflect the new selected date
+                    notifyDataSetChanged();
 
+                    if (parentFragment != null){
+                        parentFragment.onResume();
+                    }
+                }
             }
 
         });
