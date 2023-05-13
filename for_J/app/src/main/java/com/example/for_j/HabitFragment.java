@@ -122,6 +122,7 @@ public class HabitFragment extends Fragment implements HabitListAdapter.HabitLis
                 // 현재 월-1 변수에 담기
                 CalendarUtill.selectedDate = CalendarUtill.selectedDate.minusMonths(1);
                 setMonthView();
+                onResume();
             }
         });
         // 다음달 버튼 이벤트
@@ -132,6 +133,7 @@ public class HabitFragment extends Fragment implements HabitListAdapter.HabitLis
                 // 현재 월+1 변수에 담기
                 CalendarUtill.selectedDate = CalendarUtill.selectedDate.plusMonths(1);
                 setMonthView();
+                onResume();
             }
         });
 
@@ -162,46 +164,6 @@ public class HabitFragment extends Fragment implements HabitListAdapter.HabitLis
         listLayout.setVisibility(View.VISIBLE);
         nothingMessage = habitView.findViewById(R.id.nothingMessage);
 
-
-
-//        /*
-//         * 리스트뷰 관련 코드
-//         * */
-//        // 리스트뷰 연결
-//        HabitFragment_listView = habitView.findViewById(R.id.habit_habitList);
-//        // 리스트뷰 어뎁터
-//        HabitFragment_listAdapter = new HabitListAdapter();
-//
-//        // 리스트뷰 테스트 -디비에서 가져오는 걸로 바꿔야함
-//        HabitFragment_listAdapter.addItem(new ListItem("물 1L 이상 마시기"));
-//        HabitFragment_listAdapter.addItem(new ListItem("운동 30분"));
-//        HabitFragment_listAdapter.addItem(new ListItem("영양제 챙겨 먹기"));
-//        HabitFragment_listView.setAdapter(HabitFragment_listAdapter);
-//
-//        // 개수 텍스트뷰에 리스트 아이템 개수 출력 -db쿼리 카운트해서 가져오는게 좋을지 지금처럼 리스트뷰.getCount()하는게 좋을지 고민중
-//        HabitFragment_ListCountText = habitView.findViewById(R.id.habitListcount);
-//        HabitFragment_ListCountText.setText(String.valueOf(HabitFragment_listView.getCount()));
-//
-//
-//        // habit은 달성여부를 사용자가 체크하는게 아니고 nfc 태그 이용해서 체크해야됨 -> 다이얼로그 관련 코드 일단 주석처리 -> nfc 체크o 아이콘은 drawable/nfc_check.png 사용
-//        /*
-//         * 다이얼로그 관련
-//         * */
-//        // 리스트뷰 아이템 체크박스 클릭하면 체크박스 다이얼로그 띄우기
-//        HabitFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                clickedPosition = position; // 클릭 위치 전역변수로 넘김
-//
-//                dialog = new HabitDialog(getActivity(), HabitFragment_listAdapter, HabitFragment_ListCountText, clickedPosition, "To-Do", HabitFragment_listView);
-//                dialog.show();
-//
-//                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-//                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        // Inflate the layout for this fragment
         return habitView;
     }
 
@@ -294,6 +256,7 @@ public class HabitFragment extends Fragment implements HabitListAdapter.HabitLis
                 dialog = new HabitDialog(getActivity(), HabitFragment_listAdapter, clickedPosition, "HABIT", HabitFragment_listView);
                 dialog.setParentFragment(HabitFragment.this);
                 dialog.show();
+                onResume();
             }
         });
 

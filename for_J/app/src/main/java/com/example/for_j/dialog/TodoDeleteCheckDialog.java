@@ -14,26 +14,27 @@ import androidx.annotation.RequiresApi;
 
 import com.example.for_j.HabitFragment;
 import com.example.for_j.R;
+import com.example.for_j.ToDoFragment;
 
 import java.text.ParseException;
 
-public class HabitDeleteCheckDialog extends Dialog {
-    private HabitDeleteCheckDialog.HabitDeleteCheckDialogListener  habitDeleteCheckDialogListener;
-    public interface HabitDeleteCheckDialogListener {
+public class TodoDeleteCheckDialog extends Dialog {
+    private TodoDeleteCheckDialog.TodoDeleteCheckDialogListener  todoDeleteCheckDialogListener;
+
+
+    public interface TodoDeleteCheckDialogListener {
         void IsPositive(int isPositive) throws ParseException;
     }
     private Context context;
-    int deletePosition;
-    public HabitDeleteCheckDialog(@NonNull Context context, HabitDeleteCheckDialog.HabitDeleteCheckDialogListener habitDeleteCheckDialogListener, int deletePosition){
+    public TodoDeleteCheckDialog(@NonNull Context context, TodoDeleteCheckDialog.TodoDeleteCheckDialogListener todoDeleteCheckDialogListener){
         super(context);
         this.context = context;
-        this.habitDeleteCheckDialogListener = habitDeleteCheckDialogListener;
-        this.deletePosition = deletePosition;
+        this.todoDeleteCheckDialogListener = todoDeleteCheckDialogListener;
     }
 
-    private HabitFragment parentFragment;
+    private ToDoFragment parentFragment;
 
-    public void setParentFragment(HabitFragment parentFragment){
+    public void setParentFragment(ToDoFragment parentFragment){
         this.parentFragment = parentFragment;
     }
 
@@ -53,21 +54,7 @@ public class HabitDeleteCheckDialog extends Dialog {
         negativeBtn = findViewById(R.id.negativeBtn);
 
         String message = null;
-
-        switch(deletePosition){
-            case 0:
-                message = "현재 날짜 해빗을 삭제합니다. 삭제하면 복구가 불가능합니다. 삭제하시겠습니까?";
-                break;
-            case 1:
-                message = "현재 날짜 포함 이전 해빗을 삭제합니다. 삭제하면 복구가 불가능합니다. 삭제하시겠습니까?";
-                break;
-            case 2:
-                message = "현재 날짜 포함 이후 해빗을 삭제합니다. 삭제하면 복구가 불가능합니다. 삭제하시겠습니까?";
-                break;
-            case 3:
-                message = "해빗을 삭제합니다. 삭제하면 복구가 불가능합니다. 삭제하시겠습니까?";
-
-        }
+        message = "삭제하면 복구가 불가능합니다. 삭제하시겠습니까?";
         deleteMessage.setText(message);
 
 
@@ -76,7 +63,7 @@ public class HabitDeleteCheckDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 try {
-                    habitDeleteCheckDialogListener.IsPositive(1);
+                    todoDeleteCheckDialogListener.IsPositive(1);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -92,7 +79,7 @@ public class HabitDeleteCheckDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 try {
-                    habitDeleteCheckDialogListener.IsPositive(0);
+                    todoDeleteCheckDialogListener.IsPositive(0);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

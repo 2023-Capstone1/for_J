@@ -1,27 +1,36 @@
 package com.example.for_j;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 
 import com.example.for_j.dialog.TimePickCategoryDialog;
+import com.example.for_j.dialog.TimePickerFragment;
 
-public class TimeTrackerSetDateNew extends AppCompatActivity {
+import java.util.Calendar;
+
+public class TimeTrackerSetDateNew extends AppCompatActivity{
 
     // 타임트래커 타이틀
     private EditText TRSDN_Title;
     // 타임트래커 카테고리 버튼
-    private Button TRSDN_CategortBtn;
+    private Button TRSDN_CategoryBtn;
     // 타임트래커 nfc 등록 버튼
     private AppCompatButton TRSDN_NFCBtn;
     // 타임트래커 취소 버튼
@@ -35,12 +44,17 @@ public class TimeTrackerSetDateNew extends AppCompatActivity {
     private String caName = null;
     private String caColor = null;
     private String nfc = null;
+    private int state = 0;
+
+    private Calendar todayCal = Calendar.getInstance();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_tracker_set_date_new);
+
+        today = todayCal.get(Calendar.YEAR)+ "-" + todayCal.get(Calendar.MONTH) + "-" + todayCal.get(Calendar.DAY_OF_MONTH);
 
         // 타이틀바 텍스트 색상 지정
         ActionBar actionbar = getSupportActionBar();
@@ -49,56 +63,75 @@ public class TimeTrackerSetDateNew extends AppCompatActivity {
 
         // 타임 트래커 타이틀 xml 연동
         TRSDN_Title = findViewById(R.id.TRSDN_Title);
-        // 타임 트래커 카테고리 버튼 xml 연동
-        TRSDN_CategortBtn = findViewById(R.id.TRSDN_CategoryBtn);
 
+        // 타임 트래커 카테고리 버튼 xml 연동
+        TRSDN_CategoryBtn = findViewById(R.id.TRSDN_CategoryBtn);
         // 타임 트래커 카테고리 다이얼로그 클릭
-        TRSDN_CategortBtn.setOnClickListener(new View.OnClickListener() {
+        TRSDN_CategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // pickCategory 띄우기
                 TimePickCategoryDialog PCD = new TimePickCategoryDialog(TimeTrackerSetDateNew.this, new TimePickCategoryDialog.PickCategoryDialogListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void getCategoryData(String cName, String cColor) {
                         // 카테고리 색, 이름 가지고 오기, TodoSetDateNew.java 참고
 
-                        TRSDN_CategortBtn.setText(cName);
+                        TRSDN_CategoryBtn.setText(cName);
+                        TRSDN_CategoryBtn.setTypeface(null, Typeface.BOLD);
+
+                        int colorValue;
                         Drawable btnDrawable;
                         caName = cName;
-                        caColor = cColor;
+//                        caColor = cColor;
                         // 컬러설정
                         switch(cColor){
                             case "pink":
                                 btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_pink_selector);
-                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                TRSDN_CategoryBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_pink);
+                                TRSDN_CategoryBtn.setTextColor(colorValue);
                                 break;
                             case "crimson":
                                 btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_crimson_selector);
-                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                TRSDN_CategoryBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_crimson);
+                                TRSDN_CategoryBtn.setTextColor(colorValue);
                                 break;
                             case "orange":
                                 btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_orange_selector);
-                                TRSDN_CategortBtn.setBackground(btnDrawable);
-                                break;
+                                TRSDN_CategoryBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_orange);
+                                TRSDN_CategoryBtn.setTextColor(colorValue);
                             case "yellow":
                                 btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_yellow_selector);
-                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                TRSDN_CategoryBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_yellow);
+                                TRSDN_CategoryBtn.setTextColor(colorValue);
                                 break;
                             case "light_green":
                                 btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_light_green_selector);
-                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                TRSDN_CategoryBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_light_green);
+                                TRSDN_CategoryBtn.setTextColor(colorValue);
                                 break;
                             case "turquoise":
                                 btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_turquoise_selector);
-                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                TRSDN_CategoryBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_turquoise);
+                                TRSDN_CategoryBtn.setTextColor(colorValue);
                                 break;
                             case "pastel_blue":
                                 btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_pastel_blue_selector);
-                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                TRSDN_CategoryBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_pastel_blue);
+                                TRSDN_CategoryBtn.setTextColor(colorValue);
                                 break;
                             case "pastel_purple":
                                 btnDrawable = ContextCompat.getDrawable(TimeTrackerSetDateNew.this, R.drawable.category_pastel_purple_selector);
-                                TRSDN_CategortBtn.setBackground(btnDrawable);
+                                TRSDN_CategoryBtn.setBackground(btnDrawable);
+                                colorValue = getColor(R.color.lighter_pastel_purple);
+                                TRSDN_CategoryBtn.setTextColor(colorValue);
                                 break;
                         }
                     }
@@ -114,31 +147,12 @@ public class TimeTrackerSetDateNew extends AppCompatActivity {
         });
         // 카테고리 이름, 색상 불러와서 카테고리 버튼에 적용하기
 
-
         // nfc 인텐트 연결
         TRSDN_NFCBtn = findViewById(R.id.TRSDN_NFCBtn);
-        TRSDN_NFCBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent RNFCIntent = new Intent(TimeTrackerSetDateNew.this, HabitRegisterNFC.class);
-                startActivity(RNFCIntent);
-            }
+        TRSDN_NFCBtn.setOnClickListener(v -> {
+            Intent registerNFCIntent = new Intent(TimeTrackerSetDateNew.this, TimeRegisterNFC.class);
+            registerNFCResultLauncher.launch(registerNFCIntent);
         });
-
-        // rNFC에서 nfc 카드값 가져오기!!!!
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         // 저장 버튼
@@ -151,12 +165,62 @@ public class TimeTrackerSetDateNew extends AppCompatActivity {
         TRSDN_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                private String loginID = null;
+//                private String name = null;
+//                private String today = null;
+//                private String caName = null;
+//                private String caColor = null;
+//                private String nfc = null;
+
+                // loginId는 123으로 통일
+                // 나중에 바꿀거임 여기 수정해야함!!!!!
+                loginID = "123";
+
+//                // 타임트래커 타이틀
+//                private EditText TRSDN_Title;
+//                // 타임트래커 카테고리 버튼
+//                private Button TRSDN_CategoryBtn;
+//                // 타임트래커 nfc 등록 버튼
+//                private AppCompatButton TRSDN_NFCBtn;
+
+                try {
+                    if (TRSDN_Title.getText() != null) {
+                        name = TRSDN_Title.getText().toString();
+                    }
+                } catch (NullPointerException e) {
+                    name = "";
+//                    System.out.println("제목 null exception");
+                    Toast.makeText(TimeTrackerSetDateNew.this, "해빗 타이틀을 입력하세요.", Toast.LENGTH_SHORT).show();
+                }
+
+                if (name.length() == 0) {
+                    Toast.makeText(TimeTrackerSetDateNew.this, "해빗 타이틀을 입력하세요.", Toast.LENGTH_SHORT).show();
+                } else if (caName.length() == 0) {
+                    Toast toast = Toast.makeText(TimeTrackerSetDateNew.this, "카테고리를 선택해주세요.", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else if (nfc.length() == 0){
+                    // nfc 값
+                    nfc = "none";
+                } else {
+                    ApiService todoApiService = new ApiService();
+                    String url = "http://203.250.133.162:8080/todoAPI/set_todo/" + loginID + "/" + name + "/" + today + "/" + caName + "/" + state;
+                    todoApiService.postUrl(url);
+
+                    if (todoApiService.getStatus()==200){
+                        finish();
+                    }
+                }
+
+
+
+
+
+
                 // edit text 디비에 저장하기
                 // 현재 날짜 db에 저장하기
                 // 카테고리 버튼 색상, 이름 저장하기
                 // nfc 값 저장하기 -> nfc 없으면 기본값은 null
                 // db에 모두 올리기
-                finish();
             }
         });
 
@@ -168,5 +232,20 @@ public class TimeTrackerSetDateNew extends AppCompatActivity {
             }
         });
     }
+
+    private final ActivityResultLauncher<Intent> registerNFCResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        nfc = data.getStringExtra("time_nfc");
+                        // Do something with habit_nfc value
+                        Toast.makeText(this, "nfc value: " + nfc, Toast.LENGTH_SHORT).show();
+                        TRSDN_NFCBtn.setText("NFC: " + nfc);
+                    }
+                }
+            }
+    );
 }
 

@@ -25,13 +25,11 @@ import com.example.for_j.R;
 public class TimePickCategoryDialog extends Dialog {
 
     private TimePickCategoryDialog.PickCategoryDialogListener PickCategoryDialogListener;
-
     public interface PickCategoryDialogListener {
         void getCategoryData(String cName, String cColor);
     }
 
     private Context context;
-
     public TimePickCategoryDialog(@NonNull Context context, PickCategoryDialogListener pickCategoryDialogListener) {
         super(context);
         this.context = context;

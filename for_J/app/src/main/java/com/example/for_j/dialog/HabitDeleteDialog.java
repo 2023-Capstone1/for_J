@@ -9,7 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.for_j.HabitFragment;
 import com.example.for_j.R;
+
+import org.w3c.dom.Text;
 
 public class HabitDeleteDialog extends Dialog {
     private HabitDeleteDialog.HabitDeleteDialogListener  habitDeleteDialogListener;
@@ -23,6 +26,8 @@ public class HabitDeleteDialog extends Dialog {
         this.habitDeleteDialogListener = habitDeleteDialogListener;
     }
 
+
+
     private LinearLayout HDD_layout;
 
     // 현재 날짜 삭제
@@ -31,6 +36,8 @@ public class HabitDeleteDialog extends Dialog {
     private TextView deletePositionPre;
     // 현재 날짜 포함 이후 날짜 모두 삭제
     private TextView deletePositionNext;
+    // 해빗 전체 삭제
+    private TextView deletePositionAll;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +48,7 @@ public class HabitDeleteDialog extends Dialog {
         deletePositionCurrent = findViewById(R.id.deletePositionCurrent);
         deletePositionPre = findViewById(R.id.deletePositionPre);
         deletePositionNext = findViewById(R.id.deletePositionNext);
+        deletePositionAll = findViewById(R.id.deletePositionAll);
 
         deletePositionCurrent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +70,14 @@ public class HabitDeleteDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 habitDeleteDialogListener.getDeletePosition(2);
+                dismiss();
+            }
+        });
+
+        deletePositionAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                habitDeleteDialogListener.getDeletePosition(3);
                 dismiss();
             }
         });

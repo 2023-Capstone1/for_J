@@ -140,6 +140,7 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
                 // 현재 월-1 변수에 담기
                 CalendarUtill.selectedDate = CalendarUtill.selectedDate.minusMonths(1);
                 setMonthView();
+                onResume();
             }
         });
         // 다음달 버튼 이벤트
@@ -150,6 +151,7 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
                 // 현재 월+1 변수에 담기
                 CalendarUtill.selectedDate = CalendarUtill.selectedDate.plusMonths(1);
                 setMonthView();
+                onResume();
             }
         });
 
@@ -179,31 +181,7 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
         listLayoutSet = todoView.findViewById(R.id.todoList_add_position);
         listLayoutSet.setVisibility(View.VISIBLE);
         nothingMessage = todoView.findViewById(R.id.nothingMessage);
-//        System.out.println("onCreate에서 nothingMessage 연결");
 
-//        // get_is_tuple_exist로 0이면 nothingMessage 띄우기
-//        // 1이면 아래꺼 실행하기
-//        checkTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "todo" + "/" + today;
-//        checkTupleExistAPI = new ApiService();
-//        checkTupleExistAPI.getUrl(checkTupleExistURL);
-////        System.out.println("is_tuple_exist type: " + checkTupleExistAPI.getValue("is_tuple_exist").getClass().getTypeName());
-////        System.out.println("is_tuple_exist: " + checkTupleExistAPI.getValue("is_tuple_exist"));
-//
-//
-//        if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
-//            nothingMessage.setVisibility(View.VISIBLE);
-////            System.out.println("onCreate에서 nothingMessage VISIBLE 실행");
-////            Toast toast = Toast.makeText(todoView.getContext(),"onCreate 서버에 값 없음", Toast.LENGTH_SHORT);
-////            toast.show();
-//            ToDoFragment_listCountText = todoView.findViewById(R.id.todoListCount);
-//            // 모든 투두리스트 개수 합쳐서 출력하기 위해 ToDoFragment_listCount변수 추가
-//            ToDoFragment_listCountText.setText(checkTupleExistAPI.getValue("is_tuple_exist"));
-//        } else{
-//            nothingMessage.setVisibility(View.GONE);
-////            System.out.println("onCreate에서 nothingMessage Gone 실행");
-//            getCategoryFromServer();
-//            getTodoFromServer();
-//        }
 
         // Inflate the layout for this fragment
         return todoView;
@@ -397,15 +375,7 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
 //        System.out.println("이거 실행됨");
 
 
-//        ListView[] todoFragment_listView;   // 카테고리 하나에 포함되어 있는 리스트뷰 배열
-//        ListItemAdapter[] todoFragment_listAdapter; // 카테고리 하나에 포함되어 있는 리스트어뎁터 배열
-//        LinearLayout[] listlayoutarr;   // 카테고리별 레이아웃
-//        List<String> distinctCNameList; // 카테고리 리스트
-//        private int[] todoNum;  // 카테고리별 투두 수
-
         // toDoFragment_ListNumText 리스트 개수 출력
-
-
         ToDoFragment_listCountText = todoView.findViewById(R.id.todoListCount);
         // 모든 투두리스트 개수 합쳐서 출력하기 위해 ToDoFragment_listCount변수 추가
         ToDoFragment_listCountText.setText(getTodoListAPI.getValue("todo_total"));

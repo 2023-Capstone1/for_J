@@ -1,5 +1,6 @@
 package com.example.for_j;
 
+import static android.os.Build.VERSION_CODES.O;
 import static com.example.for_j.CalendarUtill.selectedDate;
 
 import android.annotation.SuppressLint;
@@ -24,24 +25,30 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.annotation.Annotation;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class TimeFragment extends Fragment {
+public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeListAdapterListener {
 
     // 달력 관련 변수
     private TextView TimeFragment_monthYearText; // 년월 텍스트뷰
     private RecyclerView TimeFragment_recyclerView; // RecyclerView 객체 생성
     private ImageButton TimeFragment_prevBtn; // 이전달 이동 버튼
     private ImageButton TimeFragment_nextBtn; // 다음달 이동 버튼
+    private DateTimeFormatter formatter;    // 달력 날짜 포맷
 
     // 리스트 개수를 보여주기위한 텍스트뷰
     private TextView TimeFragment_listCountText;
@@ -70,8 +77,13 @@ public class TimeFragment extends Fragment {
     private String timeUrl;
     private Calendar calendar = Calendar.getInstance();
     private String loginID = "123";
-    @SuppressLint("DefaultLocale")
-    private String today = calendar.get(Calendar.YEAR) + "-" + String.format("%02d", calendar.get(Calendar.MONTH)+1) + "-" + String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH));
+    private String startTime;
+    private String endTime;
+    private String timeTaken;
+    private int order;
+    //    @SuppressLint("DefaultLocale")
+//    private String today = calendar.get(Calendar.YEAR) + "-" + String.format("%02d", calendar.get(Calendar.MONTH)+1) + "-" + String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH));
+    private String selectedDateStr;
     private int cateNum = 0;
     private int[] timeNum;
     private int isTodo = 0;
@@ -261,34 +273,61 @@ public class TimeFragment extends Fragment {
 ////        });
 
         // 리스트뷰 오른쪽 위에 오늘 날짜 표시
+        // 리스트뷰 오른쪽 위에 오늘 날짜 표시
         TimeFragment_list_today = timeView.findViewById(R.id.timeToday);
-        TimeFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
+        TimeFragment_list_today.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+
+        TimeFragment_list_today.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Date date = calendar.getTime();
+                Instant instant = date.toInstant();
+                ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+                LocalDate calendarDate = zonedDateTime.toLocalDate();
+
+                selectedDate = calendarDate;
+
+                onResume();
+            }
+        });
+
+
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        selectedDateStr = selectedDate.format(formatter);
+
 
         listLayoutSet = timeView.findViewById(R.id.timeList_add_position);
         listLayoutSet.setVisibility(View.VISIBLE);
         nothingMessage = timeView.findViewById(R.id.nothingMessage);
+
+//        TimeFragment_list_today = timeView.findViewById(R.id.timeToday);
+//        TimeFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
+//
+//        listLayoutSet = timeView.findViewById(R.id.timeList_add_position);
+//        listLayoutSet.setVisibility(View.VISIBLE);
+//        nothingMessage = timeView.findViewById(R.id.nothingMessage);
 //        System.out.println("onCreate에서 nothingMessage 연결");
 
-        // get_is_tuple_exist로 0이면 nothingMessage 띄우기
-        // 1이면 아래꺼 실행하기
-        checkTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "time" + "/" + today;
-        checkTupleExistAPI = new ApiService();
-        checkTupleExistAPI.getUrl(checkTupleExistURL);
-//        System.out.println("is_tuple_exist type: " + checkTupleExistAPI.getValue("is_tuple_exist").getClass().getTypeName());
-//        System.out.println("is_tuple_exist: " + checkTupleExistAPI.getValue("is_tuple_exist"));
-
-
-        if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
-            nothingMessage.setVisibility(View.VISIBLE);
-//            System.out.println("onCreate에서 nothingMessage VISIBLE 실행");
-//            Toast toast = Toast.makeText(todoView.getContext(),"onCreate 서버에 값 없음", Toast.LENGTH_SHORT);
-//            toast.show();
-        } else{
-            nothingMessage.setVisibility(View.GONE);
-//            System.out.println("onCreate에서 nothingMessage Gone 실행");
-            getCategoryFromServer();
-            getTimeFromServer();
-        }
+//        // get_is_tuple_exist로 0이면 nothingMessage 띄우기
+//        // 1이면 아래꺼 실행하기
+//        checkTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "time" + "/" + today;
+//        checkTupleExistAPI = new ApiService();
+//        checkTupleExistAPI.getUrl(checkTupleExistURL);
+////        System.out.println("is_tuple_exist type: " + checkTupleExistAPI.getValue("is_tuple_exist").getClass().getTypeName());
+////        System.out.println("is_tuple_exist: " + checkTupleExistAPI.getValue("is_tuple_exist"));
+//
+//
+//        if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
+//            nothingMessage.setVisibility(View.VISIBLE);
+////            System.out.println("onCreate에서 nothingMessage VISIBLE 실행");
+////            Toast toast = Toast.makeText(todoView.getContext(),"onCreate 서버에 값 없음", Toast.LENGTH_SHORT);
+////            toast.show();
+//        } else{
+//            nothingMessage.setVisibility(View.GONE);
+////            System.out.println("onCreate에서 nothingMessage Gone 실행");
+//            getCategoryFromServer();
+//            getTimeFromServer();
+//        }
 
 
         // Inflate the layout for this fragment
@@ -297,11 +336,14 @@ public class TimeFragment extends Fragment {
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
         super.onResume();
+
         // Rerun the code from the beginning
+        // 달력 화면 설정
+        setMonthView();
 
         if (nothingMessage == null){
             nothingMessage = timeView.findViewById(R.id.nothingMessage);
@@ -311,16 +353,26 @@ public class TimeFragment extends Fragment {
         if (listLayoutSet != null){
             listLayoutSet.removeAllViewsInLayout();
             listLayoutSet.removeViewInLayout(listLayoutSet);
+//            checkTupleExistAPI.getUrl(checkTupleExistURL);
+
+            selectedDateStr = selectedDate.format(formatter);
+
+            checkTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "time" + "/" + selectedDateStr;
+            checkTupleExistAPI = new ApiService();
             checkTupleExistAPI.getUrl(checkTupleExistURL);
+            System.out.println("메소드 : get_is_tuple_exist");
 
             if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
-                nothingMessage.setVisibility(View.VISIBLE);
+//                nothingMessage.setVisibility(View.VISIBLE);
 //                System.out.println("onResume에서 nothingMessage visible 실행");
-//                Toast toast = Toast.makeText(todoView.getContext(),"Resume 서버에 값 없음", Toast.LENGTH_SHORT);
+//                Toast toast = Toast.makeText(timeView.getContext(),"Resume 서버에 값 없음", Toast.LENGTH_SHORT);
 //                toast.show();
+                TimeFragment_listCountText = timeView.findViewById(R.id.timeListCount);
+                // 모든 투두리스트 개수 합쳐서 출력하기 위해 TimeFragment_listCount변수 추가
+                TimeFragment_listCountText.setText(checkTupleExistAPI.getValue("is_tuple_exist"));
 
             }else{
-                nothingMessage.setVisibility(View.GONE);
+//                nothingMessage.setVisibility(View.GONE);
 //                System.out.println("onResume에서 nothingMessage Gone 실행");
                 getCategoryFromServer();
                 getTimeFromServer();
@@ -328,20 +380,24 @@ public class TimeFragment extends Fragment {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void getCategoryFromServer(){
         // 서버에서 카테고리 가지고 오기
-        getCategoryUrl = "http://203.250.133.162:8080/timeAPI/get_time_date_category/" + loginID + "/" + today + "/" + isTodo;
+        selectedDateStr = selectedDate.format(formatter);
+        System.out.println(selectedDateStr);
+
+        getCategoryUrl = "http://203.250.133.162:8080/timeAPI/get_time_date_category/" + loginID + "/" + selectedDateStr + "/" + isTodo;
         getTimeDateCateAPI = new ApiService();
         getTimeDateCateAPI.getUrl(getCategoryUrl);
+        System.out.println("메소드 : get_time_date_category");
 
 
         // 중복 카테고리 중복 처리
         String[] cName = new String[Integer.parseInt(getTimeDateCateAPI.getValue("time_category_total"))];
-        int categoryCount = 0;
-        if (getTimeDateCateAPI.getValue("time_category_total") != null && !getTimeDateCateAPI.getValue("time_category_total").isEmpty()) {
-            categoryCount = Integer.parseInt(getTimeDateCateAPI.getValue("time_category_total"));
-        }
+//        int categoryCount = 0;
+//        if (getTimeDateCateAPI.getValue("time_category_total") != null && !getTimeDateCateAPI.getValue("time_category_total").isEmpty()) {
+//            categoryCount = Integer.parseInt(getTimeDateCateAPI.getValue("time_category_total"));
+//        }
         for (int i = 0; i < Integer.parseInt(getTimeDateCateAPI.getValue("time_category_total")); i++){
             cName[i] = getTimeDateCateAPI.getValue("time_cName"+i);
         }
@@ -395,7 +451,8 @@ public class TimeFragment extends Fragment {
             getCategoryUrl = "http://203.250.133.162:8080/categoryAPI/get_time_category/" + loginID + "/" + distinctCNameList.get(i) + "/" + isTodo;
             getTimeCateColorAPI = new ApiService();
             getTimeCateColorAPI.getUrl(getCategoryUrl);
-//            System.out.println(getCategoryUrl);
+            System.out.println("메소드 : get_time_category");
+
 
             button.setClickable(false);
             int colorValue;
@@ -462,13 +519,14 @@ public class TimeFragment extends Fragment {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void getTimeFromServer() {
 
         // 서버에서 타임 리스트 가지고 와서 카테고리 별로 분리해서 리스트에 추가하기
-        timeUrl = "http://203.250.133.162:8080/timeAPI/get_time_list/" + loginID + "/" + today;
+        timeUrl = "http://203.250.133.162:8080/timeAPI/get_time_list/" + loginID + "/" + selectedDateStr;
         getTimeListAPI = new ApiService();
         getTimeListAPI.getUrl(timeUrl);
+        System.out.println("메소드 : get_time_list");
 
 
 //        ListView[] timeFragment_listView;   // 카테고리 하나에 포함되어 있는 리스트뷰 배열
@@ -481,27 +539,40 @@ public class TimeFragment extends Fragment {
         TimeFragment_listCountText = timeView.findViewById(R.id.timeListCount);
         // 모든 타임리스트 개수 합쳐서 출력하기 위해 TimeFragment_listCount변수 추가
         TimeFragment_listCountText.setText(getTimeListAPI.getValue("time_total"));
-
+        System.out.println("타임 토탈: " + getTimeListAPI.getValue("time_total"));
 
         // 카테고리 개수만큼의 리스트뷰 배열 만들기
         timeFragment_listView = new ListView[cateNum];
         timeFragment_listAdapter = new TimeListItemAdapter[cateNum];
-        timeNum = new int[cateNum];
+//        timeNum = new int[cateNum];
 
         // 각각 카테고리에 포함되어 있는 리스트 가지고 생성
         for (int i = 0; i < cateNum; i++){
             timeFragment_listAdapter[i] = new TimeListItemAdapter();
+            timeFragment_listAdapter[i].setListener(TimeFragment.this);
             timeFragment_listView[i] = new ListView(getContext());
             timeFragment_listView[i].setNestedScrollingEnabled(false);
             timeFragment_listView[i].setDivider(null); // 디바이더 제거
             timeFragment_listView[i].setDividerHeight(20);
             for (int j = 0; j < Integer.parseInt(getTimeListAPI.getValue("time_total")); j++){
-                if (Objects.equals(distinctCNameList.get(i), getTimeListAPI.getValue("time_cName" + j))){
-                    timeFragment_listAdapter[i].addItem(
-                            new TimeListItem(getTimeListAPI.getValue("time_list_id"+j), getTimeListAPI.getValue("time_name"+j), today,
-                                    distinctCNameList.get(i), distinctCColorlist.get(i)));
-
+//                if (Objects.equals(distinctCNameList.get(i), getTimeListAPI.getValue("time_cName" + j))){
+//                    timeFragment_listAdapter[i].addItem(
+//                            new TimeListItem(getTimeListAPI.getValue("time_list_id"+j), getTimeListAPI.getValue("time_name"+j), selectedDateStr,
+//                                    distinctCNameList.get(i), distinctCColorlist.get(i), getTimeListAPI.getValue("time_start_Time"+j),
+//                                    getTimeListAPI.getValue("time_end_Time"+j), getTimeListAPI.getValue("timd_TimeTaken"+j), Integer.parseInt(getTimeListAPI.getValue("time_order")+j)));
+//
+//                }
+                String orderStr = getTimeListAPI.getValue("time_order");
+                int order = 0; // 디폴트 값
+                if (orderStr != null && !orderStr.equals("null")) {
+                    order = Integer.parseInt(orderStr);
                 }
+                int orderWithJ = order + j;
+                timeFragment_listAdapter[i].addItem(
+                        new TimeListItem(getTimeListAPI.getValue("time_list_id"+j), getTimeListAPI.getValue("time_name"+j), selectedDateStr,
+                                distinctCNameList.get(i), distinctCColorlist.get(i), getTimeListAPI.getValue("time_start_Time"+j),
+                                getTimeListAPI.getValue("time_end_Time"+j), getTimeListAPI.getValue("timd_TimeTaken"+j), orderWithJ));
+
             }
             // 리스트 어뎁터 연결
             timeFragment_listView[i].setAdapter(timeFragment_listAdapter[i]);
@@ -534,6 +605,7 @@ public class TimeFragment extends Fragment {
 
                     System.out.println("listViewPage: " + listViewPage);
                     dialog = new TimeTrackerListDialog(getActivity(), timeFragment_listAdapter[listViewPage], clickedPosition, "Time", timeFragment_listView[listViewPage]);
+                    dialog.setParentFragment(TimeFragment.this);
                     dialog.show();
                     // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
 //                    Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
@@ -567,6 +639,7 @@ public class TimeFragment extends Fragment {
         ArrayList<LocalDate> dayList = daysInMonthArray(CalendarUtill.selectedDate);
 
         HalfCalendarAdapter halfAdapter = new HalfCalendarAdapter(dayList);
+        halfAdapter.setParentFragment(TimeFragment.this);
 
         // 레이아웃 설정 (열 7개)
         RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity().getApplicationContext(), 7);
@@ -583,16 +656,20 @@ public class TimeFragment extends Fragment {
 
         ArrayList<LocalDate> dayList = new ArrayList<>();
 
-        @SuppressLint({"NewApi", "LocalSuppress"}) YearMonth yearMonth = YearMonth.from(date);
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        YearMonth yearMonth = YearMonth.from(date);
 
         // 해당 월 마지막 날짜 가져오기
-        @SuppressLint({"NewApi", "LocalSuppress"}) int lastDay = yearMonth.lengthOfMonth();
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        int lastDay = yearMonth.lengthOfMonth();
 
         // 해당 월의 첫 날짜 가져오기
-        @SuppressLint({"NewApi", "LocalSuppress"}) LocalDate firstDay = CalendarUtill.selectedDate.withDayOfMonth(1);
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        LocalDate firstDay = CalendarUtill.selectedDate.withDayOfMonth(1);
 
         // 첫 날 요일 가져오기
-        @SuppressLint({"NewApi", "LocalSuppress"}) int dayOfWeek = firstDay.getDayOfWeek().getValue();
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        int dayOfWeek = firstDay.getDayOfWeek().getValue();
 
         for (int i = 1; i < 42; i++) {
             if (i <= dayOfWeek || i > lastDay + dayOfWeek) {
@@ -602,5 +679,12 @@ public class TimeFragment extends Fragment {
             }
         }
         return dayList;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    //@Override
+    public void onCheckButtonClicked(int position, TimeTrackerListDialog timeTrackerListDialog) {
+        // Handle check button click event
+        timeTrackerListDialog.setParentFragment(TimeFragment.this);
     }
 }

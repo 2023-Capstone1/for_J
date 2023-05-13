@@ -34,6 +34,8 @@ public class HabitDialog {
     private ApiService deleteAPI;
     private String getSameNameURL;
     private ApiService getSameNameAPI;
+    private String updateHabitURL;
+    private ApiService updateHabitAPI;
 
     private String loginId = "123";
     private String name;
@@ -74,9 +76,9 @@ public class HabitDialog {
             public void onClick(View v) {
                 Intent intent = new Intent(context, HabitSetDateModify.class);
                 // 인텐트로 이름, 날짜 보내기
-                String name = String.valueOf(listItemAdapter.getListName(clickedPosition));
-                String today = String.valueOf(listItemAdapter.getListToday(clickedPosition));
-                String id = String.valueOf(listItemAdapter.getListId(clickedPosition));
+                name = String.valueOf(listItemAdapter.getListName(clickedPosition));
+                today = String.valueOf(listItemAdapter.getListToday(clickedPosition));
+                id = String.valueOf(listItemAdapter.getListId(clickedPosition));
                 intent.putExtra("title", name);
                 intent.putExtra("today", today);
                 intent.putExtra("id", id);
@@ -118,9 +120,9 @@ public class HabitDialog {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
-        Calendar today = Calendar.getInstance();
+        Calendar Ctoday = Calendar.getInstance();
         try {
-            today.setTime(sdf.parse(listItemAdapter.getListToday(clickedPosition)));
+            Ctoday.setTime(sdf.parse(listItemAdapter.getListToday(clickedPosition)));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -135,11 +137,17 @@ public class HabitDialog {
                             public void IsPositive(int isPositive) {
                                 if (isPositive == 1){
                                     // 삭제 메소드 실행
-                                    deleteURL = "http://203.250.133.162:8080/habitAPI/habit_delete/" + loginId + "/" + listItemAdapter.getListId(clickedPosition);
+                                    deleteURL = "http://203.250.133.162:8080/habitAPI/habit_delete_with_id/" + loginId + "/" + listItemAdapter.getListId(clickedPosition);
                                     deleteAPI.deleteUrl(deleteURL);
                                 }
                             }
                         }, deletePosition);
+                        HDCD1.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        // 다이얼로그 밖을 터치했을 때, 다이얼로그 꺼짐
+                        HDCD1.setCanceledOnTouchOutside(true);
+                        HDCD1.setCancelable(true);
+                        HDCD1.setParentFragment(parentFragment);
+                        HDCD1.show();
                         break;
                     case 1: // 이전 날짜
                         HabitDeleteCheckDialog HDCD2 = new HabitDeleteCheckDialog(context, new HabitDeleteCheckDialog.HabitDeleteCheckDialogListener() {
@@ -148,19 +156,48 @@ public class HabitDialog {
                                 if (isPositive == 1){
 //                                    private String getSameNameURL;
 //                                    private ApiService getSameNameAPI;
+
+                                    /*
+                                    5.1 - 5.31
+
+                                    현재 날짜 5.14
+
+                                    이전 삭제 5.15 - 5.31
+                                    이후 삭제 5.1-5.13
+                                     */
                                     getSameNameURL = "http://203.250.133.162:8080/habitAPI/get_habit_same_name/" + loginId + "/" + listItemAdapter.getListName(clickedPosition) + "/" + listItemAdapter.getListStartDate(clickedPosition) + "/" + listItemAdapter.getListEndDate(clickedPosition);
+                                    System.out.println("get_habit_same_name: " + getSameNameURL);
                                     getSameNameAPI.getUrl(getSameNameURL);
 
-                                    for (int i = 0; i < Integer.parseInt(getSameNameAPI.getValue("habit_today_total"));i++){
-                                        calendar.setTime(sdf.parse(getSameNameAPI.getValue("habit_startDate"+i)));
-                                        if (calendar.compareTo(today) <= 0) {  // 캘린더가 투데이보다 이전이거나 같은 경우
-                                            deleteURL = "http://203.250.133.162:8080/habitAPI/habit_delete/" + loginId + "/" + getSameNameAPI.getValue("habit_list_id"+i);
+                                    for (int i = 0; i < Integer.parseInt(getSameNameAPI.getValue("habit_today_total")); i++){
+                                        System.out.println("현재 날짜: " + Ctoday.getTime());
+                                        calendar.setTime(sdf.parse(getSameNameAPI.getValue("habit_today"+i)));
+                                        System.out.println("저정된 today: " + calendar.getTime());
+
+                                        if (calendar.compareTo(Ctoday) <= 0) {  // 캘린더가 투데이보다 이전이거나 같은 경우
+                                            deleteURL = "http://203.250.133.162:8080/habitAPI/habit_delete_with_id/" + loginId + "/" + getSameNameAPI.getValue("habit_list_id"+i);
+                                            System.out.println("habit_delete_with_id: " + deleteURL);
                                             deleteAPI.deleteUrl(deleteURL);
+                                        }else{
+                                            // 시작 날짜 업데이트
+                                            updateHabitURL = "http://203.250.133.162:8080/habitAPI/update_startDate/" + loginId + "/" + getSameNameAPI.getValue("habit_list_id") + "/" + today;
+                                            updateHabitAPI = new ApiService();
+                                            updateHabitAPI.putUrl(updateHabitURL);
                                         }
                                     }
+
+
+
+
                                 }
                             }
                         }, deletePosition);
+                        HDCD2.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        // 다이얼로그 밖을 터치했을 때, 다이얼로그 꺼짐
+                        HDCD2.setCanceledOnTouchOutside(true);
+                        HDCD2.setCancelable(true);
+                        HDCD2.setParentFragment(parentFragment);
+                        HDCD2.show();
                         break;
                     case 2: // 이후 날짜
                         HabitDeleteCheckDialog HDCD3 = new HabitDeleteCheckDialog(context, new HabitDeleteCheckDialog.HabitDeleteCheckDialogListener() {
@@ -168,32 +205,73 @@ public class HabitDialog {
                             public void IsPositive(int isPositive) throws ParseException {
                                 if (isPositive == 1){
                                     getSameNameURL = "http://203.250.133.162:8080/habitAPI/get_habit_same_name/" + loginId + "/" + listItemAdapter.getListName(clickedPosition) + "/" + listItemAdapter.getListStartDate(clickedPosition) + "/" + listItemAdapter.getListEndDate(clickedPosition);
+                                    System.out.println("get_habit_same_name: " + getSameNameURL);
                                     getSameNameAPI.getUrl(getSameNameURL);
 
                                     for (int i = 0; i < Integer.parseInt(getSameNameAPI.getValue("habit_today_total"));i++){
-                                        calendar.setTime(sdf.parse(getSameNameAPI.getValue("habit_startDate"+i)));
-                                        if (calendar.compareTo(today) >= 0) {  // 캘린더가 투데이보다 이후이거나 같은 경우
-                                            deleteURL = "http://203.250.133.162:8080/habitAPI/habit_delete/" + loginId + "/" + getSameNameAPI.getValue("habit_list_id"+i);
+                                        calendar.setTime(sdf.parse(getSameNameAPI.getValue("habit_today"+i)));
+                                        System.out.println("현재 날짜: " + Ctoday.getTime());
+                                        System.out.println("저정된 today: " + calendar.getTime());
+                                        if (calendar.compareTo(Ctoday) >= 0) {  // 캘린더가 투데이보다 이후이거나 같은 경우
+                                            deleteURL = "http://203.250.133.162:8080/habitAPI/habit_delete_with_id/" + loginId + "/" + getSameNameAPI.getValue("habit_list_id"+i);
+                                            System.out.println("habit_delete_with_id: " + deleteURL);
                                             deleteAPI.deleteUrl(deleteURL);
+                                        }else{
+                                            // 끝 날짜 업데이트
+                                            updateHabitURL = "http://203.250.133.162:8080/habitAPI/update_endDate/" + loginId + "/" + getSameNameAPI.getValue("habit_list_id") + "/" + today;
+                                            updateHabitAPI = new ApiService();
+                                            updateHabitAPI.putUrl(updateHabitURL);
                                         }
                                     }
                                 }
                             }
                         }, deletePosition);
+                        HDCD3.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        // 다이얼로그 밖을 터치했을 때, 다이얼로그 꺼짐
+                        HDCD3.setCanceledOnTouchOutside(true);
+                        HDCD3.setCancelable(true);
+                        HDCD3.setParentFragment(parentFragment);
+                        HDCD3.show();
+                        break;
+                    case 3: // 전체 삭제
+                        HabitDeleteCheckDialog HDCD4 = new HabitDeleteCheckDialog(context, new HabitDeleteCheckDialog.HabitDeleteCheckDialogListener() {
+                            @Override
+                            public void IsPositive(int isPositive) {
+                                if (isPositive == 1){
+
+                                    getSameNameURL = "http://203.250.133.162:8080/habitAPI/get_habit_same_name/" + loginId + "/" + listItemAdapter.getListName(clickedPosition) + "/" + listItemAdapter.getListStartDate(clickedPosition) + "/" + listItemAdapter.getListEndDate(clickedPosition);
+                                    System.out.println("get_habit_same_name: " + getSameNameURL);
+                                    getSameNameAPI.getUrl(getSameNameURL);
+
+                                    // 전체 날짜 삭제
+                                    for (int i = 0; i < Integer.parseInt(getSameNameAPI.getValue("habit_today_total"));i++){
+                                        deleteURL = "http://203.250.133.162:8080/habitAPI/habit_delete_with_id/" + loginId + "/" + getSameNameAPI.getValue("habit_list_id"+i);
+                                        System.out.println("habit_delete_with_id: " + deleteURL);
+                                        deleteAPI.deleteUrl(deleteURL);
+                                    }
+                                }
+                            }
+                        }, deletePosition);
+                        HDCD4.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        // 다이얼로그 밖을 터치했을 때, 다이얼로그 꺼짐
+                        HDCD4.setCanceledOnTouchOutside(true);
+                        HDCD4.setCancelable(true);
+                        HDCD4.setParentFragment(parentFragment);
+                        HDCD4.show();
                         break;
                 }
             }
         });
+        HDD.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        // 다이얼로그 밖을 터치했을 때, 다이얼로그 꺼짐
+        HDD.setCanceledOnTouchOutside(true);
+        HDD.setCancelable(true);
+        HDD.show();
 
-        if (parentFragment != null){
-            parentFragment.onResume();
-        }
 
-//        ArrayList<ListItem> listItems = listItemAdapter.getListItem();
-//
-//        listItems.remove(clickedPosition);
-//        listItemAdapter.notifyDataSetChanged();
-//        listCountText.setText(String.valueOf(listItemAdapter.getCount()));
+//        if (parentFragment != null){
+//            parentFragment.onResume();
+//        }
 
         dialog.dismiss();
     }

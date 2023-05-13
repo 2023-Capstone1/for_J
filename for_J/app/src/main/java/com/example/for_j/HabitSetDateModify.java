@@ -2,23 +2,17 @@ package com.example.for_j;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
@@ -29,13 +23,13 @@ import com.example.for_j.dialog.ColorPaletteDialog;
 import com.example.for_j.dialog.DatePickerFragment;
 import com.example.for_j.dialog.RepeatCycle;
 import com.example.for_j.dialog.TimePickerFragment;
-import com.example.for_j.dialog.TodoPickCategoryDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
+
 
 
 public class HabitSetDateModify extends AppCompatActivity implements DatePickerFragment.OnDateSelectedListener, TimePickerFragment.OnTimeSelectedListener{
@@ -81,6 +75,18 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
     // 서버 통신 변수
     private String getHabitToUpdateURL;
     private ApiService getHabitToUpdateAPI = new ApiService();
+    private String getCreateHabitURL;
+    private ApiService getCreateHabitAPI;
+    private String getUpdateHabitURL;
+    private ApiService getUpdateHabitAPI;
+    private String getDeleteHabitURL;
+    private ApiService getDeleteHabitAPI;
+    private String setHabitURL;
+    private ApiService setHabitAPI;
+    private String updateURL;
+    private ApiService updateAPI;
+    private String deleteHabitURL;
+    private ApiService deleteHabitAPI;
 
     // habit 스키마
     String SloginId = null;
@@ -98,17 +104,17 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
     int Shabit_state = 0;
 
     // 기존 해빗 정보
-    String PstartDate = null;
-    String PendDate = null;
+    String PreStartDate = null;
+    String PreEndDate = null;
     int[] PdayOfWeek = new int[7];
 
 
     boolean isRepeatNull = true;
 
+    @SuppressLint("SetTextI18n")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_habit_set_date_new);
-        ActionBar actionbar = getSupportActionBar();
 
         // 이전 인텐트에서 받아온 값 읽어오기
         Sname = getIntent().getStringExtra("title");
@@ -238,6 +244,9 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
         HSDN_StartDateBtn = findViewById(R.id.HSDN_StartDateBtn);
         HSDN_StartDateBtn.setText(getHabitToUpdateAPI.getValue("habit_startDate"));
         SstartDate = getHabitToUpdateAPI.getValue("habit_startDate");
+        // 기존 시작 날짜 설정
+        PreStartDate = getHabitToUpdateAPI.getValue("habit_startDate");
+
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -261,6 +270,8 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
         HSDN_EndDateBtn = findViewById(R.id.HSDN_EndDateBtn);
         HSDN_EndDateBtn.setText(getHabitToUpdateAPI.getValue("habit_endDate"));
         SendDate = getHabitToUpdateAPI.getValue("habit_endDate");
+        // 기존 종료 날짜 설정
+        PreEndDate = getHabitToUpdateAPI.getValue("habit_endDate");
 
         try {
             endSelectedDate.setTime(Objects.requireNonNull(dateFormat.parse(getHabitToUpdateAPI.getValue("habit_endDate"))));
@@ -285,13 +296,16 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
         HSDN_AlarmSwitch = findViewById(R.id.HSDN_AlarmSwitch);
         HSDN_AlarmBtn = findViewById(R.id.HSDN_AlarmBtn);
 
-        if (getHabitToUpdateAPI.getValue("habit_alarmSwitch") == "0"){
+
+        if (Objects.equals(getHabitToUpdateAPI.getValue("habit_alarmSwitch"), "0")){
             HSDN_AlarmSwitch.setChecked(false);
             HSDN_AlarmBtn.setVisibility(View.GONE);
+            System.out.println("스위치 커져있어야 함");
         } else {
             HSDN_AlarmSwitch.setChecked(true);
             HSDN_AlarmBtn.setVisibility(View.VISIBLE);
             HSDN_AlarmBtn.setText(getHabitToUpdateAPI.getValue("habit_alarm"));
+            System.out.println("스위치 꺼져 있어야 함");
         }
 
         // 스위치 온오프
@@ -368,7 +382,7 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
 
         // nfc 인텐트 연결
         HSDN_NFCBtn = findViewById(R.id.HSDN_NFCBtn);
-        HSDN_NFCBtn.setText(getHabitToUpdateAPI.getValue("habit_nfc"));
+        HSDN_NFCBtn.setText("NFC: " + getHabitToUpdateAPI.getValue( "habit_nfc"));
         Shabit_nfc = getHabitToUpdateAPI.getValue("habit_nfc");
         HSDN_NFCBtn.setOnClickListener(v -> {
             Intent registerNFCIntent = new Intent(this, HabitRegisterNFC.class);
@@ -523,64 +537,121 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
 
                     // 기존에 저장되어 있는 헤빗들 가져오기
                     ApiService getHabitSameNameAPI = new ApiService();
-                    String getHabitSameNameURL = "http://203.250.133.162:8080/habitAPI/get_habit_same_name/" + SloginId + "/" + Sname + "/" + SstartDate + "/" + SendDate;
+                    String getHabitSameNameURL = "http://203.250.133.162:8080/habitAPI/get_habit_same_name/" + SloginId + "/" + Sname + "/" + PreStartDate + "/" + PreEndDate;
                     getHabitSameNameAPI.getUrl(getHabitSameNameURL);
-
-//                    for (int i = 0; i < Integer.parseInt(getHabitSameNameAPI.getValue("habit_today_total"));i++){
-//
-//                    }
 
                     // 기존 시작 날짜랑 변경된 시작 날짜 비교
                     if (SrepeatN > 0) { // 반복 횟수
 
+                        // 생성
+                        getCreateHabitURL = "http://203.250.133.162:8080/habitAPI/get_date_to_create_N/" + SloginId + "/" + Sname + "/" + PreStartDate + "/" + SstartDate + "/" + PreEndDate + "/" + SendDate + "/" + getHabitToUpdateAPI.getValue("habit_repeatN");
+                        getCreateHabitAPI = new ApiService();
+                        getCreateHabitAPI.getUrl(getCreateHabitURL);
 
+                        // 123/test/2023-05-01/2023-04-24/2023-05-31/2023-05-28/7
+//                        { # create 예시
+//                            "date_to_create0": "2023-04-30",
+//                                "date_to_create1": "2023-04-29",
+//                                "date_to_create2": "2023-04-28",
+//                                "date_to_create3": "2023-04-27",
+//                                "date_to_create4": "2023-04-26",
+//                                "date_to_create5": "2023-04-25",
+//                                "date_to_create6": "2023-04-24",
+//                                "total": "7",
+//                                "SUCCESS": "200"
+//                        }//
+                        //
+                        for (int i = 0; i < Integer.parseInt(getCreateHabitAPI.getValue("total")); i++){
+                            setHabitURL = "http://203.250.133.162:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + getCreateHabitAPI.getValue("date_to_create"+i) + "/"
+                                    + SstartDate + "/" + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
+                                    + Shabit_nfc + "/" + Shabit_state;
+                            setHabitAPI.postUrl(setHabitURL);
+                        }
 
+                        // 업데이트
+                        getUpdateHabitURL = "http://203.250.133.162:8080/habitAPI/get_date_to_update_N/" + SloginId + "/" + Sname + "/" + PreStartDate + "/" + SstartDate + "/" + PreEndDate + "/" + SendDate + "/" + getHabitToUpdateAPI.getValue("habit_repeatN");
+                        getUpdateHabitAPI = new ApiService();
+                        getUpdateHabitAPI.getUrl(getUpdateHabitURL);
 
+                        /*
+                        {
+                            "date_to_update0": "2023-05-01",
+                                "date_to_update1": "2023-05-02",
+                                "date_to_update2": "2023-05-03",
+                                "date_to_update3": "2023-05-04",
+                                "date_to_update4": "2023-05-05",
+                                "date_to_update5": "2023-05-06",
+                                "date_to_update6": "2023-05-07",
+                                "date_to_update7": "2023-05-08",
+                                "date_to_update8": "2023-05-09",
+                                "date_to_update9": "2023-05-10",
+                                "date_to_update10": "2023-05-11",
+                                "date_to_update11": "2023-05-12",
+                                "date_to_update12": "2023-05-13",
+                                "date_to_update13": "2023-05-14",
+                                "date_to_update14": "2023-05-15",
+                                "date_to_update15": "2023-05-16",
+                                "date_to_update16": "2023-05-17",
+                                "date_to_update17": "2023-05-18",
+                                "date_to_update18": "2023-05-19",
+                                "date_to_update19": "2023-05-20",
+                                "date_to_update20": "2023-05-21",
+                                "date_to_update21": "2023-05-22",
+                                "date_to_update22": "2023-05-23",
+                                "date_to_update23": "2023-05-24",
+                                "date_to_update24": "2023-05-25",
+                                "date_to_update25": "2023-05-26",
+                                "date_to_update26": "2023-05-27",
+                                "date_to_update27": "2023-05-28",
+                                "total": "27",
+                                "SUCCESS": "200"
+                        }
+                        */
 
+                        for (int i = 0; i < Integer.parseInt(getUpdateHabitAPI.getValue("total"));i++){
+                            updateURL = "http://203.250.133.162:8080/habitAPI/update_habit/" + SloginId + "/" + Sname + "/" + getCreateHabitAPI.getValue("date_to_update"+i) + "/"
+                                    + SstartDate + "/" + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
+                                    + Shabit_nfc + "/" + Shabit_state;
+                            updateAPI.putUrl(updateURL);
+                        }
 
+                        // 삭제
+                        getDeleteHabitURL = "http://203.250.133.162:8080/habitAPI/get_date_to_delete_N/" + SloginId + "/" + Sname + "/" + PreStartDate + "/" + SstartDate + "/" + PreEndDate + "/" + SendDate + "/" + getHabitToUpdateAPI.getValue("habit_repeatN");
+                        getDeleteHabitAPI = new ApiService();
+                        getDeleteHabitAPI.getUrl(getDeleteHabitURL);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        // 종료 날짜 전까지 반복
-                        // 기존 시작 날짜, 수정 시작 날짜 비교해서
-
-
-//                        currentDate = (Calendar) startSelectedDate.clone();
-//                        while (currentDate.compareTo(endSelectedDate) < 1) {
-//                            year = currentDate.get(Calendar.YEAR);
-//                            month = currentDate.get(Calendar.MONTH) + 1;
-//                            day = currentDate.get(Calendar.DAY_OF_MONTH);
-//                            Stoday = String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, day);
-////                            System.out.println("start date: " + SstartDate);
-////                            System.out.println("today: " + Stoday);
-////                            System.out.println("end date: " + SendDate);
-//                            String url = "http://203.250.133.162:8080/habitAPI/update_habit/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
-//                                    + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-//                                    + Shabit_nfc + "/" + Shabit_state;
-//                            Log.d("TAG", SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
-//                                    + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-//                                    + Shabit_nfc + "/" + Shabit_state);
-//                            habitApiService.postUrl(url);
-//                            if (habitApiService.getStatus() == 200) {
-//                                success += 1;
-//                            }
-//                            currentDate.add(Calendar.DAY_OF_MONTH, 1);
-//                        }
+                        for (int i = 0; i < Integer.parseInt(getDeleteHabitAPI.getValue("total")); i++){
+                            deleteHabitURL = "http://203.250.133.162:8080/habitAPI/haibt_delete" + SloginId + "/" + Sname + "/" + SstartDate + "/" + SendDate + "/" + getDeleteHabitAPI.getValue("date_to_delete"+i);
+                            deleteHabitAPI = new ApiService();
+                            deleteHabitAPI.deleteUrl(deleteHabitURL);
+                        }
                     } else {    // 반복 날짜
 
+                        // habitAPI/get_date_to_create_N/login_id/name/preStartDate/currentStartDate/preEndDate/currentEndDate/repeatN
+                        // habitAPI/get_date_to_update_N/login_id/name/preStartDate/currentStartDate/preEndDate/currentEndDate/repeatN
+                        // habitAPI/get_date_to_delete_N/login_id/name/preStartDate/currentStartDate/preEndDate/currentEndDate/repeatN
 
+                        // 서버 통신 변수
+//                        private String getHabitToUpdateURL;
+//                        private ApiService getHabitToUpdateAPI = new ApiService();
+//                        private String getCreateHabitURL;
+//                        private ApiService getCreateHabitAPI = new ApiService();
+//                        private String getUpdateHabitURL;
+//                        private ApiService getUpdateHabitAPI = new ApiService();
+//                        private String getDeleteHabitURL;
+//                        private ApiService getDeleteHabitAPI = new ApiService();
+//                        private String setHabitURL;
+//                        private ApiService setHabitAPI = new ApiService();
+//                        private String updateURL;
+//                        private ApiService updateAPI = new ApiService();
+//                        private String deleteHabitURL;
+//                        private ApiService deleteHabitAPI = new ApiService();
+
+                        // 기존 해빗 정보
+//                        getHabitSameNameAPI
+//                        String PreStartDate = null;
+//                        String PreEndDate = null;
+//                        int[] PdayOfWeek = new int[7];
 
 
 

@@ -20,12 +20,24 @@ public class TimeTrackerListDialog {
     //private final TextView listCountText;
 
     // 서버 통신 변수
+    private String getStateURL;
+    private String setStateURL;
     private String deleteURL;
+    private ApiService getStateAPI;
+    private ApiService setStateAPI;
     private ApiService deleteAPI;
 
     private String loginId = "123";
+    private String name;
+    private String today;
     private String id;
-    //private int state;
+    private int state;
+
+    private TimeFragment parentFragment;
+
+    public void setParentFragment(TimeFragment parentFragment){
+        this.parentFragment = parentFragment;
+    }
 
     //public TimeTrackerListDialog(Context context, TimeListItemAdapter listItemAdapter, TextView listCountText, int clickedPosition, String dialogTitle, ListView listView) {
     public TimeTrackerListDialog(Context context, TimeListItemAdapter listItemAdapter, int clickedPosition, String dialogTitle, ListView listView) {

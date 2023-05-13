@@ -19,10 +19,10 @@ public class TimeRegisterNFC extends AppCompatActivity {
     private Button RNFC_TagBtn;
     private PendingIntent pendingIntent;
     boolean readTagEnabled = false;
-    String habit_nfc = null;
+    String time_nfc = null;
+    String loginID = "123";
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.O)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_nfc);
@@ -97,16 +97,26 @@ public class TimeRegisterNFC extends AppCompatActivity {
         if (tag != null) {
             byte[] tagId = tag.getId();
             String serialNumber = bytesToHexString(tagId);
-            habit_nfc = serialNumber;
-            //Toast.makeText(this, "시리얼 번호: " + serialNumber, Toast.LENGTH_SHORT).show();
-            // Set readTagEnabled to false after the tag is read
-            readTagEnabled = false;
+            time_nfc = serialNumber;
 
-            Intent data = new Intent();
-            data.putExtra("habit_nfc", habit_nfc);
-            setResult(RESULT_OK, data);
+            String checkNFCExistURL = "http://203.250.133.162:8080/checkAPI/get_is_nfc_exist/" + loginID + "/" + "time" + "/" + time_nfc;
+            ApiService checkNFCExistAPI = new ApiService();
+            checkNFCExistAPI.getUrl(checkNFCExistURL);
 
-            finish();
+            if (Integer.parseInt(checkNFCExistAPI.getValue("is_nfc_exist")) == 1) {
+                Toast.makeText(this, "이미 등록된 nfc 입니다. 새로운 nfc를 등록해주세요", Toast.LENGTH_SHORT).show();
+            } else {
+                //Toast.makeText(this, "시리얼 번호: " + serialNumber, Toast.LENGTH_SHORT).show();
+                // Set readTagEnabled to false after the tag is read
+                readTagEnabled = false;
+                Intent data = new Intent();
+                data.putExtra("time_nfc", time_nfc);
+                setResult(RESULT_OK, data);
+
+                finish();
+            }
+
+
         }
     }
 

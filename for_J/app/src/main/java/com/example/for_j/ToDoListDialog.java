@@ -18,6 +18,10 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.for_j.dialog.TodoDeleteCheckDialog;
+
+import java.text.ParseException;
+
 
 public class ToDoListDialog {
     private final Dialog dialog;
@@ -154,9 +158,24 @@ public class ToDoListDialog {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void deleteListItem() {
-        deleteURL = "http://203.250.133.162:8080/todoAPI/todo_delete/" + loginId + "/" + id;
-        deleteAPI = new ApiService();
-        deleteAPI.deleteUrl(deleteURL);
+
+        TodoDeleteCheckDialog TDCD = new TodoDeleteCheckDialog(context, new TodoDeleteCheckDialog.TodoDeleteCheckDialogListener() {
+            @Override
+            public void IsPositive(int isPositive) throws ParseException {
+                if (isPositive == 1){
+                    // 삭제 메소드 실행
+                    deleteURL = "http://203.250.133.162:8080/todoAPI/todo_delete/" + loginId + "/" + id;
+                    deleteAPI = new ApiService();
+                    deleteAPI.deleteUrl(deleteURL);
+                }
+            }
+        });
+        TDCD.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        // 다이얼로그 밖을 터치했을 때, 다이얼로그 꺼짐
+        TDCD.setCanceledOnTouchOutside(true);
+        TDCD.setCancelable(true);
+        TDCD.setParentFragment(parentFragment);
+        TDCD.show();
 
         if (parentFragment != null){
             parentFragment.onResume();
