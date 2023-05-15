@@ -75,7 +75,9 @@ public class HabitRegisterNFC extends AppCompatActivity {
         if (intent.getComponent().getClassName().equals(HabitRegisterNFC.class.getName())) {
             if (readTagEnabled) {
                 Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+//                System.out.println("readTagEnaled 은 트루임");
                 if (tag != null) {
+//                    System.out.println("태그 널 아님");
                     readTag(tag);
                 }
             }

@@ -15,7 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class TimeRegisterNFC extends AppCompatActivity {
 
-    private NfcAdapter nfcAdapter;
+    public static NfcAdapter nfcAdapter;
+//    private NfcAdapter nfcAdapter;
     private Button RNFC_TagBtn;
     private PendingIntent pendingIntent;
     boolean readTagEnabled = false;
@@ -56,7 +57,7 @@ public class TimeRegisterNFC extends AppCompatActivity {
         super.onResume();
         if (nfcAdapter != null) {
             nfcAdapter.disableForegroundDispatch(this);
-            //nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+//            nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
         }
     }
 
@@ -74,12 +75,24 @@ public class TimeRegisterNFC extends AppCompatActivity {
 //        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 //        String nfcValue = tag.getId().toString();
 //        Toast.makeText(this, "nfcValue=" + nfcValue, Toast.LENGTH_SHORT).show();
-        if (intent.getComponent().getClassName().equals(TimeRegisterNFC.class.getName())) {
+        if (intent.getComponent().getClassName().equals(getClass().getName())) {
             if (readTagEnabled) {
                 Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+//                Tag tag = intent.getParcelableExtra("android.nfc.extra.TAG");
+
+                System.out.println("readTagEnaled 은 트루임");
+
+
+                // 태그가 널임!!!!! 왜 널인지 확인 하기
+
+
                 if (tag != null) {
                     readTag(tag);
-                }
+                    System.out.println("태그");
+                }/*
+                else {
+                    System.out.println("태그 널임");
+                }*/
             }
         }
 
@@ -94,18 +107,21 @@ public class TimeRegisterNFC extends AppCompatActivity {
     }
 
     private void readTag(Tag tag){
+
         if (tag != null) {
             byte[] tagId = tag.getId();
             String serialNumber = bytesToHexString(tagId);
             time_nfc = serialNumber;
 
-            String checkNFCExistURL = "http://203.250.133.162:8080/checkAPI/get_is_nfc_exist/" + loginID + "/" + "time" + "/" + time_nfc;
+/*            String checkNFCExistURL = "http://203.250.133.162:8080/checkAPI/get_is_nfc_exist/" + loginID + "/" + "time" + "/" + time_nfc;
             ApiService checkNFCExistAPI = new ApiService();
             checkNFCExistAPI.getUrl(checkNFCExistURL);
 
+
             if (Integer.parseInt(checkNFCExistAPI.getValue("is_nfc_exist")) == 1) {
-                Toast.makeText(this, "이미 등록된 nfc 입니다. 새로운 nfc를 등록해주세요", Toast.LENGTH_SHORT).show();
-            } else {
+                Toast.makeText(this, "이미 등록된 nfc 입니다. 새로운 nfc를
+                 등록해주세요", Toast.LENGTH_SHORT).show();
+            } else {*/
                 //Toast.makeText(this, "시리얼 번호: " + serialNumber, Toast.LENGTH_SHORT).show();
                 // Set readTagEnabled to false after the tag is read
                 readTagEnabled = false;
@@ -114,7 +130,7 @@ public class TimeRegisterNFC extends AppCompatActivity {
                 setResult(RESULT_OK, data);
 
                 finish();
-            }
+//            }
 
 
         }

@@ -80,21 +80,22 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- NFC 태그 -->
-    <!-- NFC 추가 설정 버튼 vertical -->
+    <!--&lt;!&ndash; NFC 태그 &ndash;&gt;
+    &lt;!&ndash; NFC 추가 설정 버튼 vertical &ndash;&gt;
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <!-- NFC img, text 왼쪽 정렬 / switch 오른쪽 정렬 -->
-        <!-- NFC 태그 다이얼로그로 구현 -->
+        &lt;!&ndash; NFC img, text 왼쪽 정렬 / switch 오른쪽 정렬 &ndash;&gt;
+        &lt;!&ndash; NFC 태그 다이얼로그로 구현 &ndash;&gt;
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- NFC 아이콘 -->
+            &lt;!&ndash; NFC 아이콘 &ndash;&gt;
             <ImageView
                 android:id="@+id/TRSDN_NFCImg"
                 android:layout_width="36dp"
@@ -104,7 +105,7 @@
                 android:src="@drawable/ic_nfc"
                 />
 
-            <!-- NFC 텍스트 -->
+            &lt;!&ndash; NFC 텍스트 &ndash;&gt;
             <TextView
                 android:id="@+id/TRSDN_NFCTxt"
 
@@ -117,14 +118,14 @@
 
                 android:text="NFC 태그"/>
 
-            <!-- 오른쪽 정렬 -->
+            &lt;!&ndash; 오른쪽 정렬 &ndash;&gt;
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 />
 
-            <!-- NFC 스위치 -->
+            &lt;!&ndash; NFC 스위치 &ndash;&gt;
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/TRSDN_NFCSwitch"
                 android:layout_width="wrap_content"
@@ -143,9 +144,9 @@
                 android:visibility="invisible"/>
         </LinearLayout>
 
-        <!-- NFC 설정 버튼 -->
-        <!-- 다이얼 로그 -->
-        <!-- 등록 되면 txt="nfc 값"으로 변경 -->
+        &lt;!&ndash; NFC 설정 버튼 &ndash;&gt;
+        &lt;!&ndash; 다이얼 로그 &ndash;&gt;
+        &lt;!&ndash; 등록 되면 txt="nfc 값"으로 변경 &ndash;&gt;
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/TRSDN_NFCBtn"
             android:layout_width="match_parent"
@@ -158,7 +159,7 @@
             />
 
     </LinearLayout>
-
+-->
     <!-- 하단 고정을 위한 공간 생성 -->
     <View
         android:layout_width="0dp"

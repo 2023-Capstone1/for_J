@@ -80,9 +80,12 @@ public class TimeSetDateModify extends AppCompatActivity  {
         url = "http://203.250.133.162:8080/timeAPI/get_time_to_update/" + loginID + "/" + listId;
         timeApiService.getUrl(url);
 
+        today = timeApiService.getValue("time_today");
+
 
         // 타임 타이틀 xml 연동
         TRSDN_Title = findViewById(R.id.TRSDN_Title);
+        name = timeApiService.getValue("time_name");
         TRSDN_Title.setText(name);
 
         // 카테고리 버튼 xml 연동
@@ -227,7 +230,7 @@ public class TimeSetDateModify extends AppCompatActivity  {
         });
 
         // nfc switch
-        TRSDN_NFCSwitch = findViewById(R.id.TRSDN_NFCSwitch);
+        /*TRSDN_NFCSwitch = findViewById(R.id.TRSDN_NFCSwitch);
 
 
         // nfc 인텐트 연결
@@ -238,7 +241,7 @@ public class TimeSetDateModify extends AppCompatActivity  {
                 Intent RNFCIntent = new Intent(TimeSetDateModify.this, TimeRegisterNFC.class);
                 startActivity(RNFCIntent);
             }
-        });
+        });*/
 
         // 저장 버튼
         TRSDN_Save = findViewById(R.id.TRSDN_Save);
@@ -272,17 +275,16 @@ public class TimeSetDateModify extends AppCompatActivity  {
                 if (name.length() == 0){
                     Toast toast = Toast.makeText(TimeSetDateModify.this, "타임 타이틀을 입력하세요.", Toast.LENGTH_SHORT);
                     toast.show();
-//                }else if (today.length() == 0){
-//                    Toast toast = Toast.makeText(TimeSetDateModify.this, "카테고리를 선택해주세요.", Toast.LENGTH_SHORT);
-//                    toast.show();
                 }else if (caName.length() == 0){
                     Toast toast = Toast.makeText(TimeSetDateModify.this, "카테고리를 선택해주세요.", Toast.LENGTH_SHORT);
                     toast.show();
-                }else if (nfc.length() == 0){
+                }
+                else if (nfc.length() == 0){
                     Toast toast = Toast.makeText(TimeSetDateModify.this, "nfc를 등록해주세요.", Toast.LENGTH_SHORT);
                     toast.show();
-                }else{
-                    url = "http://203.250.133.162:8080/timeAPI/update_time/" + loginID + "/" + listId + "/" + name + "/" + today + "/" + caName + "/" + nfc  ;
+                }
+                else{
+                    url = "http://203.250.133.162:8080/timeAPI/update_time/" + loginID + "/" + listId + "/" + name + "/" + today + "/" + caName;
                     timeApiService.postUrl(url);
                     if (timeApiService.getStatus()==200){
                         finish();

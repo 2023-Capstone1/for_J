@@ -8,6 +8,7 @@ package com.example.for_j;
 import static com.example.for_j.CalendarUtill.selectedDate;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,6 +37,9 @@ public class CalendarFragment extends Fragment {
     ImageButton CalendarFragment_prevBtn;
     ImageButton CalendarFragment_nextBtn;
 
+    //옵션 버튼
+    ImageButton Btn_Option;
+
     // 리스트뷰관련 변수
     ListView CalendarFragment_scheduleListView;
     ListView CalendarFragment_todoListView;
@@ -54,6 +58,18 @@ public class CalendarFragment extends Fragment {
         * */
         // 프래그먼트 뷰 생성
         View calendarView = inflater.inflate(R.layout.fragment_calendar, container, false);
+
+        // 옵션 버튼 클릭 이벤트
+        Btn_Option = calendarView.findViewById(R.id.btn_option);
+
+        Btn_Option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Menu.java로 이동하는 인텐트 생성
+                Intent intent = new Intent(getActivity(), Menu.class);
+                startActivity(intent);
+            }
+        });
 
         // 풀캘린더 초기화
         CalendarFragment_monthYearText = calendarView.findViewById(R.id.monthYearText);

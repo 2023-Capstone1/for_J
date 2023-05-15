@@ -54,7 +54,11 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_tracker_set_date_new);
 
-        today = todayCal.get(Calendar.YEAR)+ "-" + todayCal.get(Calendar.MONTH) + "-" + todayCal.get(Calendar.DAY_OF_MONTH);
+        int year = todayCal.get(Calendar.YEAR);
+        int month = todayCal.get(Calendar.MONTH) + 1; // Add 1 to the month to represent 1-12 range
+        int day = todayCal.get(Calendar.DAY_OF_MONTH);
+
+        today = String.format("%04d-%02d-%02d", year, month, day);
 
         // 타이틀바 텍스트 색상 지정
         ActionBar actionbar = getSupportActionBar();
@@ -148,11 +152,20 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
         // 카테고리 이름, 색상 불러와서 카테고리 버튼에 적용하기
 
         // nfc 인텐트 연결
-        TRSDN_NFCBtn = findViewById(R.id.TRSDN_NFCBtn);
+        /*TRSDN_NFCBtn = findViewById(R.id.TRSDN_NFCBtn);
         TRSDN_NFCBtn.setOnClickListener(v -> {
-            Intent registerNFCIntent = new Intent(TimeTrackerSetDateNew.this, TimeRegisterNFC.class);
+            Intent registerNFCIntent = new Intent(this, TimeRegisterNFC.class);
             registerNFCResultLauncher.launch(registerNFCIntent);
-        });
+        });*/
+
+        /*TRSDN_NFCBtn = findViewById(R.id.TRSDN_NFCBtn);
+        TRSDN_NFCBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent registerNFCIntent = new Intent(TimeTrackerSetDateNew.this, TimeRegisterNFC.class);
+                registerNFCResultLauncher.launch(registerNFCIntent);
+            }
+        });*/
 
 
         // 저장 버튼
@@ -175,8 +188,7 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
                 // loginId는 123으로 통일
                 // 나중에 바꿀거임 여기 수정해야함!!!!!
                 loginID = "123";
-
-//                // 타임트래커 타이틀
+                // 타임트래커 타이틀
 //                private EditText TRSDN_Title;
 //                // 타임트래커 카테고리 버튼
 //                private Button TRSDN_CategoryBtn;
@@ -198,13 +210,16 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
                 } else if (caName.length() == 0) {
                     Toast toast = Toast.makeText(TimeTrackerSetDateNew.this, "카테고리를 선택해주세요.", Toast.LENGTH_SHORT);
                     toast.show();
-                } else if (nfc.length() == 0){
+                }/*
+                else if (nfc.length() == 0){
                     // nfc 값
-                    nfc = "none";
-                } else {
+                    nfc = "none";}*/
+                else {
                     ApiService todoApiService = new ApiService();
-                    String url = "http://203.250.133.162:8080/todoAPI/set_todo/" + loginID + "/" + name + "/" + today + "/" + caName + "/" + state;
+                    String url = "http://203.250.133.162:8080/timeAPI/set_timeTracker/" + loginID + "/" + name + "/" + today + "/" + caName;
                     todoApiService.postUrl(url);
+                    System.out.println(url);
+
 
                     if (todoApiService.getStatus()==200){
                         finish();
@@ -234,8 +249,7 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
     }
 
     private final ActivityResultLauncher<Intent> registerNFCResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
+            new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
                     Intent data = result.getData();
                     if (data != null) {

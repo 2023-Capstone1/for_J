@@ -43,6 +43,9 @@ import java.util.Set;
 
 public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeListAdapterListener {
 
+    //옵션 버튼
+    ImageButton Btn_Option;
+
     // 달력 관련 변수
     private TextView TimeFragment_monthYearText; // 년월 텍스트뷰
     private RecyclerView TimeFragment_recyclerView; // RecyclerView 객체 생성
@@ -77,10 +80,10 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
     private String timeUrl;
     private Calendar calendar = Calendar.getInstance();
     private String loginID = "123";
-    private String startTime;
+/*    private String startTime;
     private String endTime;
     private String timeTaken;
-    private int order;
+    private int order;*/
     //    @SuppressLint("DefaultLocale")
 //    private String today = calendar.get(Calendar.YEAR) + "-" + String.format("%02d", calendar.get(Calendar.MONTH)+1) + "-" + String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH));
     private String selectedDateStr;
@@ -119,6 +122,18 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
             }
         });
 
+        // 옵션 버튼 클릭 이벤트
+        Btn_Option = timeView.findViewById(R.id.btn_option);
+
+        Btn_Option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Menu.java로 이동하는 인텐트 생성
+                Intent intent = new Intent(getActivity(), Menu.class);
+                startActivity(intent);
+            }
+        });
+
         /*
          * 달력 관련 코드
          * */
@@ -132,7 +147,7 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
         selectedDate = LocalDate.now();
 
         // 달력 화면 설정
-        setMonthView();
+//        setMonthView();
 
         // 이전달 버튼 이벤트
         TimeFragment_prevBtn.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +157,7 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
                 // 현재 월-1 변수에 담기
                 CalendarUtill.selectedDate = CalendarUtill.selectedDate.minusMonths(1);
                 setMonthView();
+                onResume();
             }
         });
         // 다음달 버튼 이벤트
@@ -152,127 +168,10 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
                 // 현재 월+1 변수에 담기
                 CalendarUtill.selectedDate = CalendarUtill.selectedDate.plusMonths(1);
                 setMonthView();
+                onResume();
             }
         });
 
-//        // 카테고리랑 리스트뷰를 묶은 리니어레이아웃 추가 --> 디비에서 투두 카테고리 개수 가져와서 아래 생성 부분
-//        /*
-//        * 생성 부분
-//        * */
-//        // LinearLayout 생성
-//        LinearLayout linearLayout = new LinearLayout(getContext());
-//        linearLayout.setOrientation(LinearLayout.VERTICAL);
-//        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        linearLayout.setTag("linear_layout_todo"); // setId 대신 태그 설정해서 태그로 참조하기
-//
-//        // Button을 생성하고 LinearLayout에 추가합니다.
-//        Button button = new Button(getContext());
-//        button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        button.setPadding(5, 5, 5, 5);
-//        button.setText("Personal"); // 카테고리 디비 테이블에서 투두 카테고리 이름 가져와서 setText 수정해야함
-//        button.setTag("todo_category");
-//        linearLayout.addView(button);
-//
-//        // ListView를 생성하고 LinearLayout에 추가합니다.
-//        ListView listView = new ListView(getContext());
-//        listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        listView.setDividerHeight(10);
-//        listView.setDivider(ContextCompat.getDrawable(getContext(), R.drawable.list_item_divider));
-//        listView.setTag("todo_category_list");
-//        linearLayout.addView(listView);
-//
-//        // ScrollView에 LinearLayout을 추가합니다.
-//        ScrollView scrollView = todoView.findViewById(R.id.todo_listScrollView);
-//        scrollView.addView(linearLayout);
-//
-//        /*
-//        * 리스트뷰 관련 코드
-//        * */
-//        // 리스트뷰 연결 -> 위 코드처럼 xml자바로 추가했을 때 사용
-//        ToDoFragment_listView = scrollView.findViewWithTag("todo_category_list");
-
-//        // 리스트뷰 연결
-//        TimeFragment_listView = timeView.findViewById(R.id.time_list);
-//        TimeFragment_listView2 = timeView.findViewById(R.id.time_list2);
-//        // 리스트뷰 어댑터 객체 생성
-//        TimeFragment_listAdapter = new TimeListItemAdapter();
-//
-//        // 리스트뷰 테스트용 -디비에서 가져오는 걸로 바꿔야함
-//        TimeFragment_listAdapter.addItem(new TimeListItem("안드로이드 과제 제출"));
-//        TimeFragment_listAdapter.addItem(new TimeListItem("캡스톤 회의"));
-//        TimeFragment_listView.setAdapter(TimeFragment_listAdapter);
-//        TimeFragment_listView2.setAdapter(TimeFragment_listAdapter);
-//
-//        // toDoFragment_ListNumText 리스트 개수 출력 -db쿼리 카운트해서 가져오는게 좋을지 지금처럼 리스트뷰.getCount()하는게 좋을지 고민중
-//        TimeFragment_listCountText = timeView.findViewById(R.id.timeListCount);
-//        // 모든 투두리스트 개수 합쳐서 출력하기 위해 ToDoFragment_listCount변수 추가
-//        TimeFragment_listCountText.setText(String.valueOf(TimeFragment_listView.getCount() + TimeFragment_listView2.getCount())); // 두 리스트뷰 아이템 개수 합쳐서 출력
-//
-//        // 리스트뷰 오른쪽 위에 오늘 날짜 표시
-//        TimeFragment_list_today = timeView.findViewById(R.id.timeToday);
-//        TimeFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
-//
-//
-//        // 나중에 실행해볼것
-//        /////////////////////////////////////////////////////
-//        Play = timeView.findViewById(R.id.play);
-//        Pause = timeView.findViewById(R.id.pause);
-//        chrono = timeView.findViewById(R.id.timer);
-////
-////        TimeFragment_listView.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View view) {
-////                chrono.setBase(SystemClock.elapsedRealtime());
-////                chrono.start();
-////                Play.setVisibility(View.INVISIBLE);
-////                Pause.setVisibility(View.VISIBLE);
-////            }
-////        });
-////
-////        TimeFragment_listView.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View view) {
-////                chrono.stop();
-////                Play.setVisibility(View.VISIBLE);
-////                Pause.setVisibility(View.INVISIBLE);
-////            }
-////        });
-//        /////////////////////////////////////////////////////
-//
-//
-//
-//
-//        /*
-//         * 다이얼로그 관련
-//         * */
-//        // 리스트뷰 클릭하면 다이얼로그 띄우기
-////        TimeFragment_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-////            @Override
-////            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////                clickedPosition = position; // 클릭 위치 전역변수로 넘김
-////
-////                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView);
-////                dialog.show();
-////
-////                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-////                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
-////            }
-////        });
-////
-////        TimeFragment_listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-////            @Override
-////            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////                clickedPosition = position; // 클릭 위치 전역변수로 넘김
-////
-////                dialog = new TimeTrackerListDialog(getActivity(), TimeFragment_listAdapter, TimeFragment_listCountText, clickedPosition, "Time", TimeFragment_listView2);
-////                dialog.show();
-////
-////                // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-////                Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
-////            }
-////        });
-
-        // 리스트뷰 오른쪽 위에 오늘 날짜 표시
         // 리스트뷰 오른쪽 위에 오늘 날짜 표시
         TimeFragment_list_today = timeView.findViewById(R.id.timeToday);
         TimeFragment_list_today.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
@@ -299,35 +198,6 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
         listLayoutSet = timeView.findViewById(R.id.timeList_add_position);
         listLayoutSet.setVisibility(View.VISIBLE);
         nothingMessage = timeView.findViewById(R.id.nothingMessage);
-
-//        TimeFragment_list_today = timeView.findViewById(R.id.timeToday);
-//        TimeFragment_list_today.setText(dayFormat(CalendarUtill.selectedDate));
-//
-//        listLayoutSet = timeView.findViewById(R.id.timeList_add_position);
-//        listLayoutSet.setVisibility(View.VISIBLE);
-//        nothingMessage = timeView.findViewById(R.id.nothingMessage);
-//        System.out.println("onCreate에서 nothingMessage 연결");
-
-//        // get_is_tuple_exist로 0이면 nothingMessage 띄우기
-//        // 1이면 아래꺼 실행하기
-//        checkTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "time" + "/" + today;
-//        checkTupleExistAPI = new ApiService();
-//        checkTupleExistAPI.getUrl(checkTupleExistURL);
-////        System.out.println("is_tuple_exist type: " + checkTupleExistAPI.getValue("is_tuple_exist").getClass().getTypeName());
-////        System.out.println("is_tuple_exist: " + checkTupleExistAPI.getValue("is_tuple_exist"));
-//
-//
-//        if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
-//            nothingMessage.setVisibility(View.VISIBLE);
-////            System.out.println("onCreate에서 nothingMessage VISIBLE 실행");
-////            Toast toast = Toast.makeText(todoView.getContext(),"onCreate 서버에 값 없음", Toast.LENGTH_SHORT);
-////            toast.show();
-//        } else{
-//            nothingMessage.setVisibility(View.GONE);
-////            System.out.println("onCreate에서 nothingMessage Gone 실행");
-//            getCategoryFromServer();
-//            getTimeFromServer();
-//        }
 
 
         // Inflate the layout for this fragment
@@ -555,23 +425,16 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
             timeFragment_listView[i].setDivider(null); // 디바이더 제거
             timeFragment_listView[i].setDividerHeight(20);
             for (int j = 0; j < Integer.parseInt(getTimeListAPI.getValue("time_total")); j++){
-//                if (Objects.equals(distinctCNameList.get(i), getTimeListAPI.getValue("time_cName" + j))){
-//                    timeFragment_listAdapter[i].addItem(
-//                            new TimeListItem(getTimeListAPI.getValue("time_list_id"+j), getTimeListAPI.getValue("time_name"+j), selectedDateStr,
-//                                    distinctCNameList.get(i), distinctCColorlist.get(i), getTimeListAPI.getValue("time_start_Time"+j),
-//                                    getTimeListAPI.getValue("time_end_Time"+j), getTimeListAPI.getValue("timd_TimeTaken"+j), Integer.parseInt(getTimeListAPI.getValue("time_order")+j)));
-//
-//                }
-                String orderStr = getTimeListAPI.getValue("time_order");
-                int order = 0; // 디폴트 값
-                if (orderStr != null && !orderStr.equals("null")) {
-                    order = Integer.parseInt(orderStr);
+
+                if (Objects.equals(distinctCNameList.get(i), getTimeListAPI.getValue("time_cName"+j))){
+                    timeFragment_listAdapter[i].addItem(
+                            new TimeListItem(getTimeListAPI.getValue("time_list_id"+j),
+                                    getTimeListAPI.getValue("time_name"+j),
+                                    selectedDateStr,
+                                    getTimeListAPI.getValue("time_cName"+j),
+                                    distinctCColorlist.get(i))
+                    );
                 }
-                int orderWithJ = order + j;
-                timeFragment_listAdapter[i].addItem(
-                        new TimeListItem(getTimeListAPI.getValue("time_list_id"+j), getTimeListAPI.getValue("time_name"+j), selectedDateStr,
-                                distinctCNameList.get(i), distinctCColorlist.get(i), getTimeListAPI.getValue("time_start_Time"+j),
-                                getTimeListAPI.getValue("time_end_Time"+j), getTimeListAPI.getValue("timd_TimeTaken"+j), orderWithJ));
 
             }
             // 리스트 어뎁터 연결
@@ -603,10 +466,13 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     clickedPosition = position; // 클릭 위치 전역변수로 넘김
 
-                    System.out.println("listViewPage: " + listViewPage);
+                    Intent intent = new Intent(getContext(), TimeTrackerTimeTable.class);
+                    intent.putExtra("date", new Date().getTime());
+                    getContext().startActivity(intent);
+                    /*System.out.println("listViewPage: " + listViewPage);
                     dialog = new TimeTrackerListDialog(getActivity(), timeFragment_listAdapter[listViewPage], clickedPosition, "Time", timeFragment_listView[listViewPage]);
                     dialog.setParentFragment(TimeFragment.this);
-                    dialog.show();
+                    dialog.show();*/
                     // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
 //                    Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
                 }

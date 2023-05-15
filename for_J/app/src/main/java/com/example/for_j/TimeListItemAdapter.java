@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +15,9 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.List;
 
 public class TimeListItemAdapter extends BaseAdapter {
 
@@ -28,6 +25,18 @@ public class TimeListItemAdapter extends BaseAdapter {
     Context context;
 
     private TimeFragment parentFragment;
+
+    private String loginId = "123";
+    private String name;
+    private String id;
+    private List<Integer> orderList;
+    private int order;
+    private List<String> startTime;
+    private List<String> endTime;
+    private List<String> timeTaken;
+    private Chronometer chrono;
+
+//    ApiService
 
     public interface TimeListAdapterListener {
         void onCheckButtonClicked(int position, TimeTrackerListDialog timeListDialog);
@@ -134,13 +143,25 @@ public class TimeListItemAdapter extends BaseAdapter {
         });
 
 
-        String loginId = "123";
-        String name = items.get(position).getListName();
-        String id = items.get(position).getListId();
-        int[] order = {items.get(position).getListOrder()};
-        String[] startTime = {items.get(position).getListStartTime()};
-        String[] endTime = {items.get(position).getListEndTime()};
-        String[] timeTaken = {items.get(position).getListTimeTaken()};
+        // play버튼 눌렀을 때
+        // pause 버튼 눌렀을 때
+
+        name = items.get(position).getListName();
+        id = items.get(position).getListId();
+        orderList = items.get(position).getListOrder();
+        if (orderList == null){
+
+        }
+
+
+
+        /*
+        name = items.get(position).getListName();
+        id = items.get(position).getListId();
+        order = items.get(position).getListOrder();
+        startTime = items.get(position).getListStartTime();
+        endTime = items.get(position).getListEndTime();
+        timeTaken = items.get(position).getListTimeTaken();
 
         Chronometer chrono = convertView.findViewById(R.id.timer);
         ImageView play = convertView.findViewById(R.id.play);
@@ -198,85 +219,18 @@ public class TimeListItemAdapter extends BaseAdapter {
                             endTime[0] = endTimeString;
                             timeTaken[0] = timeTakenString;
                             order[0] = timeOrder;
-                            items.get(position).setListOrder(order[0]);
+                            items.get(position).setListOrder(order);
                         }
                     }
 //                    if (timeOrderString != null) {
 //                        order[0] = Integer.parseInt(timeOrderString);
 //                    }
-                    items.get(position).setListOrder(order[0]);
+                    items.get(position).setListOrder(order);
                     play.setVisibility(View.VISIBLE);
                     pause.setVisibility(View.INVISIBLE);
                 }
             }
-        });
-
-//        // 서버에서 order 가지고 와서 시간 출력하기
-//        String loginId = "123";
-//        String name = items.get(position).getListName();
-//        String id = items.get(position).getListId();
-//        int[] order = {items.get(position).getListOrder()};
-//        String[] startTime = {items.get(position).getListStartTime()};
-//        String[] endTime = {items.get(position).getListEndTime()};
-//        String[] timeTaken = {items.get(position).getListTimeTaken()};
-//
-//        //String getTimeList = "http://203.250.133.162:8080/timeAPI/get_timer_info/" + loginId + "/" + id + "/" + name + "/" + order + "/" + startTime + "/" + endTime + "/" + timeTaken;
-////        ApiService getStateAPI = new ApiService();
-////        getStateAPI.getUrl(getTimeList);
-////        order = Integer.parseInt(getStateAPI.getValue("time_order"));
-////        items.get(position).setListOrder(order);
-//
-//
-//        Chronometer chrono = convertView.findViewById(R.id.timer);
-//        ImageView play = convertView.findViewById(R.id.play);
-//        ImageView pause = convertView.findViewById(R.id.pause);
-//        final long[] timeWhenStopped = {0}; // 멈춘 시점의 시간을 저장할 변수
-//        final boolean[] isRunning = {false};
-//        final long[] pauseOffset = {0};
-//
-//        // Play에 OnClickListener 추가
-//        play.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!isRunning[0]) {
-//                    startTime[0] = String.valueOf(System.currentTimeMillis() - pauseOffset[0]);
-//                    chrono.setBase(SystemClock.elapsedRealtime() - pauseOffset[0]);
-//                    chrono.start();
-//                    isRunning[0] = true;
-//                    play.setVisibility(View.INVISIBLE);
-//                    pause.setVisibility(View.VISIBLE);
-//                    order[0]++;
-//                }
-//            }
-//        });
-//
-//        // Pause에 OnClickListener 추가
-//        pause.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (isRunning[0]) {
-//                    endTime[0] = String.valueOf(System.currentTimeMillis());
-//                    //timeWhenStopped[0] = chrono.getBase() - SystemClock.elapsedRealtime(); // 멈춘 시점의 시간을 계산
-//                    chrono.stop();
-//                    pauseOffset[0] = SystemClock.elapsedRealtime() - chrono.getBase();
-//                    isRunning[0] = false;
-//                    long millis = Long.parseLong(endTime[0]) - Long.parseLong(startTime[0]);
-//                    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-//                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-//                    timeTaken[0] = dateFormat.format(new Date(millis));
-//                    String getTimeList = "http://203.250.133.162:8080/timeAPI/get_timer_info/" + loginId + "/" + id + "/" + name + "/" + order[0] + "/" + startTime[0] + "/" + endTime[0] + "/" + timeTaken[0];
-//                    ApiService getStateAPI = new ApiService();
-//                    getStateAPI.getUrl(getTimeList);
-//                    String timeOrderString = getStateAPI.getValue("time_order");
-//                    if (timeOrderString != null) {
-//                        order[0] = Integer.parseInt(timeOrderString);
-//                    }
-//                    items.get(position).setListOrder(order[0]);
-//                    play.setVisibility(View.VISIBLE);
-//                    pause.setVisibility(View.INVISIBLE);
-//                }
-//            }
-//        });
+        });*/
 
 
         return convertView;

@@ -45,6 +45,9 @@ import java.util.Set;
 
 public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAdapterListener {
 
+    //옵션 버튼
+    ImageButton Btn_Option;
+
     // 달력 관련 변수
     private TextView ToDoFragment_monthYearText; // 년월 텍스트뷰
     private RecyclerView ToDoFragment_recyclerView; // RecyclerView 객체 생성
@@ -113,6 +116,18 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), TodoSetDateNew.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        });
+
+        // 옵션 버튼 클릭 이벤트
+        Btn_Option = todoView.findViewById(R.id.btn_option);
+
+        Btn_Option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Menu.java로 이동하는 인텐트 생성
+                Intent intent = new Intent(getActivity(), Menu.class);
                 startActivity(intent);
             }
         });

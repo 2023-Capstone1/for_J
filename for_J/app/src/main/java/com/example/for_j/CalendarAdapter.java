@@ -67,6 +67,15 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             // 해당 일자 넣기
             holder.dayText.setText(String.valueOf(day.getDayOfMonth()));
 
+            if (day.equals(calendarDate)){
+                // 오늘날짜
+                holder.dayText.setTextColor(ContextCompat.getColor(parentFragment.getContext(), R.color.indigo_100)); // 오늘 날짜 숫자 색상은 하얀색
+                holder.parentView.setBackgroundResource(R.drawable.unselected_today_background_shape); //오늘 날짜 배경 모양
+            }
+            else{
+                holder.dayText.setTextColor(Color.BLACK); // 선택 날짜 제외한 나머지 날짜 -> 기본 날짜 색 검정으로 지정
+            }
+
             // 선택 날짜 색상 칠하기
             if (day.equals(CalendarUtill.selectedDate)) {
 //                System.out.println(day + " " + calendar.getTime());
@@ -81,21 +90,23 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
                 }
             }
             // 토, 일 날짜 글씨 색 지정
-            else if ((position + 1) % 7 == 0) { // 토요일
+            else if (((position + 1) % 7 == 0) && day.equals(CalendarUtill.selectedDate) ) { // 토요일
                 holder.dayText.setTextColor(Color.BLUE); // 파랑
 //                System.out.println("파란색 토요일");
-            } else if (position == 0 || position % 7 == 0) { // 일요일
+            } else if (position == 0 || position % 7 == 0  && day.equals(CalendarUtill.selectedDate)) { // 일요일
                 holder.dayText.setTextColor(Color.RED); // 빨강
 //                System.out.println("빨간색 일요일");
-            } else {
+            }
+            /*else {
                 if (day.equals(calendarDate)){
                     // 오늘날짜
                     holder.dayText.setTextColor(ContextCompat.getColor(parentFragment.getContext(), R.color.indigo_100)); // 오늘 날짜 숫자 색상은 하얀색
                     holder.parentView.setBackgroundResource(R.drawable.unselected_today_background_shape); //오늘 날짜 배경 모양
-                } else{
+                }
+                else{
                     holder.dayText.setTextColor(Color.BLACK); // 선택 날짜 제외한 나머지 날짜 -> 기본 날짜 색 검정으로 지정
                 }
-            }
+            }*/
         }
 
         // 날짜 클릭 이벤트
