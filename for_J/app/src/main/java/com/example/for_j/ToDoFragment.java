@@ -214,6 +214,7 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
         // 달력 화면 설정
         setMonthView();
 
+        // 이거 layoutSet 안으로 넣어서 처리해보기
         if (nothingMessage == null){
             nothingMessage = todoView.findViewById(R.id.nothingMessage);
 //            System.out.println("onResume에서 nothingMessage 연결");
@@ -379,6 +380,8 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
             listlayoutarr[i].addView(button); // 버튼을 LinearLayout에 추가
         }
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void getTodoFromServer() {

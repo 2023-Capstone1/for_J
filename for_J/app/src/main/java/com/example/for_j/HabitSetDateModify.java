@@ -75,18 +75,8 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
     // 서버 통신 변수
     private String getHabitToUpdateURL;
     private ApiService getHabitToUpdateAPI = new ApiService();
-    private String getCreateHabitURL;
-    private ApiService getCreateHabitAPI;
-    private String getUpdateHabitURL;
-    private ApiService getUpdateHabitAPI;
-    private String getDeleteHabitURL;
-    private ApiService getDeleteHabitAPI;
-    private String setHabitURL;
-    private ApiService setHabitAPI;
-    private String updateURL;
-    private ApiService updateAPI;
-    private String deleteHabitURL;
-    private ApiService deleteHabitAPI;
+    private String updateHabitURL;
+    private ApiService updateHabitAPI = new ApiService();
 
     // habit 스키마
     String SloginId = null;
@@ -104,9 +94,10 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
     int Shabit_state = 0;
 
     // 기존 해빗 정보
+    String PreName = null;
     String PreStartDate = null;
     String PreEndDate = null;
-    int[] PdayOfWeek = new int[7];
+//    int[] PdayOfWeek = new int[7];
 
 
     boolean isRepeatNull = true;
@@ -118,6 +109,7 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
 
         // 이전 인텐트에서 받아온 값 읽어오기
         Sname = getIntent().getStringExtra("title");
+        PreName = getIntent().getStringExtra("title");
         Stoday = getIntent().getStringExtra("today");
         SlistId = getIntent().getStringExtra("id");
 
@@ -542,204 +534,51 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
 
                     // 기존 시작 날짜랑 변경된 시작 날짜 비교
                     if (SrepeatN > 0) { // 반복 횟수
-
-                        // 생성
-                        getCreateHabitURL = "http://203.250.133.162:8080/habitAPI/get_date_to_create_N/" + SloginId + "/" + Sname + "/" + PreStartDate + "/" + SstartDate + "/" + PreEndDate + "/" + SendDate + "/" + getHabitToUpdateAPI.getValue("habit_repeatN");
-                        getCreateHabitAPI = new ApiService();
-                        getCreateHabitAPI.getUrl(getCreateHabitURL);
-
-                        // 123/test/2023-05-01/2023-04-24/2023-05-31/2023-05-28/7
-//                        { # create 예시
-//                            "date_to_create0": "2023-04-30",
-//                                "date_to_create1": "2023-04-29",
-//                                "date_to_create2": "2023-04-28",
-//                                "date_to_create3": "2023-04-27",
-//                                "date_to_create4": "2023-04-26",
-//                                "date_to_create5": "2023-04-25",
-//                                "date_to_create6": "2023-04-24",
-//                                "total": "7",
-//                                "SUCCESS": "200"
-//                        }//
-                        //
-                        for (int i = 0; i < Integer.parseInt(getCreateHabitAPI.getValue("total")); i++){
-                            setHabitURL = "http://203.250.133.162:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + getCreateHabitAPI.getValue("date_to_create"+i) + "/"
-                                    + SstartDate + "/" + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-                                    + Shabit_nfc + "/" + Shabit_state;
-                            setHabitAPI.postUrl(setHabitURL);
-                        }
-
-                        // 업데이트
-                        getUpdateHabitURL = "http://203.250.133.162:8080/habitAPI/get_date_to_update_N/" + SloginId + "/" + Sname + "/" + PreStartDate + "/" + SstartDate + "/" + PreEndDate + "/" + SendDate + "/" + getHabitToUpdateAPI.getValue("habit_repeatN");
-                        getUpdateHabitAPI = new ApiService();
-                        getUpdateHabitAPI.getUrl(getUpdateHabitURL);
-
-                        /*
-                        {
-                            "date_to_update0": "2023-05-01",
-                                "date_to_update1": "2023-05-02",
-                                "date_to_update2": "2023-05-03",
-                                "date_to_update3": "2023-05-04",
-                                "date_to_update4": "2023-05-05",
-                                "date_to_update5": "2023-05-06",
-                                "date_to_update6": "2023-05-07",
-                                "date_to_update7": "2023-05-08",
-                                "date_to_update8": "2023-05-09",
-                                "date_to_update9": "2023-05-10",
-                                "date_to_update10": "2023-05-11",
-                                "date_to_update11": "2023-05-12",
-                                "date_to_update12": "2023-05-13",
-                                "date_to_update13": "2023-05-14",
-                                "date_to_update14": "2023-05-15",
-                                "date_to_update15": "2023-05-16",
-                                "date_to_update16": "2023-05-17",
-                                "date_to_update17": "2023-05-18",
-                                "date_to_update18": "2023-05-19",
-                                "date_to_update19": "2023-05-20",
-                                "date_to_update20": "2023-05-21",
-                                "date_to_update21": "2023-05-22",
-                                "date_to_update22": "2023-05-23",
-                                "date_to_update23": "2023-05-24",
-                                "date_to_update24": "2023-05-25",
-                                "date_to_update25": "2023-05-26",
-                                "date_to_update26": "2023-05-27",
-                                "date_to_update27": "2023-05-28",
-                                "total": "27",
-                                "SUCCESS": "200"
-                        }
-                        */
-
-                        for (int i = 0; i < Integer.parseInt(getUpdateHabitAPI.getValue("total"));i++){
-                            updateURL = "http://203.250.133.162:8080/habitAPI/update_habit/" + SloginId + "/" + Sname + "/" + getCreateHabitAPI.getValue("date_to_update"+i) + "/"
-                                    + SstartDate + "/" + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-                                    + Shabit_nfc + "/" + Shabit_state;
-                            updateAPI.putUrl(updateURL);
-                        }
-
-                        // 삭제
-                        getDeleteHabitURL = "http://203.250.133.162:8080/habitAPI/get_date_to_delete_N/" + SloginId + "/" + Sname + "/" + PreStartDate + "/" + SstartDate + "/" + PreEndDate + "/" + SendDate + "/" + getHabitToUpdateAPI.getValue("habit_repeatN");
-                        getDeleteHabitAPI = new ApiService();
-                        getDeleteHabitAPI.getUrl(getDeleteHabitURL);
-
-                        for (int i = 0; i < Integer.parseInt(getDeleteHabitAPI.getValue("total")); i++){
-                            deleteHabitURL = "http://203.250.133.162:8080/habitAPI/haibt_delete" + SloginId + "/" + Sname + "/" + SstartDate + "/" + SendDate + "/" + getDeleteHabitAPI.getValue("date_to_delete"+i);
-                            deleteHabitAPI = new ApiService();
-                            deleteHabitAPI.deleteUrl(deleteHabitURL);
-                        }
+//                        private String updateHabitURL;
+//                        private ApiService updateHabitAPI = new ApiService();
+                        updateHabitURL = "http://203.250.133.162:8080/habitAPI/update_habit/" + SloginId + "/" + PreName + "/" + Sname + "/" + PreStartDate + "/" + SstartDate + "/" + PreEndDate + "/" +
+                                SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/" + Shabit_nfc + "/" + Shabit_state;
+                        updateHabitAPI = new ApiService();
+                        updateHabitAPI.putUrl(updateHabitURL);
                     } else {    // 반복 날짜
 
-                        // habitAPI/get_date_to_create_N/login_id/name/preStartDate/currentStartDate/preEndDate/currentEndDate/repeatN
-                        // habitAPI/get_date_to_update_N/login_id/name/preStartDate/currentStartDate/preEndDate/currentEndDate/repeatN
-                        // habitAPI/get_date_to_delete_N/login_id/name/preStartDate/currentStartDate/preEndDate/currentEndDate/repeatN
+                        boolean[] dayOfWeek = new boolean[7];
+                        // Calendar.DAY_OF_WEEK 일요일 1, 월요일 2, 화요일 3, 수요일 4, 목요일 5, 금요일 6, 토요일 7
+                        // dayOfWeek는 일요일이 0
+                        for (int i = 0; i < SrepeatDay.length(); i++) {
+                            char character = SrepeatDay.charAt(i);
+                            switch (character) {
+                                case '일':
+                                    dayOfWeek[0] = true;
+                                    break;
+                                case '월':
+                                    dayOfWeek[1] = true;
+                                    break;
+                                case '화':
+                                    dayOfWeek[2] = true;
+                                    break;
+                                case '수':
+                                    dayOfWeek[3] = true;
+                                    break;
+                                case '목':
+                                    dayOfWeek[4] = true;
+                                    break;
+                                case '금':
+                                    dayOfWeek[5] = true;
+                                    break;
+                                case '토':
+                                    dayOfWeek[6] = true;
+                                    break;
 
-                        // 서버 통신 변수
-//                        private String getHabitToUpdateURL;
-//                        private ApiService getHabitToUpdateAPI = new ApiService();
-//                        private String getCreateHabitURL;
-//                        private ApiService getCreateHabitAPI = new ApiService();
-//                        private String getUpdateHabitURL;
-//                        private ApiService getUpdateHabitAPI = new ApiService();
-//                        private String getDeleteHabitURL;
-//                        private ApiService getDeleteHabitAPI = new ApiService();
-//                        private String setHabitURL;
-//                        private ApiService setHabitAPI = new ApiService();
-//                        private String updateURL;
-//                        private ApiService updateAPI = new ApiService();
-//                        private String deleteHabitURL;
-//                        private ApiService deleteHabitAPI = new ApiService();
+                            }
+                        }
+//                        private String updateHabitURL;
+//                        private ApiService updateHabitAPI = new ApiService();
 
-                        // 기존 해빗 정보
-//                        getHabitSameNameAPI
-//                        String PreStartDate = null;
-//                        String PreEndDate = null;
-//                        int[] PdayOfWeek = new int[7];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//                        boolean[] dayOfWeek = new boolean[7];
-//                        // Calendar.DAY_OF_WEEK 일요일 1, 월요일 2, 화요일 3, 수요일 4, 목요일 5, 금요일 6, 토요일 7
-//                        // dayOfWeek는 일요일이 0
-//                        for (int i = 0; i < SrepeatDay.length(); i++) {
-//                            char character = SrepeatDay.charAt(i);
-//                            switch (character) {
-//                                case '일':
-//                                    dayOfWeek[0] = true;
-//                                    break;
-//                                case '월':
-//                                    dayOfWeek[1] = true;
-//                                    break;
-//                                case '화':
-//                                    dayOfWeek[2] = true;
-//                                    break;
-//                                case '수':
-//                                    dayOfWeek[3] = true;
-//                                    break;
-//                                case '목':
-//                                    dayOfWeek[4] = true;
-//                                    break;
-//                                case '금':
-//                                    dayOfWeek[5] = true;
-//                                    break;
-//                                case '토':
-//                                    dayOfWeek[6] = true;
-//                                    break;
-//
-//                            }
-//                        }
-//
-//                        // 종료 날짜 전까지 반복
-//                        currentDate = (Calendar) startSelectedDate.clone();
-//                        int dayOfToday;
-//
-//                        while (currentDate.compareTo(endSelectedDate) < 1) {
-//                            dayOfToday = currentDate.get(Calendar.DAY_OF_WEEK);
-//                            year = currentDate.get(Calendar.YEAR);
-//                            month = currentDate.get(Calendar.MONTH) + 1;
-//                            day = currentDate.get(Calendar.DAY_OF_MONTH);
-//
-//                            if (dayOfWeek[dayOfToday - 1]) {
-//                                Stoday = String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, day);
-//                                System.out.println("start date: " + SstartDate);
-//                                System.out.println("today: " + Stoday);
-//                                System.out.println("end date: " + SendDate);
-//                                String url = "http://203.250.133.162:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
-//                                        + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-//                                        + Shabit_nfc + "/" + Shabit_state;
-//                                Log.d("TAG", SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
-//                                        + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-//                                        + Shabit_nfc + "/" + Shabit_state);
-//                                habitApiService.postUrl(url);
-//                                if (habitApiService.getStatus() == 200) {
-//                                    success += 1;
-//                                }
-//
-//                            }
-//                            currentDate.add(Calendar.DATE, 1);
-//                        }
+                        updateHabitURL = "http://203.250.133.162:8080/habitAPI/update_habit/" + SloginId + "/" + PreName + "/" + Sname + "/" + PreStartDate + "/" + SstartDate + "/" + PreEndDate + "/" +
+                                SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/" + Shabit_nfc + "/" + Shabit_state;
+                        updateHabitAPI = new ApiService();
+                        updateHabitAPI.putUrl(updateHabitURL);
                     }
                     finish();
                 }

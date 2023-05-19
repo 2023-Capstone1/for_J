@@ -4,6 +4,7 @@ package com.example.for_j;
 import static com.example.for_j.CalendarUtill.selectedDate;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,41 +37,21 @@ import java.util.Objects;
 import java.util.Set;
 
 
-public class HalfCalendarFragment extends Fragment {
-
-    //서버
-    private String getHabitUrl;
-    private ApiService getHabitListAPI;
-    private ApiService getHabitAPI;
-    private String getTodoUrl;
-    private ApiService getTodoListAPI;
-    private ApiService checkTupleExistAPI;
-    private String checkTupleExistURL;
+public class HalfCalendarFragment extends Fragment implements CalListAdapter.CalListAdapterListener, HabitListAdapter.HabitListAdapterListener {
 
     private Calendar calendar = Calendar.getInstance();
     private String loginID = "123";
-    @SuppressLint("DefaultLocale")
-    private String today = calendar.get(Calendar.YEAR) + "-" + String.format("%02d", calendar.get(Calendar.MONTH)+1) + "-" + String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH));
-    private int cateNum = 0;
-    private int[] habitNum;
-    private int[] todoNum;
+
+    private DateTimeFormatter formatter;
+    private String selectedDateStr;
+
+    // 다이얼로그 관련
+    private CalDialog dialog;
 
 
-    private LinearLayout listLayoutSet;
-    private LinearLayout[] listlayoutarr;
-    private List<String> distinctCNameList;
-    private View habitView;
-    private View todoView;
-
-    private RelativeLayout nothing;
-
-    private ListView[] habitFragment_listView;
-    private ListItemAdapter[] habitFragment_listAdapter;
-
+    private View halfCalView;
 
     private int clickedPosition = -1;
-
-    //private dialog;
 
     // 하프 캘린더 화면 액티비티
     TextView HalfFragment_monthYearText; // 년월 텍스트뷰
@@ -78,18 +59,76 @@ public class HalfCalendarFragment extends Fragment {
     ImageButton HalfFragment_prevBtn; // 이전달 이동 버튼
     ImageButton HalfFragment_nextBtn; // 다음달 이동 버튼
 
+    // +버튼
+    private ImageButton moveTimeSetDateNew;
+
+    // 리스트 관리 변수
+    private LinearLayout HalfCal_AllList;
+    private LinearLayout HalfCal_CalList;
+    private LinearLayout HalfCal_habitList;
+    private LinearLayout HalfCal_todoList;
+
+    private ListView Cal_listView;
+    private CalListAdapter Cal_listAdapter;
+    private ListView Habit_listView;
+    private HabitListAdapter Habit_listAdapter;
+    private ListView Todo_listView;
+    private ListItemAdapter Todo_listAdapter;
+
+    // nothing 화면
+    private TextView cal_nothing;
+    private TextView habit_nothing;
+    private TextView todo_nothing;
+
+
+
+
+
+
+
+    // 서버 소통 변수
+    private String CalIsTupleExistURL;
+    private ApiService CalIsTupleExistAPI = new ApiService();
+
+    private String getCalListURL;
+    private ApiService getCalListAPI;
+
+    private String HabitIsTupleExistURL;
+    private ApiService HabitIsTupleExistAPI = new ApiService();
+
+    private String getHabitListURL;
+    private ApiService getHabitListAPI;
+
+    private String TodoIsTupleExistURL;
+    private ApiService TodoIsTupleExistAPI = new ApiService();
+
+    private String getTodoListURL;
+    private ApiService getTodoListAPI;
+
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        habitView = inflater.inflate(R.layout.fragment_half_calendar, container, false);
+        halfCalView = inflater.inflate(R.layout.fragment_half_calendar, container, false);
+
+        // 타임 리스트 추가 인텐트로 이동
+        moveTimeSetDateNew = halfCalView.findViewById(R.id.time_listAddBtn);
+        moveTimeSetDateNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CalSetDateNew.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        });
 
         // 초기화
-        HalfFragment_monthYearText = habitView.findViewById(R.id.Calendar_MonthYearText);
-        HalfFragment_prevBtn = habitView.findViewById(R.id.Calendar_PreBtn);
-        HalfFragment_nextBtn = habitView.findViewById(R.id.Calendar_NextBtn);
-        HalfFragment_recyclerView = habitView.findViewById(R.id.Calendar_RecyclerView);
+        HalfFragment_monthYearText = halfCalView.findViewById(R.id.Calendar_MonthYearText);
+        HalfFragment_prevBtn = halfCalView.findViewById(R.id.Calendar_PreBtn);
+        HalfFragment_nextBtn = halfCalView.findViewById(R.id.Calendar_NextBtn);
+        HalfFragment_recyclerView = halfCalView.findViewById(R.id.Calendar_RecyclerView);
 
         // 현재 날짜
         selectedDate = LocalDate.now();
@@ -118,242 +157,256 @@ public class HalfCalendarFragment extends Fragment {
             }
         });
 
-        listLayoutSet = habitView.findViewById(R.id.habitList_add_position);
-        listLayoutSet.setVisibility(View.VISIBLE);
-        nothing = habitView.findViewById(R.id.nothing);
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        selectedDateStr = selectedDate.format(formatter);
 
-        checkTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "todo" + "/" + today;
-        checkTupleExistAPI = new ApiService();
-        checkTupleExistAPI.getUrl(checkTupleExistURL);
+        HalfCal_AllList = halfCalView.findViewById(R.id.HalfCal_AllList);
+        HalfCal_CalList = halfCalView.findViewById(R.id.HalfCal_CalList);
+        HalfCal_habitList = halfCalView.findViewById(R.id.HalfCal_habitList);
+        HalfCal_todoList = halfCalView.findViewById(R.id.HalfCal_todoList);
 
-        if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
-            nothing.setVisibility(View.VISIBLE);
-//            System.out.println("onCreate에서 nothingMessage VISIBLE 실행");
-//            Toast toast = Toast.makeText(todoView.getContext(),"onCreate 서버에 값 없음", Toast.LENGTH_SHORT);
-//            toast.show();
-        } else{
-            nothing.setVisibility(View.GONE);
-//            System.out.println("onCreate에서 nothingMessage Gone 실행");
-            getHabitFromServer();
-        }
+        cal_nothing = halfCalView.findViewById(R.id.cal_nothing);
+        cal_nothing.setVisibility(View.GONE);
+        habit_nothing = halfCalView.findViewById(R.id.habit_nothing);
+        habit_nothing.setVisibility(View.GONE);
+        todo_nothing = halfCalView.findViewById(R.id.todo_nothing);
+        todo_nothing.setVisibility(View.GONE);
 
         // Inflatethe layout for this fragment
-        return habitView;
+        return halfCalView;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
         super.onResume();
         // Rerun the code from the beginning
 
-        if (nothing == null){
-            nothing = habitView.findViewById(R.id.nothing);
-            //System.out.println("onResume에서 nothingMessage 연결");
-        }
+        setMonthView();
 
-        if (listLayoutSet != null){
-            listLayoutSet.removeAllViewsInLayout();
-            listLayoutSet.removeViewInLayout(listLayoutSet);
-            checkTupleExistAPI.getUrl(checkTupleExistURL);
+        // selectedDate 포매팅하기
+        selectedDateStr = selectedDate.format(formatter);
 
-            if (Objects.equals(checkTupleExistAPI.getValue("is_tuple_exist"), "0")){
-                nothing.setVisibility(View.VISIBLE);
-//                System.out.println("onResume에서 nothingMessage visible 실행");
-//                Toast toast = Toast.makeText(todoView.getContext(),"Resume 서버에 값 없음", Toast.LENGTH_SHORT);
-//                toast.show();
+        // 캘린더 레이아웃 설정
+        if (HalfCal_CalList != null){
+            HalfCal_CalList.removeAllViewsInLayout();
+            HalfCal_CalList.removeViewInLayout(HalfCal_CalList);
 
-            }else{
-                nothing.setVisibility(View.GONE);
-//                System.out.println("onResume에서 nothingMessage Gone 실행");
-                getHabitFromServer();
+            HalfCal_CalList = halfCalView.findViewById(R.id.HalfCal_CalList);
+
+            // 캘린더 튜플이 있는지 확인
+            CalIsTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "calendar" + "/" + selectedDateStr;
+            CalIsTupleExistAPI.getUrl(CalIsTupleExistURL);
+
+            // 캘린더가 없으면 nothing 띄우기
+            if (Objects.equals(CalIsTupleExistAPI.getValue("is_tuple_exist"), "0")){
+                cal_nothing.setVisibility(View.VISIBLE);
+            } else {
+                cal_nothing.setVisibility(View.GONE);
+                getCalListFromServer();
             }
         }
+
+        // 해빗 레이아웃 설정
+        if (HalfCal_habitList != null){
+            HalfCal_habitList.removeAllViewsInLayout();
+            HalfCal_habitList.removeViewInLayout(HalfCal_habitList);
+
+            HalfCal_habitList = halfCalView.findViewById(R.id.HalfCal_habitList);
+
+            // 캘린더 튜플이 있는지 확인
+            CalIsTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "habit" + "/" + selectedDateStr;
+            CalIsTupleExistAPI.getUrl(CalIsTupleExistURL);
+
+            // 캘린더가 없으면 nothing 띄우기
+            if (Objects.equals(CalIsTupleExistAPI.getValue("is_tuple_exist"), "0")){
+                cal_nothing.setVisibility(View.VISIBLE);
+            } else {
+                cal_nothing.setVisibility(View.GONE);
+                getHabitListFromServer();
+            }
+        }
+
+
+
+        // 모든 리스트 띄우는 레이아웃 초기화
+        /*if (HalfCal_AllList != null){
+            HalfCal_AllList.removeAllViewsInLayout();
+            HalfCal_CalList.removeViewInLayout(HalfCal_CalList);
+
+
+
+            HalfCal_AllList = halfCalView.findViewById(R.id.HalfCal_AllList);
+
+            HalfCal_habitList = halfCalView.findViewById(R.id.HalfCal_habitList);
+            HalfCal_todoList = halfCalView.findViewById(R.id.HalfCal_todoList);
+
+
+
+            // 해빗 튜플이 있는지 확인
+            HabitIsTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "habit" + "/" + selectedDateStr;
+            HabitIsTupleExistAPI.getUrl(HabitIsTupleExistURL);
+
+
+            // 투두가 있는지 확인
+            TodoIsTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "todo" + "/" + selectedDateStr;
+            TodoIsTupleExistAPI.getUrl(TodoIsTupleExistURL);
+
+
+
+        }*/
+
+
     }
 
-    //367
+    // 캘린더 리스트 불러오기
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void getCalListFromServer(){
+        selectedDateStr = selectedDate.format(formatter);
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void getHabitFromServer() {
+        getCalListURL = "http://203.250.133.162:8080/CalendarAPI/get_cal_list/" + loginID + "/" + selectedDateStr;
+        getCalListAPI = new ApiService();
+        getCalListAPI.getUrl(getCalListURL);
 
-        // 서버에서 습관 목록 가져오기
-        getHabitUrl = "http://203.250.133.162:8080/habitAPI/get_habit_today/" + loginID + "/" + today;
-        getHabitListAPI = new ApiService();
-        getHabitListAPI.getUrl(getHabitUrl);
+        // 가져온 캘린더 리스트 어뎁터 아이템에 추가 하기
+        Cal_listAdapter = new CalListAdapter();
+        Cal_listAdapter.setListener(HalfCalendarFragment.this);
+        Cal_listView = new ListView(getContext());
 
-//
-//        int totalHabits = Integer.parseInt(getHabitListAPI.getValue("habit_total"));
-//        String[] categoryNames = new String[totalHabits];
-//
-//        //String[]  categoryNames = new String[Integer.parseInt(getHabitListAPI.getValue("habit_total"))];
-//        for (int i = 0; i < Integer.parseInt(getHabitListAPI.getValue("habit_total")); i++) {
-//            categoryNames[i] = getHabitListAPI.getValue("habit_cName" + i);
-//        }
-//
-//        Set<String> distinctCategoryNames = new HashSet<>(Arrays.asList(categoryNames));
-//        cateNum = distinctCategoryNames.size();
-
-        // 리스트뷰가 들어가야하는 리니어 레이아웃 연결
-        if (listLayoutSet == null){
-            listLayoutSet = habitView.findViewById(R.id.habitList_add_position);
-        }
-        listlayoutarr = new LinearLayout[cateNum];
-
-        for (int i = 0; i < listlayoutarr.length; i++) {
-            listlayoutarr[i] = new LinearLayout(habitView.getContext());
-
-            // set the layout parameters and properties of the LinearLayout
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
+        Cal_listView.setNestedScrollingEnabled(false);
+        Cal_listView.setDivider(null);  // 디바이더 제거
+        Cal_listView.setDividerHeight(20);
+        /*{
+            "cal_list_id0": "3",
+                "cal_list_name0": "web test",
+                "cal_list_color0": "pink",
+                "cal_list_allDay0": "0",
+                "cal_list_startDate0": "2023-05-18",
+                "cal_list_startTime0": "14:00",
+                "cal_list_endDate0": "2023-05-31",
+                "cal_list_endTime0": "16:30",
+                "cal_list_location0": "c401",
+                "cal_list_alarm0": "0",
+                "cal_list_memo0": "memo test",
+                "total": "1",
+                "SUCCESS": "200"
+        }*/
+        for (int i = 0; i < Integer.parseInt(getCalListAPI.getValue("total")); i++){
+            Cal_listAdapter.addItem(
+                    new ListItem(getCalListAPI.getValue("cal_list_id"+i), getCalListAPI.getValue("cal_list_name"+i),
+                            getCalListAPI.getValue("cal_list_color"+i), Integer.parseInt(getCalListAPI.getValue("cal_list_allDay"+i)),
+                            getCalListAPI.getValue("cal_list_startDate"+i), getCalListAPI.getValue("cal_list_startTime"+i),
+                            getCalListAPI.getValue("cal_list_endDate"+i), getCalListAPI.getValue("cal_list_endTime"+i),
+                            getCalListAPI.getValue("cal_list_location"+i), Integer.parseInt(getCalListAPI.getValue("cal_list_alarm"+i)),
+                            getCalListAPI.getValue("cal_list_memo"+i))
             );
-            listlayoutarr[i].setLayoutParams(layoutParams);
-            listlayoutarr[i].setOrientation(LinearLayout.VERTICAL);
-            listLayoutSet.addView(listlayoutarr[i]);
+        }
+        Cal_listView.setAdapter(Cal_listAdapter);
+        HalfCal_CalList.addView(Cal_listView);
+
+        // 스크롤 뷰와 리스트뷰 충돌방지 용 리스트뷰 높이 지정
+        int totalHeight = 0;
+        ViewGroup.LayoutParams params;
+        for (int i = 0; i < Integer.parseInt(getCalListAPI.getValue("total")); i++){
+            // 모든 항목을 표시하기 위해 리스트뷰의 높이를 계산
+            View listItem = Cal_listAdapter.getView(i, null, Cal_listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
         }
 
-        habitFragment_listView = new ListView[cateNum];
-        habitFragment_listAdapter = new ListItemAdapter[cateNum];
-        habitNum = new int[cateNum];
+        // 리스트뷰의 높이를 고정
+        params = Cal_listView.getLayoutParams();
+        params.height = totalHeight + (Cal_listView.getDividerHeight() * (Cal_listAdapter.getCount() - 1));
+        Cal_listView.setLayoutParams(params);
 
-        for (int i = 0; i < cateNum; i++) {
-            habitFragment_listAdapter[i] = new ListItemAdapter();
-            habitFragment_listView[i] = new ListView(getContext());
-            habitFragment_listView[i].setNestedScrollingEnabled(false);
-            habitFragment_listView[i].setDivider(null);
-            habitFragment_listView[i].setDividerHeight(20);
-            for (int j = 0; j < Integer.parseInt(getHabitListAPI.getValue("habit_total")); j++) {
-                if (Objects.equals(distinctCNameList.get(i), getHabitListAPI.getValue("habit_cName" + j))) {
-                    habitFragment_listAdapter[i].addItem(
-                            new ListItem(getHabitListAPI.getValue("habit_list_id" + j), getHabitListAPI.getValue("habit_name" + j), today,
-                                    distinctCNameList.get(i), distinctCNameList.get(i), Integer.parseInt(getHabitListAPI.getValue("habit_state" + j))));
-                }
+        Cal_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                System.out.println("이거 실행됨");
+                clickedPosition = position;
+
+                dialog = new CalDialog(getActivity(), Cal_listAdapter, clickedPosition, "Calendar", Cal_listView);
+                dialog.setParentFragment(HalfCalendarFragment.this);
+                dialog.show();
+                onResume();
             }
-
-            habitFragment_listView[i].setAdapter(habitFragment_listAdapter[i]);
-
-            listlayoutarr[i].addView(habitFragment_listView[i]);
-
-        }
-
-
-//
-//        for (int i = 0; i < cateNum; i++) {
-//            int totalHeight = 0;
-//            for (int j = 0; j < habitFragment_listAdapter[i].getCount(); j++) {
-//                View listItem = habitFragment_listAdapter[i].getView(j, null, habitFragment_listView[i]);
-//                listItem.measure(0, 0);
-//                totalHeight += listItem.getMeasuredHeight();
-//            }
-//
-//            ViewGroup.LayoutParams params = habitFragment_listView[i].getLayoutParams();
-//            params.height = totalHeight + (habitFragment_listView[i].getDividerHeight() * (habitFragment_listAdapter[i].getCount() - 1));
-//            habitFragment_listView[i].setLayoutParams(params);
-//
-//        }
-//
-//        for (int i = 0; i < cateNum; i++) {
-//            final int listViewPage = i;
-//            habitFragment_listView[listViewPage].setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                    clickedPosition = position;
-//
-//                    System.out.println("listViewPage: " + listViewPage);
-//                    //dialog = new HabitListDialog(getActivity(), habitFragment_listAdapter[listViewPage], clickedPosition, "Habit", habitFragment_listView[listViewPage]);
-//
-//                }
-//            });
-//        }
-
+        });
     }
+    // 해빗 리스트 불러오기
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void getHabitListFromServer(){
+        selectedDateStr = selectedDate.format(formatter);
+
+        getHabitListURL = "http://203.250.133.162:8080/habitAPI/get_habit_today/" + loginID + "/" + selectedDateStr;
+        getHabitListAPI = new ApiService();
+        getHabitListAPI.getUrl(getHabitListURL);
+
+        Habit_listAdapter = new HabitListAdapter();
+        Habit_listAdapter.setListener(HalfCalendarFragment.this);
 
 
 
 
 
-//    @RequiresApi(api = Build.VERSION_CODES.M)
-//    private void getTodoFromServer(){
-//        //오늘 날짜인지 확인
-//        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-//        if (today.equals(currentDate)) {
-//            // The date is the current date, get the todo list from the server
-//            getTodoUrl = "http://203.250.133.162:8080/todoAPI/get_todo_list/" + loginID + "/" + today;
-//            getTodoListAPI = new ApiService();
-//            getTodoListAPI.getUrl(getTodoUrl);
-//
-//            // Check if there are any todo items
-//            if (Objects.equals(getTodoListAPI.getValue("todo_total"), "0")) {
-//                nothing.setVisibility(View.VISIBLE);
-//            } else {
-//                nothing.setVisibility(View.GONE);
-//                //addTodoItemsToListView();
-//            }
-//        } else {
-//            // The date is not the current date, show a message
-//            Toast.makeText(getContext(), "This is not today's date.", Toast.LENGTH_SHORT).show();
-//        }
 
 
 
 
-//        getTodoUrl = "http://203.250.133.162:8080/todoAPI/get_todo_list/" + loginID + "/" + today;
-//        getTodoListAPI = new ApiService();
-//        getTodoListAPI.getUrl(getTodoUrl);
 
-//        todoFragment_listView = new ListView[cateNum];
-//        todoFragment_listAdapter = new ListItemAdapter[cateNum];
-//        todoNum = new int[cateNum];
-//
-//        // 각각 카테고리에 포함되어 있는 리스트 가지고 생성
-//        for (int i = 0; i < cateNum; i++){
-//            todoFragment_listAdapter[i] = new ListItemAdapter();
-//            todoFragment_listView[i] = new ListView(getContext());
-//            todoFragment_listView[i].setNestedScrollingEnabled(false);
-//            todoFragment_listView[i].setDivider(null); // 디바이더 제거
-//            todoFragment_listView[i].setDividerHeight(20);
-//            for (int j = 0; j < Integer.parseInt(getTodoListAPI.getValue("todo_total")); j++) {
-//                if (Objects.equals(distanceCNameList.get(i), getTodoListAPI.getValue("todo_cName" + j))) {
-//                    habitFragment_listAdapter[i].addItem(
-//                            new ListItem(getTodoListAPI.getValue("todo_list_id" + j), getHabitListAPI.getValue("todo_name" + j), today,
-//                                    distanceCNameList.get(i), distanceCNameList.get(i), Integer.parseInt(getTodoListAPI.getValue("todo_state" + j))));
-//                }
-//            }
-//
-//            // 리스트 어뎁터 연결
-//            todoFragment_listView[i].setAdapter(todoFragment_listAdapter[i]);
-//
-//            listlayoutarr[i].addView(todoFragment_listView[i]);
-//        }
-//
-//        for (int i = 0; i < cateNum; i++) {
-//            int totalHeight = 0;
-//            for (int j = 0; j < habitFragment_listAdapter[i].getCount(); j++) {
-//                View listItem = habitFragment_listAdapter[i].getView(j, null, habitFragment_listView[i]);
-//                listItem.measure(0, 0);
-//                totalHeight += listItem.getMeasuredHeight();
-//            }
-//
-//            ViewGroup.LayoutParams params = habitFragment_listView[i].getLayoutParams();
-//            params.height = totalHeight + (habitFragment_listView[i].getDividerHeight() * (habitFragment_listAdapter[i].getCount() - 1));
-//            habitFragment_listView[i].setLayoutParams(params);
-//
-//        }
-//
-//        for (int i = 0; i < cateNum; i++) {
-//            final int listViewPage = i;
-//            habitFragment_listView[listViewPage].setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                    clickedPosition = position;
-//
-//                    System.out.println("listViewPage: " + listViewPage);
-//                    //dialog = new HabitListDialog(getActivity(), habitFragment_listAdapter[listViewPage], clickedPosition, "Habit", habitFragment_listView[listViewPage]);
-//
-//                }
-//            });
-//        }
-//    }
+
+
+        // 가져온 해빗 리스트 어뎁터 아이템에 추가하기
+
+        /*{
+            "habit_today_total": "1",
+                "habit_list_id0": "19",
+                "habit_name0": "test",
+                "habit_today0": "2023-05-19",
+                "habit_startDate0": "2023-05-01",
+                "habit_endDate0": "2023-05-31",
+                "habit_alarmSwitch0": "1",
+                "habit_alarm0": "오후 2:22",
+                "habit_repeatDay0": "null",
+                "habit_repeatN0": "5",
+                "habit_color0": "pink",
+                "habit_nfc0": "ca05cd35",
+                "habit_state0": "0",
+                "habit_dayOfWeek0": "4",
+                "SUCCESS": "200"
+        }*/
+    }
+    // 투두 리스트 불러오기
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // 날짜 타입 설정
     // 년월 텍스트뷰
@@ -379,6 +432,7 @@ public class HalfCalendarFragment extends Fragment {
         ArrayList<LocalDate> dayList = daysInMonthArray(CalendarUtill.selectedDate);
 
         HalfCalendarAdapter halfAdapter = new HalfCalendarAdapter(dayList);
+        halfAdapter.setParentFragment(HalfCalendarFragment.this);
 
         // 레이아웃 설정 (열 7개)
         RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity().getApplicationContext(), 7);
@@ -415,6 +469,18 @@ public class HalfCalendarFragment extends Fragment {
             }
         }
         return dayList;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onCheckButtonClicked(int position, CalDialog habitDialog) {
+        // Handle check button click event
+        habitDialog.setParentFragment(HalfCalendarFragment.this);
+    }
+
+    @Override
+    public void onCheckButtonClicked(int position, HabitDialog habitDialog) {
+
     }
 }
 

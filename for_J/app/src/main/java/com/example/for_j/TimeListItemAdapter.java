@@ -1,9 +1,11 @@
 package com.example.for_j;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +17,14 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.for_j.dialog.TimePauseNotSaveDialog;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class TimeListItemAdapter extends BaseAdapter {
 
@@ -29,14 +36,37 @@ public class TimeListItemAdapter extends BaseAdapter {
     private String loginId = "123";
     private String name;
     private String id;
-    private List<Integer> orderList;
-    private int order;
-    private List<String> startTime;
-    private List<String> endTime;
-    private List<String> timeTaken;
+    private int orderTotal;
+    private List<Integer> orderListTmp;
+    private List<String> startTimeTmp;
+    private List<String> endTimeTmp;
+    private List<String> timeTakenTmp;
     private Chronometer chrono;
 
+
+    boolean isRun = false;
+    String[] timeParts; // :을 기준으로 문자열 자르기
+    int hours;
+    int minutes;
+    int seconds;
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+    String timeTmp;
+
+
+
 //    ApiService
+    private String getOrderInfoURL;
+    private ApiService getOrderInfoAPI = new ApiService();
+
+    private String playClickURL;
+    private ApiService playClickAPI = new ApiService();
+
+    private String pauseClickURL;
+    private ApiService pauseClickAPI = new ApiService();
+
+
+
+
 
     public interface TimeListAdapterListener {
         void onCheckButtonClicked(int position, TimeTrackerListDialog timeListDialog);
@@ -143,30 +173,144 @@ public class TimeListItemAdapter extends BaseAdapter {
         });
 
 
-        // play버튼 눌렀을 때
-        // pause 버튼 눌렀을 때
-
         name = items.get(position).getListName();
         id = items.get(position).getListId();
-        orderList = items.get(position).getListOrder();
-        if (orderList == null){
+        orderListTmp = items.get(position).getListOrder();
+        startTimeTmp = items.get(position).getListStartTime();
+        endTimeTmp = items.get(position).getListEndTime();
+        timeTakenTmp = items.get(position).getListTimeTaken();
 
-        }
-
-
-
-        /*
-        name = items.get(position).getListName();
-        id = items.get(position).getListId();
-        order = items.get(position).getListOrder();
-        startTime = items.get(position).getListStartTime();
-        endTime = items.get(position).getListEndTime();
-        timeTaken = items.get(position).getListTimeTaken();
-
-        Chronometer chrono = convertView.findViewById(R.id.timer);
+        // 기존에 저장되어 있는 오더 리스트 가지고 오기
+        resetOrderList(position, convertView);
+        chrono = convertView.findViewById(R.id.timer);
         ImageView play = convertView.findViewById(R.id.play);
         ImageView pause = convertView.findViewById(R.id.pause);
-        final long[] timeWhenStopped = {0}; // 멈춘 시점의 시간을 저장할 변수
+
+
+        // play버튼 눌렀을 때
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int lastOrder = items.get(position).getLastOrder();
+
+                if (lastOrder > 0){
+                    // 크로노미터 가장 마지막 timeTaken으로 초기화
+                    // timeTake 포맷 hh:mm:ss
+                    // :을 기준으로 가장 마지막 timeTaken 분리
+                    timeParts = timeTakenTmp.get(lastOrder).split(":");
+                    hours = Integer.parseInt(timeParts[0]);
+                    minutes = Integer.parseInt(timeParts[1]);
+                    seconds = Integer.parseInt(timeParts[2]);
+
+                    long totalTimeInMillis = hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000;
+
+                    chrono.setBase(SystemClock.elapsedRealtime() - totalTimeInMillis);
+                }else{
+                    chrono.setBase(SystemClock.elapsedRealtime());
+                }
+
+                timeTmp = timeFormat.format(new Date(System.currentTimeMillis()));
+                System.out.println("startTime 테스트" + timeTmp);
+
+                playClickURL = "http://203.250.133.162:8080/timeAPI/play_click/" + loginId + "/" + items.get(position).getListId() + "/" + timeTmp;
+                playClickAPI.getUrl(playClickURL);
+
+
+                chrono.start();
+                isRun = true;
+                play.setVisibility(View.INVISIBLE);
+                pause.setVisibility(View.VISIBLE);
+
+
+                items.get(position).addListOrder(Integer.parseInt(playClickAPI.getValue("create_list_order")));
+                orderListTmp.add(Integer.parseInt(playClickAPI.getValue("create_list_order")));
+                items.get(position).addListStartTime(playClickAPI.getValue("create_list_startTime"));
+                startTimeTmp.add(playClickAPI.getValue("create_list_startTime"));
+                items.get(position).addListEndTime(playClickAPI.getValue("create_list_endTime"));
+                endTimeTmp.add(playClickAPI.getValue("create_list_endTime"));
+                items.get(position).addListTimeTaken(playClickAPI.getValue("create_list_timeTaken"));
+                timeTakenTmp.add(playClickAPI.getValue("create_list_timeTaken"));
+            }
+        });
+
+        // pause 버튼 눌렀을 때
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timeTmp = timeFormat.format(new Date(System.currentTimeMillis()));
+
+                pauseClickURL = "http://203.250.133.162:8080/timeAPI/pause_click/" + loginId + "/" + items.get(position).getListId() + "/" + timeTmp;
+                pauseClickAPI.getUrl(pauseClickURL);
+
+                if (!Objects.equals(pauseClickAPI.getValue("tuple"), "None")){
+                    chrono.stop();
+                    isRun = false;
+                    play.setVisibility(View.VISIBLE);
+                    pause.setVisibility(View.INVISIBLE);
+                    items.get(position).addListOrder(Integer.parseInt(pauseClickAPI.getValue("create_list_order")));
+                    orderListTmp.add(Integer.parseInt(pauseClickAPI.getValue("create_list_order")));
+                    items.get(position).addListStartTime(pauseClickAPI.getValue("create_list_startTime"));
+                    startTimeTmp.add(pauseClickAPI.getValue("create_list_startTime"));
+                    items.get(position).addListEndTime(pauseClickAPI.getValue("create_list_endTime"));
+                    endTimeTmp.add(pauseClickAPI.getValue("create_list_endTime"));
+                    items.get(position).addListTimeTaken(pauseClickAPI.getValue("create_list_timeTaken"));
+                    timeTakenTmp.add(pauseClickAPI.getValue("create_list_timeTaken"));
+                }else{
+                    TimePauseNotSaveDialog timePauseNotSaveDialog = new TimePauseNotSaveDialog(context);
+                    timePauseNotSaveDialog.show();
+                    // 여기서 다시 resume();
+                    chrono.stop();
+                    isRun = false;
+                    play.setVisibility(View.VISIBLE);
+                    pause.setVisibility(View.INVISIBLE);
+
+//                    items.get(position).remove(items.get(position).getLastOrder());
+                    /*
+                    List<Integer> numbers = new ArrayList<>();
+                    numbers.add(1);
+                    numbers.add(2);
+                    numbers.add(3);
+
+                    numbers.remove(1); // Removes the element at index 1 (value 2)
+                    numbers.remove(Integer.valueOf(3)); // Removes the first occurrence of value 3
+                    */
+
+                }
+            }
+        });
+
+
+
+
+        // get_timer_info
+            /*
+            timeOrder_total(모든 튜플의 개수)
+            timeOrder_order
+            timeOrder_startTime
+            timeOrder_endTime
+            timeOrder_timeTaken
+            SUCCESS
+
+
+            private int order;
+            private List<Integer> orderListTmp;
+            private List<String> startTimeTmp;
+            private List<String> endTimeTmp;
+            private List<String> timeTakenTmp;
+            private Chronometer chrono;
+
+            private String getOrderInfoURL;
+            private ApiService getOrderInfoAPI;
+
+            private String playClickURL;
+            private ApiService playClickAPI;
+
+            private String pauseClickURL;
+            private ApiService pauseClickAPI;
+             */
+
+
+        /*final long[] timeWhenStopped = {0}; // 멈춘 시점의 시간을 저장할 변수
         final boolean[] isRunning = {false};
         final long[] pauseOffset = {0};
 
@@ -235,6 +379,71 @@ public class TimeListItemAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    private void resetOrderList(int position, View view){
+        // 기존 오더 불러오기
+        if (orderListTmp == null){
+            getOrderInfoURL = "http://203.250.133.162:8080/timeAPI/get_timer_info/" + loginId + "/" + items.get(position).getListId();
+            getOrderInfoAPI.getUrl(getOrderInfoURL);
+
+            orderTotal = Integer.parseInt(getOrderInfoAPI.getValue("timeOrder_total"));
+
+            for (int i = 0; i < orderTotal; i++){
+                orderListTmp.add(Integer.parseInt(getOrderInfoAPI.getValue("timeOrder_order"+i)));
+                startTimeTmp.add(getOrderInfoAPI.getValue("timeOrder_startTime"+i));
+                endTimeTmp.add(getOrderInfoAPI.getValue("timeOrder_endTime"+i));
+                timeTakenTmp.add(getOrderInfoAPI.getValue("timeOrder_timeTaken"+i));
+            }
+
+            // 리스트 아이템으로 연결
+            items.get(position).setListOrder(orderListTmp);
+            items.get(position).setListStartTime(startTimeTmp);
+            items.get(position).setListEndTime(endTimeTmp);
+            items.get(position).setListTimeTaken(timeTakenTmp);
+
+            items.get(position).setNumOfOrder(orderTotal);
+
+            // 크로노미터 가장 마지막 timeTaken으로 초기화
+            // timeTake 포맷 hh:mm:ss
+            int lastOrder = items.get(position).getLastOrder();
+            // :을 기준으로 가장 마지막 timeTaken 분리
+            timeParts = timeTakenTmp.get(lastOrder).split(":");
+            hours = Integer.parseInt(timeParts[0]);
+            minutes = Integer.parseInt(timeParts[1]);
+            seconds = Integer.parseInt(timeParts[2]);
+
+            long totalTimeInMillis = hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000;
+
+            chrono.setBase(SystemClock.elapsedRealtime() - totalTimeInMillis);
+
+        }else{
+            orderTotal = 0;
+            items.get(position).setNumOfOrder(orderTotal);
+
+            if (chrono == null){
+                chrono = view.findViewById(R.id.timer);
+            }
+            chrono.setBase(SystemClock.elapsedRealtime());  // 크로노미터 0으로 초기화
+        }
+    }
+
+/*    private String formatElapsedTime(long elapsedMillis) {
+        int hours = (int) (elapsedMillis / (1000 * 60 * 60) % 60 % 24);
+        int minutes = (int) ((elapsedMillis / (1000 * 60)) % 60);
+        int seconds = (int) ((elapsedMillis / 1000) % 60);
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }*/
+
+
+
+
+
+
+
+
+
+
 
     public void addItem(TimeListItem item) {
         items.add(item);

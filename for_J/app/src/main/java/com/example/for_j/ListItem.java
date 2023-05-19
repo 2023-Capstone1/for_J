@@ -8,7 +8,13 @@ public class ListItem {
     private String listCName;
     private String listColor;
     private String listStartDate;
+    private String listStartTime;
     private String listEndDate;
+    private String listEndTime;
+    private int listAllDay;
+    private String listLocation;
+    private int listAlarm;
+    private String listMemo;
     private int listState;
 
     ListItem(String listName) {
@@ -30,6 +36,20 @@ public class ListItem {
         this.listStartDate = listStartDate;
         this.listEndDate = listEndDate;
         this.listState = listState;
+    }
+    ListItem(String listId, String listName, String listColor, int listAllDay, String listStartDate, String listStartTime,
+             String listEndDate, String listEndTime, String listLocation, int listAlarm, String listMemo){
+        this.listId = listId;
+        this.listName = listName;
+        this.listColor = listColor;
+        this.listAllDay = listAllDay;
+        this.listStartDate = listStartDate;
+        this.listStartTime = listStartTime;
+        this.listEndDate = listEndDate;
+        this.listEndTime = listEndTime;
+        this.listLocation = listLocation;
+        this.listAlarm = listAlarm;
+        this.listMemo = listMemo;
     }
 
 
@@ -57,6 +77,30 @@ public class ListItem {
 
     public String getListEndDate() {return listEndDate;}
 
+    public String getListStartTime() {
+        return listStartTime;
+    }
+
+    public String getListEndTime() {
+        return listEndTime;
+    }
+
+    public int getListAllDay(){
+        return listAllDay;
+    }
+
+    public String getListLocation() {
+        return listLocation;
+    }
+
+    public int getListAlarm() {
+        return listAlarm;
+    }
+
+    public String getListMemo() {
+        return listMemo;
+    }
+
     public int getListState() {
         return listState;
     }
@@ -81,6 +125,30 @@ public class ListItem {
         this.listColor = listColor;
     }
 
+    public void setListStartTime(String listStartTime) {
+        this.listStartTime = listStartTime;
+    }
+
+    public void setListEndTime(String listEndTime) {
+        this.listEndTime = listEndTime;
+    }
+
+    public void setListAllDay(int listAllDay){
+        this.listAllDay = listAllDay;
+    }
+
+    public void setListLocation(String listLocation) {
+        this.listLocation = listLocation;
+    }
+
+    public void setListAlarm(int listAlarm) {
+        this.listAlarm = listAlarm;
+    }
+
+    public void setListMemo(String listMemo) {
+        this.listMemo = listMemo;
+    }
+
     public void setListState(int listState) {
         this.listState = listState;
     }
@@ -88,6 +156,5 @@ public class ListItem {
     public void setListStartDate(String listStartDate) {this.listStartDate = listStartDate;}
 
     public void setListEndDate(String listEndDate) {this.listEndDate = listEndDate;}
-
 
 }

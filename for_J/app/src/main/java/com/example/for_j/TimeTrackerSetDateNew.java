@@ -248,7 +248,7 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
         });
     }
 
-    private final ActivityResultLauncher<Intent> registerNFCResultLauncher = registerForActivityResult(
+/*    private final ActivityResultLauncher<Intent> registerNFCResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
                     Intent data = result.getData();
@@ -260,6 +260,6 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
                     }
                 }
             }
-    );
+    );*/
 }
 

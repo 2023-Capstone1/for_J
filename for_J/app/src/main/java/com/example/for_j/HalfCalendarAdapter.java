@@ -50,6 +50,10 @@ public class HalfCalendarAdapter extends RecyclerView.Adapter<HalfCalendarAdapte
         this.parentFragment = parentFragment;
     }
 
+    public void setParentFragment(HalfCalendarFragment parentFragment){
+        this.parentFragment = parentFragment;
+    }
+
     // 화면 연결
     @NonNull
     @Override

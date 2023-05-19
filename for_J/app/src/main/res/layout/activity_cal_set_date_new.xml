@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CalSetDateNew"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        >
+        <!-- 캘린더 이름 입력란 -->
+        <EditText
+            android:id="@+id/CSDN_CalTitle"
+            android:importantForAutofill="no"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:hint="Calendar Title"
+            android:textSize="30sp"
+
+            android:singleLine="true"
+            android:lines="1"
+
+            android:inputType="text"
+            tools:ignore="VisualLintTextFieldSize"
+            />
+        <!-- 색상 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/CSDN_Color"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+
+            android:background="@drawable/circle"
+            android:layout_margin="15dp"
+
+            android:layout_gravity="right|center_vertical"
+            />
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="30">
+        <!-- 옵션 레이아웃 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 하루 종일 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 하루종일 img, text 왼쪽 정렬, 스위치 오른쪽 정렬 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- 하루종일 img -->
+                    <ImageView
+                        android:id="@+id/CSDN_AllDayImg"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_notification_clock_alarm"
+                        />
+
+                    <!-- 하루종일 text -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center"
+                        android:textSize="25sp"
+                        android:text="하루종일"
+                        />
+
+                    <!-- 오른쪽 정렬 -->
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        />
+
+                    <!-- 하루종일 switch -->
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/CSDN_AllDaySwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center"
+                        android:checked="true"
+                        android:thumb="@drawable/shape_switch_thumb"
+
+                        app:switchMinWidth="60sp"
+                        app:track="@drawable/selector_switch"
+                        />
+                </LinearLayout>
+
+                <!-- 시작 날짜, 화살표 이미지 ,종료 날짜 -->
+                <LinearLayout
+                    android:id="@+id/CSDN_AllDayTrue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <!-- 시작 날짜 -->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/CSDN_AllDayTrueStartDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginVertical="10dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="2"/>
+                    <!-- 화살표 img -->
+                    <androidx.constraintlayout.utils.widget.ImageFilterView
+                        android:id="@+id/CSDN_AllDayTrueArrow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="3.3"
+                        android:src="@drawable/ic_arrow"/>
+                    <!-- 종료 날짜 -->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/CSDN_ALlDayTrueEndDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginVertical="10dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="2"/>
+                </LinearLayout>
+
+                <!-- 시작날짜/시간, 화살표 이미지 ,종료날짜/시간 -->
+                <LinearLayout
+                    android:id="@+id/CSDN_AllDayFalse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    >
+
+                    <!-- 시작 날짜, 시간 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="2">
+                        <!-- 시작 날짜 -->
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/CSDN_AllDayFalseStartDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginVertical="10dp"
+                            android:layout_gravity="center"
+                            />
+                        <!-- 시작 시간 -->
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/CSDN_AllDayFalseStartTime"
+                            android:layout_width="142dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginVertical="10dp" />
+
+                    </LinearLayout>
+
+                        <!-- 화살표 img -->
+                        <androidx.constraintlayout.utils.widget.ImageFilterView
+                            android:id="@+id/CSDN_AllDayFalseArrow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:src="@drawable/ic_arrow"
+                            android:layout_weight="3.3"/>
+
+                    <!-- 종료 날짜, 시간 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="2">
+                        <!-- 종료 날짜 -->
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/CSDN_AllDayFalseEndDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginVertical="10dp"
+                            android:layout_gravity="center"
+                            />
+                        <!-- 종료 시간 -->
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/CSDN_AllDayFalseEndTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginVertical="10dp"
+                            android:layout_gravity="center"
+                            />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <!-- 장소 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- 장소 img -->
+                <ImageView
+                    android:id="@+id/CSDN_LocationImg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_gps"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <!-- 장소 edit text-->
+                    <EditText
+                        android:id="@+id/CSDN_LocationET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:importantForAutofill="no"
+
+                        android:hint="장소"
+                        android:textSize="30sp"
+
+                        android:singleLine="true"
+                        android:lines="1"
+
+                        android:inputType="text"
+                        tools:ignore="VisualLintTextFieldSize"/>
+
+                    <!-- 지도 btn -->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/CSDN_mapBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_margin="5dp"
+                        android:backgroundTint="#00ff0000"
+                        android:layout_gravity="right|center_vertical"
+
+                        android:text="지도"
+                        android:textSize="20sp"
+                        />
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <!-- 알림 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- 알림 img -->
+                <ImageView
+                    android:id="@+id/CSDN_AlarmImg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_notification_bell_alarm"/>
+
+                <!-- 알림 btn -->
+                <!-- 버튼 누르면 (정각/10분전/1시간전/하루전) 체크박스 다이얼로그로 띄우기-->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/CSDN_SetAlarmBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_margin="5dp"
+                    android:backgroundTint="#00ff0000"
+                    android:layout_gravity="right|center_vertical"
+
+                    android:textSize="20sp"
+                    />
+            </LinearLayout>
+
+<!--            &lt;!&ndash; 반복 주기 &ndash;&gt;
+            &lt;!&ndash; 반복 주기 img, btn  &ndash;&gt;
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                &lt;!&ndash; 반복주기 img &ndash;&gt;
+                <ImageView
+                    android:id="@+id/CSDN_RepeatImg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_repeat"
+                    />
+
+                &lt;!&ndash; 반복주기 텍스트 &ndash;&gt;
+                &lt;!&ndash; 디폴트는 반복 안함 &ndash;&gt;
+                <TextView
+                    android:id="@+id/CSDN_RepeatBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+
+                    android:textSize="25sp"
+                    />
+            </LinearLayout>-->
+
+            <!-- 메모 -->
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- 메모 아이콘 -->
+                    <ImageView
+                        android:id="@+id/CSDN_MemoImg"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/ic_memo"
+                        />
+
+                    <!-- 메모 텍스트 -->
+                    <EditText
+                        android:id="@+id/CSDN_MemoET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:hint="메모"
+                        android:textSize="30sp" />
+                </LinearLayout>
+            </ScrollView>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 취소 / 저장 버튼 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        >
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/CSDN_Cancle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+
+            android:text="취소"
+            android:textSize="22sp"
+
+            android:padding="20dp"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/CSDN_Save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+
+            android:text="저장"
+            android:textSize="22sp"
+            android:padding="20dp"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

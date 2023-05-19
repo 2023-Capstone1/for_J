@@ -156,6 +156,9 @@
         <activity
             android:name=".TimeFragment"
             android:exported="false" />
+        <activity
+            android:name=".CalSetDateNew"
+            android:exported="false" />
         <!-- 민형파트/다솔파트 -->
         <activity
             android:name=".CalendarMainActivity"

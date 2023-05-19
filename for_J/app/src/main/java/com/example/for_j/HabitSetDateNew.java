@@ -414,7 +414,15 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 //                    System.out.println("횟수: " + SrepeatN + " SrepeatDay: " + SrepeatDay);
 
                     if (SrepeatN > 0) { // 반복 횟수
-                        // 종료 날짜 전까지 반복
+                        String url = "http://203.250.133.162:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + SstartDate + "/"
+                                + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
+                                + Shabit_nfc + "/" + Shabit_state;
+                        Log.d("TAG", url);
+                        habitApiService.postUrl(url);
+                        if (habitApiService.getStatus() == 200) {
+                            success += 1;
+                        }
+                        /*// 종료 날짜 전까지 반복
                         currentDate = (Calendar) startSelectedDate.clone();
                         while (currentDate.compareTo(endSelectedDate) < 1) {
                             year = currentDate.get(Calendar.YEAR);
@@ -424,9 +432,7 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 //                            System.out.println("start date: " + SstartDate);
 //                            System.out.println("today: " + Stoday);
 //                            System.out.println("end date: " + SendDate);
-                            String url = "http://203.250.133.162:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
-                                    + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-                                    + Shabit_nfc + "/" + Shabit_state + "/" + currentDate.get(Calendar.DAY_OF_WEEK);
+
                             Log.d("TAG", SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
                                     + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
                                     + Shabit_nfc + "/" + Shabit_state + "/" + currentDate.get(Calendar.DAY_OF_WEEK));
@@ -435,7 +441,7 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                                 success += 1;
                             }
                             currentDate.add(Calendar.DAY_OF_MONTH, 1);
-                        }
+                        }*/
                     } else {    // 반복 날짜
                         boolean[] dayOfWeek = new boolean[7];
                         // Calendar.DAY_OF_WEEK 일요일 1, 월요일 2, 화요일 3, 수요일 4, 목요일 5, 금요일 6, 토요일 7
@@ -468,7 +474,16 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                             }
                         }
 
-                        // 종료 날짜 전까지 반복
+                        String url = "http://203.250.133.162:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + SstartDate + "/"
+                                + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
+                                + Shabit_nfc + "/" + Shabit_state;
+                        Log.d("TAG", url);
+                        habitApiService.postUrl(url);
+                        if (habitApiService.getStatus() == 200) {
+                            success += 1;
+                        }
+
+                        /*// 종료 날짜 전까지 반복
                         currentDate = (Calendar) startSelectedDate.clone();
                         int dayOfToday;
 
@@ -496,7 +511,7 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 
                             }
                             currentDate.add(Calendar.DATE, 1);
-                        }
+                        }*/
                     }
                     finish();
                 }

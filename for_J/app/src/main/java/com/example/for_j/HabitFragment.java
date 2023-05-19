@@ -189,6 +189,7 @@ public class HabitFragment extends Fragment implements HabitListAdapter.HabitLis
 
         setMonthView();
 
+        // 레이아웃 안에 넣어보기
         if (nothingMessage == null){
             nothingMessage = habitView.findViewById(R.id.nothingMessage);
 //            System.out.println("onResume에서 nothingMessage 연결");

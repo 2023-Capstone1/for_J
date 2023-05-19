@@ -19,7 +19,7 @@ public class CalendarMainActivity extends AppCompatActivity {
     HabitFragment CalendarMain_habitFragment;
     CalendarFragment CalendarMain_calendarFragment;
     TimeFragment CalendarMain_timeFragment;
-    HalfCalendarFragment halfCalendarFragment;
+    HalfCalendarFragment CalendarMain_halfCalendarFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +32,11 @@ public class CalendarMainActivity extends AppCompatActivity {
         CalendarMain_habitFragment = new HabitFragment();
         CalendarMain_calendarFragment = new CalendarFragment();
         CalendarMain_timeFragment = new TimeFragment();
+        CalendarMain_halfCalendarFragment = new HalfCalendarFragment();
 
         // 프래그먼트 초기화면 구성 - 초기화면은 CalendarFragment로 설정
-        getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_calendarFragment).commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_calendarFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_halfCalendarFragment).commit();
 
         // bottom_navigation_view 구현
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) NavigationBarView navigationBarView = findViewById(R.id.bottom_navigationView);
@@ -49,7 +51,8 @@ public class CalendarMainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_habitFragment).commit();
                         return true;
                     case R.id.calendar:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_calendarFragment).commit();
+//                        getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_calendarFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_halfCalendarFragment).commit();
                         return true;
                     case R.id.time:
                         getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_timeFragment).commit();

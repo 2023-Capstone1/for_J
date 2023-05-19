@@ -14,10 +14,13 @@ public class TimeListItem {
     private String[] listStartTime;
     private String[] listEndTime;
     private String[] listTimeTaken;*/
-    List<Integer> listOrder = null;
-    List<String> listStartTime = null;
-    List<String> listEndTime = null;
-    List<String> listTimeTaken = null;
+
+    private int numOfOrder;
+    private List<Integer> listOrder = null;
+    private List<String> listStartTime = null;
+    private List<String> listEndTime = null;
+    private List<String> listTimeTaken = null;
+    private String totalTimeTaken = null;
 
     TimeListItem(String listName) {
         this.listName = listName;
@@ -29,6 +32,28 @@ public class TimeListItem {
         this.listToday = listToday;
         this.listCName = listCName;
         this.listColor = listColor;
+        this.numOfOrder = 0;
+        this.listOrder = new ArrayList<>();
+        this.listStartTime = new ArrayList<>();
+        this.listEndTime = new ArrayList<>();
+        this.listTimeTaken = new ArrayList<>();
+
+    }
+
+    public void addListOrder (int listOrder){
+        this.listOrder.add(listOrder);
+    }
+
+    public void addListStartTime (String listStartTime){
+        this.listStartTime.add(listStartTime);
+    }
+
+    public void addListEndTime (String listEndTime){
+        this.listEndTime.add(listEndTime);
+    }
+
+    public void addListTimeTaken (String listTimeTaken){
+        this.listTimeTaken.add(listTimeTaken);
     }
 
     public String getListId() {
@@ -51,6 +76,8 @@ public class TimeListItem {
         return listColor;
     }
 
+    public int getNumOfOrder() {return numOfOrder;};
+
     public List<String> getListStartTime() {
         return listStartTime;
     }
@@ -67,9 +94,21 @@ public class TimeListItem {
         return listOrder;
     }
 
+    public String getTotalTimeTaken() {
+        return totalTimeTaken;
+    }
+
     public int getLastOrder() {
         int last = listOrder.size() - 1;
-        return listOrder.get(last);
+        if (last < 0){
+            return 0;
+        }{
+            return listOrder.get(last);
+        }
+    }
+
+    public void setNumOfOrder(int numOfOrder) {
+        this.numOfOrder = numOfOrder;
     }
 
     public void setListId(String listId) {
@@ -107,5 +146,10 @@ public class TimeListItem {
     public void setListOrder(List<Integer> Order) {
         this.listOrder = listOrder;
     }
+
+    public void setTotalTimeTaken(String totalTimeTaken){
+        this.totalTimeTaken = totalTimeTaken;
+    }
+
 
 }

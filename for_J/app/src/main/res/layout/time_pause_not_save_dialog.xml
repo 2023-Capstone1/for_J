@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/HDCD_layout"
+    android:layout_height="wrap_content"
+    android:layout_width="250dp"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_round_rectangle_10"
+    android:backgroundTint="@color/blueGray_50"
+    android:gravity="center"
+    >
+    <TextView
+        android:id="@+id/deleteMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="1분 미만은 저장되지 않습니다."/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/negativeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="취소"
+            android:visibility="invisible"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/positiveBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="확인"/>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
