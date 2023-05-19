@@ -208,7 +208,7 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
         }
 
         // 해빗 레이아웃 설정
-        if (HalfCal_habitList != null){
+        /*if (HalfCal_habitList != null){
             HalfCal_habitList.removeAllViewsInLayout();
             HalfCal_habitList.removeViewInLayout(HalfCal_habitList);
 
@@ -225,9 +225,12 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
                 cal_nothing.setVisibility(View.GONE);
                 getHabitListFromServer();
             }
-        }
+        }*/
 
 
+
+
+        
 
         // 모든 리스트 띄우는 레이아웃 초기화
         /*if (HalfCal_AllList != null){
