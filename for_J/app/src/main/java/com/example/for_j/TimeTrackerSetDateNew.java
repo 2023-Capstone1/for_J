@@ -60,10 +60,6 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
 
         today = String.format("%04d-%02d-%02d", year, month, day);
 
-        // 타이틀바 텍스트 색상 지정
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setTitle(Html.fromHtml("<font color='#D9EAF5'>CapstoneNewEditWidget</font>"));  // @colors/blue_white랑 같은색
-
 
         // 타임 트래커 타이틀 xml 연동
         TRSDN_Title = findViewById(R.id.TRSDN_Title);

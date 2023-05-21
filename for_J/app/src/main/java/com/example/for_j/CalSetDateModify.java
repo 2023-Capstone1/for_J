@@ -566,11 +566,14 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
                     }
 
 
-                    updateCalURL = "http://203.250.133.162:8080/calendarAPI/set_calendar/" + login_id + "/" + name + "/" + color + "/" +
+                    updateCalURL = "http://203.250.133.162:8080/calendarAPI/update_cal/" + login_id + "/" + list_id + "/" + name + "/" + color + "/" +
                             allDay + "/" + startDate + "/" + startTime + "/" + endDate + "/" + endTime + "/" + location + "/" + alarm +
                             "/" +  memo;
                     updateCalAPI = new ApiService();
-                    updateCalAPI.postUrl(updateCalURL);
+                    updateCalAPI.putUrl(updateCalURL);
+                    System.out.println(updateCalURL);
+
+
 
                     finish();
 
@@ -634,16 +637,14 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
             case 0:
                 // 시작 날짜 버튼 날짜 입력
                 CSDN_AllDayTrueStartDate.setText(dateString);
+                CSDN_AllDayFalseStartDate.setText(dateString);
+                startDate = dateString;
                 break;
             case 1:
                 // 종료 날짜 버튼 날짜 입력
                 CSDN_ALlDayTrueEndDate.setText(dateString);
-                break;
-            case 3:
-                CSDN_AllDayFalseStartDate.setText(dateString);
-                break;
-            case 4:
                 CSDN_AllDayFalseEndDate.setText(dateString);
+                endDate = dateString;
                 break;
         }
     }
@@ -651,8 +652,14 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
     @Override
     public void onTimeSelected(int hour, int minute) {
 
+        String timeServerFormat = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+
+
+
         String t = "오전";
+//        int hhour = hour;
         if (hour > 12){
+//            hhour -= 12;
             hour -= 12;
             t = "오후";
         }
@@ -662,9 +669,20 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         switch (time){
             case 0:
                 CSDN_AllDayFalseStartTime.setText(timeString);
+                startTime = timeServerFormat;
+
+                startSelectedDate.set(Calendar.HOUR_OF_DAY, hour);
+                startSelectedDate.set(Calendar.MINUTE, minute);
+
+//                System.out.println(startSelectedDate.get(Calendar.HOUR_OF_DAY) + ":" + startSelectedDate.get(Calendar.MINUTE));
                 break;
             case 1:
                 CSDN_AllDayFalseEndTime.setText(timeString);
+                endTime = timeServerFormat;
+
+                endSelectedDate.set(Calendar.HOUR_OF_DAY, hour);
+                endSelectedDate.set(Calendar.MINUTE, minute);
+//                System.out.println(endSelectedDate.get(Calendar.HOUR_OF_DAY) + ":" + endSelectedDate.get(Calendar.MINUTE));
                 break;
         }
     }
