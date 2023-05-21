@@ -158,13 +158,15 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
                         android:text="Calendar"
                         android:textSize="25dp"
                         android:textStyle="bold"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                     <TextView
                         android:id="@+id/cal_nothing"
@@ -182,7 +184,9 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="@drawable/divider"/>
+                    android:background="@drawable/divider"
+                    android:visibility="gone"
+                    />
 
 
                 <LinearLayout
@@ -194,6 +198,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Habit"
+                        android:layout_marginVertical="10dp"
                         android:textSize="25dp"
                         android:textStyle="bold"
                         android:visibility="visible"/>
@@ -214,7 +219,8 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="@drawable/divider"/>
+                    android:background="@drawable/divider"
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -225,6 +231,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="To-Do"
+                        android:layout_marginVertical="10dp"
                         android:textSize="25dp"
                         android:textStyle="bold"
                         android:visibility="visible"/>

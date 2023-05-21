@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class CalListAdapter extends BaseAdapter {
@@ -55,13 +57,67 @@ public class CalListAdapter extends BaseAdapter {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        context = parent.getContext();
+        ListItem listItem = items.get(position);
 
+        if (convertView == null){
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.listview_cal_item, parent, false);
+        }
 
+        ImageView Cal_color = convertView.findViewById(R.id.Cal_color);
 
+        switch (items.get(position).getListColor()){
+            case "pink":
+                Cal_color.setBackgroundResource(R.drawable.color_round_box_pink);
+                break;
+            case "crimson":
+                Cal_color.setBackgroundResource(R.drawable.color_round_box_crimson);
+                break;
+            case "orange":
+                Cal_color.setBackgroundResource(R.drawable.color_round_box_orange);
+                break;
+            case "yellow":
+                Cal_color.setBackgroundResource(R.drawable.color_round_box_yellow);
+                break;
+            case "light_green":
+                Cal_color.setBackgroundResource(R.drawable.color_round_box_light_green);
+                break;
+            case "turquoise":
+                Cal_color.setBackgroundResource(R.drawable.color_round_box_turquoise);
+                break;
+            case "pastel_blue":
+                Cal_color.setBackgroundResource(R.drawable.color_round_box_pastel_blue);
+                break;
+            case "pastel_purple":
+                Cal_color.setBackgroundResource(R.drawable.color_round_box_pastel_purple);
+                break;
+        }
 
+        TextView cal_name = convertView.findViewById(R.id.cal_name);
 
+        cal_name.setText(listItem.getListName());
 
+        TextView cal_time = convertView.findViewById(R.id.cal_time);
 
+        // 하루종일 == 0 이면 "오후 2:30 - 오후 4: 30" 이런식으로
+        if (items.get(position).getListAllDay() == 0){
+            String[] startTimeParts = listItem.getListStartTime().split(":");
+            int startHour = Integer.parseInt(startTimeParts[0]);
+            int startMinute = Integer.parseInt(startTimeParts[1]);
+            String startTimeFormatted = String.format("%d:%02d %s", startHour % 12 == 0 ? 12 : startHour % 12, startMinute, startHour < 12 ? "AM" : "PM");
+
+            String[] endTimeParts = listItem.getListEndTime().split(":");
+            int endHour = Integer.parseInt(endTimeParts[0]);
+            int endMinute = Integer.parseInt(endTimeParts[1]);
+            String endTimeFormatted = String.format("%d:%02d %s", endHour % 12 == 0 ? 12 : endHour % 12, endMinute, endHour < 12 ? "AM" : "PM");
+
+            String timeRange = startTimeFormatted + " - " + endTimeFormatted;
+            cal_time.setText(timeRange);
+        } else{
+            cal_time.setText("하루종일");
+//            cal_time.setVisibility(View.GONE);
+        }
 
 
 

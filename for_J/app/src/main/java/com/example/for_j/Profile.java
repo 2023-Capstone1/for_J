@@ -13,6 +13,7 @@ public class Profile extends AppCompatActivity {
 
     Button Profile_Logout;
     TextView User_Info,User_Name, User_Id, User_Pw, User_Email;
+    String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -25,9 +26,12 @@ public class Profile extends AppCompatActivity {
         User_Pw = findViewById(R.id.user_pw);
         User_Email = findViewById(R.id.user_email);
 
+        IdSave idSave = (IdSave) getApplication();
+        user_id = idSave.getUserId();
+
         // url 작성
         ApiService InfoApiService = new ApiService();
-        String url = "http://203.250.133.162:8080/usersAPI/user_info/" + "123";
+        String url = "http://203.250.133.162:8080/usersAPI/user_info/" + user_id;
         InfoApiService.getUrl(url);
 
         String Id = InfoApiService.getValue("user_id");
@@ -70,7 +74,9 @@ public class Profile extends AppCompatActivity {
         profile_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                // 메뉴 화면으로 이동
+                Intent intent = new Intent(Profile.this, Menu.class);
+                startActivity(intent);
             }
         });
 
@@ -87,6 +93,7 @@ public class Profile extends AppCompatActivity {
         Profile_Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                idSave.clearData();
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
             }

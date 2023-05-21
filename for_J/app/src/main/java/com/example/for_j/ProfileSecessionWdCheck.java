@@ -16,6 +16,7 @@ public class ProfileSecessionWdCheck extends AppCompatActivity {
     ImageButton Profile_Secession_Wd_Check_Back_Btn;
     EditText Profile_Secession_Pw_Check_Chat;
     Button Profile_Secession_Wd_Check_Btn;
+    String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +35,12 @@ public class ProfileSecessionWdCheck extends AppCompatActivity {
         // CustomDialog 객체 생성
         CustomDialog dialog = new CustomDialog(ProfileSecessionWdCheck.this);
 
+        IdSave idSave = (IdSave) getApplication();
+        user_id = idSave.getUserId();
+
         // url 작성
         ApiService InfoApiService = new ApiService();
-        String url = "http://203.250.133.162:8080/usersAPI/user_info/" + "123";
+        String url = "http://203.250.133.162:8080/usersAPI/user_info/" + user_id;
         InfoApiService.getUrl(url);
 
         String Pw = InfoApiService.getValue("user_pw");
@@ -94,7 +98,7 @@ public class ProfileSecessionWdCheck extends AppCompatActivity {
                     public void onClick(View view) {
                         // url 작성
                         ApiService InfoApiService = new ApiService();
-                        String url = "http://203.250.133.162:8080/usersAPI/user_delete/" + "123" + "/" + Pw;
+                        String url = "http://203.250.133.162:8080/usersAPI/user_delete/" + user_id + "/" + Pw;
                         InfoApiService.deleteUrl(url);
                         dialog.dismiss();
                     }

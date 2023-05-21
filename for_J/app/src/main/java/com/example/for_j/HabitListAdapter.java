@@ -204,9 +204,9 @@ public class HabitListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 HabitDialog dialog = new HabitDialog(context, HabitListAdapter.this, position, "HABIT", (ListView)parent);
-                System.out.println("mListener 투두 쪽 실행됨1");
+//                System.out.println("mListener 투두 쪽 실행됨1");
                 if (mListener != null) {
-                    System.out.println("mListener 투두 쪽 실행됨2");
+//                    System.out.println("mListener 투두/ 쪽 실행됨2");
                     mListener.onCheckButtonClicked(position, dialog);
                     dialog.show();
                 }

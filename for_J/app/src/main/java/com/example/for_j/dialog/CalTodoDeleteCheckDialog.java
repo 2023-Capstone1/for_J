@@ -12,29 +12,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import com.example.for_j.HabitFragment;
+import com.example.for_j.HalfCalendarFragment;
 import com.example.for_j.R;
 import com.example.for_j.ToDoFragment;
 
 import java.text.ParseException;
 
-public class TodoDeleteCheckDialog extends Dialog {
-    private TodoDeleteCheckDialog.TodoDeleteCheckDialogListener  todoDeleteCheckDialogListener;
+public class CalTodoDeleteCheckDialog extends Dialog {
+    private CalTodoDeleteCheckDialog.TodoDeleteCheckDialogListener  todoDeleteCheckDialogListener;
 
 
     public interface TodoDeleteCheckDialogListener {
         void IsPositive(int isPositive) throws ParseException;
     }
     private Context context;
-    public TodoDeleteCheckDialog(@NonNull Context context, TodoDeleteCheckDialog.TodoDeleteCheckDialogListener todoDeleteCheckDialogListener){
+    public CalTodoDeleteCheckDialog(@NonNull Context context, CalTodoDeleteCheckDialog.TodoDeleteCheckDialogListener todoDeleteCheckDialogListener){
         super(context);
         this.context = context;
         this.todoDeleteCheckDialogListener = todoDeleteCheckDialogListener;
     }
 
-    private ToDoFragment parentFragment;
+    private HalfCalendarFragment parentFragment;
 
-    public void setParentFragment(ToDoFragment parentFragment){
+    public void setParentFragment(HalfCalendarFragment parentFragment){
         this.parentFragment = parentFragment;
     }
 

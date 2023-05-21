@@ -111,7 +111,8 @@
                     android:id="@+id/CSDN_AllDayTrue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="visible">
                     <!-- 시작 날짜 -->
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/CSDN_AllDayTrueStartDate"
@@ -167,7 +168,7 @@
                         <!-- 시작 시간 -->
                         <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/CSDN_AllDayFalseStartTime"
-                            android:layout_width="142dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginHorizontal="20dp"
@@ -264,6 +265,8 @@
 
                         android:text="지도"
                         android:textSize="20sp"
+
+                        android:visibility="gone"
                         />
                 </FrameLayout>
 
@@ -286,7 +289,7 @@
 
                 <!-- 알림 btn -->
                 <!-- 버튼 누르면 (정각/10분전/1시간전/하루전) 체크박스 다이얼로그로 띄우기-->
-                <androidx.appcompat.widget.AppCompatButton
+                <!--<androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/CSDN_SetAlarmBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -296,6 +299,12 @@
                     android:layout_gravity="right|center_vertical"
 
                     android:textSize="20sp"
+                    />-->
+                <Spinner
+                    android:id="@+id/CSDN_SetAlarmSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     />
             </LinearLayout>
 

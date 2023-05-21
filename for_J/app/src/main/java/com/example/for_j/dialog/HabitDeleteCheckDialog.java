@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.example.for_j.HabitFragment;
+import com.example.for_j.HalfCalendarFragment;
 import com.example.for_j.R;
 
 import java.text.ParseException;
@@ -31,10 +32,15 @@ public class HabitDeleteCheckDialog extends Dialog {
         this.deletePosition = deletePosition;
     }
 
-    private HabitFragment parentFragment;
+    private HabitFragment HparentFragment = null;
+    private HalfCalendarFragment HCparentFragment = null;
 
     public void setParentFragment(HabitFragment parentFragment){
-        this.parentFragment = parentFragment;
+        this.HparentFragment = parentFragment;
+    }
+
+    public void setParentFragment(HalfCalendarFragment parentFragment){
+        this.HCparentFragment = parentFragment;
     }
 
     private LinearLayout HDCD_layout;
@@ -80,9 +86,15 @@ public class HabitDeleteCheckDialog extends Dialog {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if (parentFragment != null){
-                    parentFragment.onResume();
+
+
+                if (HparentFragment != null){
+                    HparentFragment.onResume();
                 }
+                if (HCparentFragment != null){
+                    HCparentFragment.onResume();
+                }
+
                 dismiss();
             }
         });

@@ -110,18 +110,18 @@ public class ListItemAdapter extends BaseAdapter {
         /*
         0: 빈칸 1: 다음날 2: 안함 3: 체크
          */
-        // 서버에서 state 가지고 와서 버튼 이미지 바꾸기
+        /*// 서버에서 state 가지고 와서 버튼 이미지 바꾸기
         String loginId = "123";
         String name = items.get(position).getListName();
         String today = items.get(position).getListToday();
-        String id = items.get(position).getListId();
+        String id = items.get(position).getListId();*/
         int state = items.get(position).getListState();
 
-        String getStateURL = "http://203.250.133.162:8080/todoAPI/get_todo_list_state/" + loginId + "/" + id + "/" + name + "/" + today;
+        /*String getStateURL = "http://203.250.133.162:8080/todoAPI/get_todo_list_state/" + loginId + "/" + id + "/" + name + "/" + today;
         ApiService getStateAPI = new ApiService();
         getStateAPI.getUrl(getStateURL);
         state = Integer.parseInt(getStateAPI.getValue("todo_state"));
-        items.get(position).setListState(state);
+        items.get(position).setListState(state);*/
 
 
         Drawable selectedImg = null;
@@ -146,7 +146,7 @@ public class ListItemAdapter extends BaseAdapter {
         }
         ImageView imageView = convertView.findViewById(R.id.listCheckBtn);
         imageView.setImageDrawable(selectedImg);
-        System.out.println("어뎁터에서 이미지 바뀌는거 실행됨");
+//        System.out.println("어뎁터에서 이미지 바뀌는거 실행됨");
 
         // ImageView에 OnClickListener 추가
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -154,9 +154,9 @@ public class ListItemAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 ToDoListDialog dialog = new ToDoListDialog(context, ListItemAdapter.this, position, "To-Do", (ListView)parent);
-                System.out.println("mListener 투두 쪽 실행됨1");
+//                System.out.println("mListener 투두 쪽 실행됨1");
                 if (mListener != null) {
-                    System.out.println("mListener 투두 쪽 실행됨2");
+//                    System.out.println("mListener 투두 쪽 실행됨2");
                     mListener.onCheckButtonClicked(position, dialog);
                     dialog.show();
 

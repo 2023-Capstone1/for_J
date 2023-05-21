@@ -37,7 +37,7 @@ import java.util.Objects;
 import java.util.Set;
 
 
-public class HalfCalendarFragment extends Fragment implements CalListAdapter.CalListAdapterListener, HabitListAdapter.HabitListAdapterListener {
+public class HalfCalendarFragment extends Fragment implements CalListAdapter.CalListAdapterListener, CalHabitListAdapter.HabitListAdapterListener, CalTodoListAdapter.TodoListAdapterListener {
 
     private Calendar calendar = Calendar.getInstance();
     private String loginID = "123";
@@ -46,7 +46,9 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
     private String selectedDateStr;
 
     // 다이얼로그 관련
-    private CalDialog dialog;
+    private CalDialog cDialog;
+    private CalHabitDialog hDialog;
+    private CalTodoDialog tDialog;
 
 
     private View halfCalView;
@@ -71,9 +73,9 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
     private ListView Cal_listView;
     private CalListAdapter Cal_listAdapter;
     private ListView Habit_listView;
-    private HabitListAdapter Habit_listAdapter;
+    private CalHabitListAdapter Habit_listAdapter;
     private ListView Todo_listView;
-    private ListItemAdapter Todo_listAdapter;
+    private CalTodoListAdapter Todo_listAdapter;
 
     // nothing 화면
     private TextView cal_nothing;
@@ -197,6 +199,7 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
             // 캘린더 튜플이 있는지 확인
             CalIsTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "calendar" + "/" + selectedDateStr;
             CalIsTupleExistAPI.getUrl(CalIsTupleExistURL);
+            System.out.println(CalIsTupleExistAPI.getValue("is_tuple_exist"));
 
             // 캘린더가 없으면 nothing 띄우기
             if (Objects.equals(CalIsTupleExistAPI.getValue("is_tuple_exist"), "0")){
@@ -208,56 +211,46 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
         }
 
         // 해빗 레이아웃 설정
-        /*if (HalfCal_habitList != null){
+        if (HalfCal_habitList != null){
             HalfCal_habitList.removeAllViewsInLayout();
             HalfCal_habitList.removeViewInLayout(HalfCal_habitList);
 
             HalfCal_habitList = halfCalView.findViewById(R.id.HalfCal_habitList);
 
-            // 캘린더 튜플이 있는지 확인
-            CalIsTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "habit" + "/" + selectedDateStr;
-            CalIsTupleExistAPI.getUrl(CalIsTupleExistURL);
-
-            // 캘린더가 없으면 nothing 띄우기
-            if (Objects.equals(CalIsTupleExistAPI.getValue("is_tuple_exist"), "0")){
-                cal_nothing.setVisibility(View.VISIBLE);
-            } else {
-                cal_nothing.setVisibility(View.GONE);
-                getHabitListFromServer();
-            }
-        }*/
-
-
-
-
-        
-
-        // 모든 리스트 띄우는 레이아웃 초기화
-        /*if (HalfCal_AllList != null){
-            HalfCal_AllList.removeAllViewsInLayout();
-            HalfCal_CalList.removeViewInLayout(HalfCal_CalList);
-
-
-
-            HalfCal_AllList = halfCalView.findViewById(R.id.HalfCal_AllList);
-
-            HalfCal_habitList = halfCalView.findViewById(R.id.HalfCal_habitList);
-            HalfCal_todoList = halfCalView.findViewById(R.id.HalfCal_todoList);
-
-
-
             // 해빗 튜플이 있는지 확인
             HabitIsTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "habit" + "/" + selectedDateStr;
             HabitIsTupleExistAPI.getUrl(HabitIsTupleExistURL);
+            System.out.println(HabitIsTupleExistAPI.getValue("is_tuple_exist"));
 
+            // 해빗이 없으면 nothing 띄우기
+            if (Objects.equals(HabitIsTupleExistAPI.getValue("is_tuple_exist"), "0")){
+                habit_nothing.setVisibility(View.VISIBLE);
+            } else {
+                habit_nothing.setVisibility(View.GONE);
+                getHabitListFromServer();
+            }
+        }
+
+        // 투두 레이아웃 설정
+        if (HalfCal_todoList != null){
+            HalfCal_todoList.removeAllViewsInLayout();
+            HalfCal_todoList.removeViewInLayout(HalfCal_todoList);
+
+            HalfCal_todoList = halfCalView.findViewById(R.id.HalfCal_todoList);
 
             // 투두가 있는지 확인
             TodoIsTupleExistURL = "http://203.250.133.162:8080/checkAPI/get_is_tuple_exist/" + loginID + "/" + "todo" + "/" + selectedDateStr;
             TodoIsTupleExistAPI.getUrl(TodoIsTupleExistURL);
+            System.out.println(TodoIsTupleExistAPI.getValue("is_tuple_exist"));
 
-
-
-        }*/
+            // 캘린더가 없으면 nothing 띄우기
+            if (Objects.equals(TodoIsTupleExistAPI.getValue("is_tuple_exist"), "0")){
+                todo_nothing.setVisibility(View.VISIBLE);
+            } else {
+                todo_nothing.setVisibility(View.GONE);
+                getTodoListFromServer();
+            }
+        }
 
 
     }
@@ -267,7 +260,8 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
     private void getCalListFromServer(){
         selectedDateStr = selectedDate.format(formatter);
 
-        getCalListURL = "http://203.250.133.162:8080/CalendarAPI/get_cal_list/" + loginID + "/" + selectedDateStr;
+        getCalListURL = "http://203.250.133.162:8080/calendarAPI/get_cal_list/" + loginID + "/" + selectedDateStr;
+//        System.out.println(getCalListURL);
         getCalListAPI = new ApiService();
         getCalListAPI.getUrl(getCalListURL);
 
@@ -277,8 +271,8 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
         Cal_listView = new ListView(getContext());
 
         Cal_listView.setNestedScrollingEnabled(false);
-        Cal_listView.setDivider(null);  // 디바이더 제거
-        Cal_listView.setDividerHeight(20);
+//        Cal_listView.setDivider(null);  // 디바이더 제거
+        Cal_listView.setDividerHeight(2);
         /*{
             "cal_list_id0": "3",
                 "cal_list_name0": "web test",
@@ -307,6 +301,10 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
         Cal_listView.setAdapter(Cal_listAdapter);
         HalfCal_CalList.addView(Cal_listView);
 
+//        System.out.println(getCalListAPI.getValue("total"));
+
+
+
         // 스크롤 뷰와 리스트뷰 충돌방지 용 리스트뷰 높이 지정
         int totalHeight = 0;
         ViewGroup.LayoutParams params;
@@ -317,9 +315,14 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
             totalHeight += listItem.getMeasuredHeight();
         }
 
+        /*if (Integer.parseInt(getCalListAPI.getValue("total")) == 1){
+            totalHeight += 50;
+        }*/
+
+
         // 리스트뷰의 높이를 고정
         params = Cal_listView.getLayoutParams();
-        params.height = totalHeight + (Cal_listView.getDividerHeight() * (Cal_listAdapter.getCount() - 1));
+        params.height = totalHeight + (20 * (Cal_listAdapter.getCount()));
         Cal_listView.setLayoutParams(params);
 
         Cal_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -328,9 +331,9 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
                 System.out.println("이거 실행됨");
                 clickedPosition = position;
 
-                dialog = new CalDialog(getActivity(), Cal_listAdapter, clickedPosition, "Calendar", Cal_listView);
-                dialog.setParentFragment(HalfCalendarFragment.this);
-                dialog.show();
+                cDialog = new CalDialog(getActivity(), Cal_listAdapter, clickedPosition, "Calendar", Cal_listView);
+                cDialog.setParentFragment(HalfCalendarFragment.this);
+                cDialog.show();
                 onResume();
             }
         });
@@ -344,22 +347,10 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
         getHabitListAPI = new ApiService();
         getHabitListAPI.getUrl(getHabitListURL);
 
-        Habit_listAdapter = new HabitListAdapter();
+        Habit_listAdapter = new CalHabitListAdapter();
         Habit_listAdapter.setListener(HalfCalendarFragment.this);
-
-
-
-
-
-
-
-
-
-
-
-
+        Habit_listView = new ListView(getContext());
         // 가져온 해빗 리스트 어뎁터 아이템에 추가하기
-
         /*{
             "habit_today_total": "1",
                 "habit_list_id0": "19",
@@ -377,34 +368,118 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
                 "habit_dayOfWeek0": "4",
                 "SUCCESS": "200"
         }*/
+
+        for (int i = 0; i < Integer.parseInt(getHabitListAPI.getValue("habit_today_total")); i++){
+            Habit_listAdapter.addItem(
+                    new ListItem(getHabitListAPI.getValue("habit_list_id"+i), getHabitListAPI.getValue("habit_name"+i), selectedDateStr,
+                            getHabitListAPI.getValue("habit_color"+i), getHabitListAPI.getValue("habit_startDate"+i),
+                            getHabitListAPI.getValue("habit_endDate"+i), Integer.parseInt(getHabitListAPI.getValue("habit_state"+i)))
+            );
+        }
+        Habit_listView.setAdapter(Habit_listAdapter);
+        HalfCal_habitList.addView(Habit_listView);
+
+
+        // 스크롤 뷰와 리스트뷰 충돌방지 용 리스트뷰 높이 지정
+        int totalHeight = 0;
+        ViewGroup.LayoutParams params;
+        for (int i = 0; i < Integer.parseInt(getHabitListAPI.getValue("habit_today_total")); i++){
+            // 모든 항목을 표시하기 위해 리스트뷰의 높이를 계산
+            View listItem = Habit_listAdapter.getView(i, null, Habit_listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        /*if (Integer.parseInt(getHabitListAPI.getValue("habit_today_total")) == 1){
+            totalHeight += 50;
+        }*/
+
+        // 리스트뷰의 높이를 고정
+        params = Habit_listView.getLayoutParams();
+        params.height = totalHeight + (20 * (Habit_listAdapter.getCount()));
+        Habit_listView.setLayoutParams(params);
+
+        Habit_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                System.out.println("이거 실행됨");
+                clickedPosition = position;
+
+                hDialog = new CalHabitDialog(getActivity(), Habit_listAdapter, clickedPosition, "HABIT", Habit_listView);
+                hDialog.setParentFragment(HalfCalendarFragment.this);
+                hDialog.show();
+                onResume();
+            }
+        });
     }
     // 투두 리스트 불러오기
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void getTodoListFromServer(){
+        selectedDateStr = selectedDate.format(formatter);
+
+        getTodoListURL = "http://203.250.133.162:8080/todoAPI/get_todo_list_plus_color/" + loginID + "/" + selectedDateStr;
+        getTodoListAPI = new ApiService();
+        getTodoListAPI.getUrl(getTodoListURL);
+
+        Todo_listAdapter = new CalTodoListAdapter();
+        Todo_listAdapter.setListener(HalfCalendarFragment.this);
+        Todo_listView = new ListView(getContext());
+        /*{
+            "todo_total": "1",
+                "todo_list_id0": "3",
+                "todo_name0": "testtest",
+                "todo_cName0": "찾았다요놈",
+                "todo_cColor0: "pink",
+                "todo_state0": "0",
+                "SUCCESS": "200"
+        }*/
+        for (int i = 0; i < Integer.parseInt(getTodoListAPI.getValue("todo_total")); i++){
+            Todo_listAdapter.addItem(
+                    new ListItem(getTodoListAPI.getValue("todo_list_id"+i), getTodoListAPI.getValue("todo_name"+i), selectedDateStr,
+                            getTodoListAPI.getValue("todo_cName"+i), getTodoListAPI.getValue("todo_cColor"+i), Integer.parseInt(getTodoListAPI.getValue("todo_state"+i))));
+
+        }
 
 
+        Todo_listView.setAdapter(Todo_listAdapter);
+        HalfCal_todoList.addView(Todo_listView);
 
 
+        // 스크롤 뷰와 리스트뷰 충돌방지 용 리스트뷰 높이 지정
+        int totalHeight = 0;
+        ViewGroup.LayoutParams params;
+        for (int i = 0; i < Integer.parseInt(getTodoListAPI.getValue("todo_total")); i++){
+            // 모든 항목을 표시하기 위해 리스트뷰의 높이를 계산
+            View listItem = Todo_listAdapter.getView(i, null, Todo_listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+
+        }
+
+        /*if (Integer.parseInt(getTodoListAPI.getValue("todo_total")) == 1){
+            totalHeight += 40;
+        }*/
+
+        // 리스트뷰의 높이를 고정
+        params = Todo_listView.getLayoutParams();
+        params.height = totalHeight + (20 * (Todo_listAdapter.getCount()));
+        Todo_listView.setLayoutParams(params);
 
 
+        Todo_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                System.out.println("이거 실행됨");
+                clickedPosition = position;
 
+                tDialog = new CalTodoDialog(getActivity(), Todo_listAdapter, clickedPosition, "TO-DO", Todo_listView);
+                tDialog.setParentFragment(HalfCalendarFragment.this);
+                tDialog.show();
+                onResume();
+            }
+        });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 
@@ -481,9 +556,16 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
         habitDialog.setParentFragment(HalfCalendarFragment.this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onCheckButtonClicked(int position, HabitDialog habitDialog) {
+    public void onCheckButtonClicked(int position, CalHabitDialog habitDialog) {
+        habitDialog.setParentFragment(HalfCalendarFragment.this);
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onCheckButtonClicked(int position, CalTodoDialog todoDialog) {
+        todoDialog.setParentFragment(HalfCalendarFragment.this);
     }
 }
 

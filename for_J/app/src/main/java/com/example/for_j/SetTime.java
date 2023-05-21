@@ -25,6 +25,7 @@ public class SetTime extends Dialog {
             public void onClick(View v) {
                 int selectedHour = todoTP.getHour(); // 선택된 시간
                 int selectedMinute = todoTP.getMinute();
+
                 context.setValue(code, selectedHour, selectedMinute); // 다이얼 로그를 호출한 엑티비티의 해당 버튼의 값 변경
                 dismiss();
             }

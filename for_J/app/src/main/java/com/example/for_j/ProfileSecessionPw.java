@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ProfileSecessionPw extends AppCompatActivity {
 
     EditText Profile_Secession_Pw_Chat;
+    String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -31,9 +32,12 @@ public class ProfileSecessionPw extends AppCompatActivity {
         // CustomDialog 객체 생성
         CustomDialog dialog = new CustomDialog(ProfileSecessionPw.this);
 
+        IdSave idSave = (IdSave) getApplication();
+        user_id = idSave.getUserId();
+
         // url 작성
         ApiService InfoApiService = new ApiService();
-        String url = "http://203.250.133.162:8080/usersAPI/user_info/" + "123";
+        String url = "http://203.250.133.162:8080/usersAPI/user_info/" + user_id;
         InfoApiService.getUrl(url);
 
         String Pw = InfoApiService.getValue("user_pw");

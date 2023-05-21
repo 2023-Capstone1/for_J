@@ -3,6 +3,7 @@ package com.example.for_j;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.google.android.material.textfield.TextInputEditText;
 public class Login extends AppCompatActivity {
     TextInputEditText Login_Id, Login_Pw;
     TextView Login_Button, Login_Id_Pw_Find, Login_Signup;
+    CheckBox Auto_Login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,20 @@ public class Login extends AppCompatActivity {
         Login_Button = findViewById(R.id.Login_button);
         Login_Id_Pw_Find = findViewById(R.id.Login_id_pw_find);
         Login_Signup = findViewById(R.id.Login_signup);
+        Auto_Login = findViewById(R.id.auto_login);
+
+        IdSave idSave = (IdSave) getApplication();
+        String userId = idSave.getUserId();
+        int isAutoLogin = idSave.getIsAutoLogin();
+
+        // 자동 로그인 체크 여부 및 저장된 사용자 ID 확인
+        if (isAutoLogin == 1 && !userId.isEmpty()) {
+            // 자동 로그인 체크되어 있고, 저장된 사용자 ID가 있는 경우
+            // MainActivity로 이동
+            Intent intent = new Intent(Login.this, CalendarMainActivity.class);
+            startActivity(intent);
+            finish(); // 현재 액티비티 종료
+        }
 
         // 로그인 버튼
         Login_Button.setOnClickListener(new View.OnClickListener() {
@@ -31,6 +47,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 String inputId = Login_Id.getText().toString();
                 String inputPw = Login_Pw.getText().toString();
+                boolean isAutoLogin = Auto_Login.isChecked();
 
                 // CustomDialog 객체 생성
                 CustomDialog dialog = new CustomDialog(Login.this);
@@ -43,7 +60,15 @@ public class Login extends AppCompatActivity {
                 String id_error = loginApiService.getKey("login_id_pw_error");
                 String pw_error = loginApiService.getKey("login_pw_error");
 
+                if (isAutoLogin) {
+                    // Auto_Login이 체크되었을 때 로그인 정보를 저장
+                    idSave.setIsAutoLogin(1);
+                } else {
+                    idSave.setIsAutoLogin(0);
+                }
+
                 if(loginApiService.getStatus() == 200){
+                    idSave.setUserId(inputId);
                     Toast.makeText(Login.this, "로그인 성공하였습니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Login.this, CalendarMainActivity.class);
                     startActivity(intent);

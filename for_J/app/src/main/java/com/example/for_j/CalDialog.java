@@ -40,7 +40,6 @@ public class CalDialog {
 
     private String loginId = "123";
     private String name;
-    private String today;
     private String id;
     private int state;
 
@@ -56,6 +55,9 @@ public class CalDialog {
         this.listItemAdapter = listItemAdapter;
         this.clickedPosition = clickedPosition;
         this.dialogTitle = dialogTitle;
+
+        name = String.valueOf(listItemAdapter.getListName(clickedPosition));
+        id = String.valueOf(listItemAdapter.getListId(clickedPosition));
 
         // 다이얼로그 객체 생성 -  checK_box_dialog.xml설정
         dialog = new Dialog(context);
@@ -77,11 +79,10 @@ public class CalDialog {
             public void onClick(View v) {
                 Intent intent = new Intent(context, CalSetDateModify.class);
                 // 인텐트로 이름, 날짜 보내기
-                name = String.valueOf(listItemAdapter.getListName(clickedPosition));
+                /*name = String.valueOf(listItemAdapter.getListName(clickedPosition));
                 today = String.valueOf(listItemAdapter.getListToday(clickedPosition));
-                id = String.valueOf(listItemAdapter.getListId(clickedPosition));
+                id = String.valueOf(listItemAdapter.getListId(clickedPosition));*/
                 intent.putExtra("title", name);
-                intent.putExtra("today", today);
                 intent.putExtra("id", id);
                 context.startActivity(intent);
                 dialog.dismiss();
@@ -110,7 +111,8 @@ public class CalDialog {
             public void IsPositive(int isPositive) throws ParseException {
                 if (isPositive == 1){
                     // 삭제 메소드 실행
-                    deleteURL = "http://203.250.133.162:8080/cal_delete/" + loginId + "/" + id;
+                    deleteURL = "http://203.250.133.162:8080/calendarAPI/cal_delete/" + loginId + "/" + id;
+                    System.out.println(deleteURL);
                     deleteAPI = new ApiService();
                     deleteAPI.deleteUrl(deleteURL);
                 }

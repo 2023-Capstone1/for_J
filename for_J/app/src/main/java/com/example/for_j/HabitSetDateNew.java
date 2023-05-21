@@ -89,7 +89,6 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_habit_set_date_new);
-        ActionBar actionbar = getSupportActionBar();
 
         HSDN_Title = findViewById(R.id.HSDN_HabitTitle);
 
@@ -211,10 +210,6 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                     HSDN_AlarmBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // 현재 시간 가져오기
-                            int hour = currentSelectedDate.get(Calendar.HOUR_OF_DAY);
-                            int minute = currentSelectedDate.get(Calendar.MINUTE);
-
                             // 현재 시간 타임 피커로 보내기
                             DialogFragment HSDN_TimeDialog = new TimePickerFragment(currentSelectedDate, HabitSetDateNew.this);
                             HSDN_TimeDialog.show(getSupportFragmentManager(), "timePicker");

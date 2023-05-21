@@ -418,7 +418,6 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
                     todoFragment_listAdapter[i].addItem(
                             new ListItem(getTodoListAPI.getValue("todo_list_id"+j), getTodoListAPI.getValue("todo_name"+j), selectedDateStr,
                             distinctCNameList.get(i), distinctCColorlist.get(i), Integer.parseInt(getTodoListAPI.getValue("todo_state"+j))));
-
                 }
             }
             // 리스트 어뎁터 연결
