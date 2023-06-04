@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonElement;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -141,6 +143,8 @@ public class HalfCalendarAdapter extends RecyclerView.Adapter<HalfCalendarAdapte
                 if (clickedDate != null){
                     // Set the selected date to the clicked date
                     CalendarUtill.selectedDate = clickedDate;
+                    System.out.println("!!!!!클릭드 데이트" + clickedDate);
+                    System.out.println("!!!!!셀렉티드 데이트" + CalendarUtill.selectedDate);
 
                     // Update the views to reflect the new selected date
                     notifyDataSetChanged();
@@ -159,7 +163,7 @@ public class HalfCalendarAdapter extends RecyclerView.Adapter<HalfCalendarAdapte
         return dayList.size();
     }
 
-    public class CalendarViewHolder extends RecyclerView.ViewHolder {
+    public static class CalendarViewHolder extends RecyclerView.ViewHolder {
         TextView dayText;
 
         View parentView;
@@ -172,6 +176,10 @@ public class HalfCalendarAdapter extends RecyclerView.Adapter<HalfCalendarAdapte
             // calendar_cell.xml에서 dayText의 부모 뷰
             parentView = itemView.findViewById(R.id.Calendar_DateParentView);
         }
+    }
+
+    public LocalDate getSelectedDate() {
+        return CalendarUtill.selectedDate;
     }
 
 

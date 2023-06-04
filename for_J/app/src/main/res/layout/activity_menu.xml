@@ -67,6 +67,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="210dp"
+        android:layout_marginRight="20dp"
         android:layout_gravity="right">
         <Button
             android:id="@+id/main_logout"

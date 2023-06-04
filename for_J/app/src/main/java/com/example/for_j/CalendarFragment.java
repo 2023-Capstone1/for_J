@@ -8,6 +8,7 @@ package com.example.for_j;
 import static com.example.for_j.CalendarUtill.selectedDate;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,8 +19,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +33,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class CalendarFragment extends Fragment {
+    private Context context;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     // 달력 관련 변수
     // 풀캘린더
@@ -78,10 +89,12 @@ public class CalendarFragment extends Fragment {
         CalendarFragment_recyclerView = calendarView.findViewById(R.id.dateRecyclerView);
 
         // 현재 날짜
-        selectedDate = LocalDate.now();
-
+        if (selectedDate == null) {
+            selectedDate = LocalDate.now();
+        }
         // 풀캘린더 화면 설정
         setFullMonthView();
+
 
         // 이전달 버튼 이벤트
         CalendarFragment_prevBtn.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +132,15 @@ public class CalendarFragment extends Fragment {
         return calendarView;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void updateSelectedDate(LocalDate selectedDate) {
+        // selectedDate 업데이트 및 화면 갱신 작업 수행
+        CalendarUtill.selectedDate = selectedDate;
+        setFullMonthView();
+    }
+
+
+
     // 날짜 타입 설정
     @SuppressLint("NewApi")
     private String monthYearFromDate(LocalDate date) {
@@ -135,7 +157,7 @@ public class CalendarFragment extends Fragment {
         // calendar_cell 텍스트뷰 세팅
         ArrayList<LocalDate> dayList = daysInMonthArray(CalendarUtill.selectedDate);
 
-        CalendarAdapter adapter = new CalendarAdapter(dayList);
+        CalendarAdapter adapter = new CalendarAdapter(context, dayList);
         adapter.setParentFragment(CalendarFragment.this);
 
         // 레이아웃 설정 (열 7개)
@@ -146,6 +168,8 @@ public class CalendarFragment extends Fragment {
 
         // 어댑터 작용
         CalendarFragment_recyclerView.setAdapter(adapter);
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -173,4 +197,6 @@ public class CalendarFragment extends Fragment {
         }
         return dayList;
     }
+
+
 }

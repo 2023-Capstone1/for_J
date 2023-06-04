@@ -4,82 +4,55 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.example.for_j.HabitFragment;
 import com.example.for_j.R;
 
-import org.w3c.dom.Text;
-
 public class HabitDeleteDialog extends Dialog {
-    private HabitDeleteDialog.HabitDeleteDialogListener  habitDeleteDialogListener;
+    private final HabitDeleteDialog.HabitDeleteDialogListener  habitDeleteDialogListener;
     public interface HabitDeleteDialogListener {
         void getDeletePosition(int deletePosition);
     }
-    private Context context;
+
     public HabitDeleteDialog(@NonNull Context context, HabitDeleteDialogListener  habitDeleteDialogListener){
         super(context);
-        this.context = context;
         this.habitDeleteDialogListener = habitDeleteDialogListener;
     }
 
-
-
-    private LinearLayout HDD_layout;
-
-    // 현재 날짜 삭제
-    private TextView deletePositionCurrent;
-    // 현재 날짜 포함 이전 날짜 모두 삭제
-    private TextView deletePositionPre;
-    // 현재 날짜 포함 이후 날짜 모두 삭제
-    private TextView deletePositionNext;
-    // 해빗 전체 삭제
-    private TextView deletePositionAll;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.habit_delete_dialog);
 
-        HDD_layout = findViewById(R.id. HDD_layout);
+        // 현재 날짜 삭제
+        TextView deletePositionCurrent = findViewById(R.id.deletePositionCurrent);
+        // 현재 날짜 포함 이전 날짜 모두 삭제
+        TextView deletePositionPre = findViewById(R.id.deletePositionPre);
+        // 현재 날짜 포함 이후 날짜 모두 삭제
+        TextView deletePositionNext = findViewById(R.id.deletePositionNext);
+        // 해빗 전체 삭제
+        TextView deletePositionAll = findViewById(R.id.deletePositionAll);
 
-        deletePositionCurrent = findViewById(R.id.deletePositionCurrent);
-        deletePositionPre = findViewById(R.id.deletePositionPre);
-        deletePositionNext = findViewById(R.id.deletePositionNext);
-        deletePositionAll = findViewById(R.id.deletePositionAll);
-
-        deletePositionCurrent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                habitDeleteDialogListener.getDeletePosition(0);
-                dismiss();
-            }
+        deletePositionCurrent.setOnClickListener(view -> {
+            habitDeleteDialogListener.getDeletePosition(0);
+            dismiss();
         });
 
-        deletePositionPre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                habitDeleteDialogListener.getDeletePosition(1);
-                dismiss();
-            }
+        deletePositionPre.setOnClickListener(view -> {
+            habitDeleteDialogListener.getDeletePosition(1);
+            dismiss();
         });
 
-        deletePositionNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                habitDeleteDialogListener.getDeletePosition(2);
-                dismiss();
-            }
+        deletePositionNext.setOnClickListener(view -> {
+            habitDeleteDialogListener.getDeletePosition(2);
+            dismiss();
         });
 
-        deletePositionAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                habitDeleteDialogListener.getDeletePosition(3);
-                dismiss();
-            }
+        deletePositionAll.setOnClickListener(view -> {
+            habitDeleteDialogListener.getDeletePosition(3);
+            dismiss();
         });
     }
 

@@ -108,7 +108,8 @@ public class HabitListAdapter extends BaseAdapter {
         listNameText.setText(listItem.getListName());
 
         // 서버에서 state 가지고 와서 버튼 이미지 바꾸기
-        String loginId = "123";
+        IdSave idSave = (IdSave) context.getApplicationContext();
+        String loginId = idSave.getUserId();
         String name = items.get(position).getListName();
         String today = items.get(position).getListToday();
         String id = items.get(position).getListId();

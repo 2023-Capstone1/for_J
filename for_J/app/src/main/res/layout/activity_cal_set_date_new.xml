@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:hint="Calendar Title"
+            android:hint="@string/calendar_title"
             android:textSize="30sp"
 
             android:singleLine="true"
@@ -39,7 +39,7 @@
             android:layout_margin="15dp"
 
             android:layout_gravity="right|center_vertical"
-            />
+            tools:ignore="RtlHardcoded" />
     </FrameLayout>
 
     <ScrollView
@@ -72,7 +72,8 @@
                         android:layout_margin="10dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_notification_clock_alarm"
-                        />
+                        android:contentDescription="@string/todo"
+                        tools:ignore="ContentDescription" />
 
                     <!-- 하루종일 text -->
                     <TextView
@@ -81,7 +82,7 @@
                         android:layout_margin="10dp"
                         android:layout_gravity="center"
                         android:textSize="25sp"
-                        android:text="하루종일"
+                        android:text="@string/allDay"
                         />
 
                     <!-- 오른쪽 정렬 -->
@@ -232,7 +233,9 @@
                     android:layout_height="36dp"
                     android:layout_margin="10dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_gps"/>
+                    android:src="@drawable/ic_gps"
+                    android:contentDescription="@string/todo"
+                    tools:ignore="ContentDescription" />
 
                 <FrameLayout
                     android:layout_width="match_parent"

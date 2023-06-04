@@ -3,20 +3,17 @@ package com.example.for_j;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
@@ -36,9 +33,8 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
     private Toast toast;
 
     // 날짜 저장 변수
-    private Calendar startSelectedDate = Calendar.getInstance();
-    private Calendar endSelectedDate = Calendar.getInstance();
-    private final Calendar currentSelectedDate = Calendar.getInstance();
+    private final Calendar startSelectedDate = Calendar.getInstance();
+    private final Calendar endSelectedDate = Calendar.getInstance();
 
     // 색 버튼
     private AppCompatButton CSDN_Color;
@@ -46,8 +42,6 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
     // 타이틀
     private EditText CSDN_CalTitle;
 
-    // 날짜 스위치
-    private SwitchCompat CSDN_AllDaySwitch;
     private int switchNum = 0;
 
     // *하루종일 on* //
@@ -74,13 +68,8 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
     // 메모
     private EditText CSDN_MemoET;
 
-    // 저장
-    private AppCompatButton CSDN_Save;
-    // 취소
-    private AppCompatButton CSDN_Cancle;
-
     // 서버 통신 변수
-    String login_id = "123";
+    String login_id;
     String list_id = null;
     String name = null;
     String color = null;
@@ -103,6 +92,9 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cal_set_date_new);
+
+        IdSave idSave = (IdSave) getApplication();
+        login_id = idSave.getUserId();
 
         name = getIntent().getStringExtra("title");
         list_id = getIntent().getStringExtra("id");
@@ -163,64 +155,58 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         }
 
         // 여기에서 컬러팔레트에서 얻어온 색깔로 바꾸기
-        CSDN_Color.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 컬러팔레트 띄우기
-                ColorPaletteDialog CPD = new ColorPaletteDialog(CalSetDateModify.this, new ColorPaletteDialog.ColorPaletteListener() {
-                    @Override
-                    public void getColorPaletteData(int Pcolor) {
-                        Drawable btnColor;
+        CSDN_Color.setOnClickListener(view -> {
+            // 컬러팔레트 띄우기
+            ColorPaletteDialog CPD = new ColorPaletteDialog(CalSetDateModify.this, Pcolor -> {
+                Drawable btnColor1;
 //                        System.out.println(color);
-                        switch (Pcolor) {
-                            case 0:
-                                color = "pink";
-                                btnColor = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_pink_false);
-                                CSDN_Color.setBackgroundDrawable(btnColor);
-                                break;
-                            case 1:
-                                color = "crimson";
-                                btnColor = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_crimson_false);
-                                CSDN_Color.setBackgroundDrawable(btnColor);
-                                break;
-                            case 2:
-                                color = "orange";
-                                btnColor = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_orange_false);
-                                CSDN_Color.setBackgroundDrawable(btnColor);
-                                break;
-                            case 3:
-                                color = "yellow";
-                                btnColor = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_yellow_false);
-                                CSDN_Color.setBackgroundDrawable(btnColor);
-                                break;
-                            case 4:
-                                color = "light_green";
-                                btnColor = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_light_green_false);
-                                CSDN_Color.setBackgroundDrawable(btnColor);
-                                break;
-                            case 5:
-                                color = "turquoise";
-                                btnColor = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_turquoise_false);
-                                CSDN_Color.setBackgroundDrawable(btnColor);
-                                break;
-                            case 6:
-                                color = "pastel_blue";
-                                btnColor = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_pastel_blue_false);
-                                CSDN_Color.setBackgroundDrawable(btnColor);
-                                break;
-                            case 7:
-                                color = "pastel_purple";
-                                btnColor = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_pastel_purple_false);
-                                CSDN_Color.setBackgroundDrawable(btnColor);
-                                break;
-                        }
-                    }
-                });
-                CPD.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                CPD.setCanceledOnTouchOutside(true);
-                CPD.setCancelable(true);
-                CPD.show();
-            }
+                switch (Pcolor) {
+                    case 0:
+                        color = "pink";
+                        btnColor1 = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_pink_false);
+                        CSDN_Color.setBackgroundDrawable(btnColor1);
+                        break;
+                    case 1:
+                        color = "crimson";
+                        btnColor1 = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_crimson_false);
+                        CSDN_Color.setBackgroundDrawable(btnColor1);
+                        break;
+                    case 2:
+                        color = "orange";
+                        btnColor1 = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_orange_false);
+                        CSDN_Color.setBackgroundDrawable(btnColor1);
+                        break;
+                    case 3:
+                        color = "yellow";
+                        btnColor1 = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_yellow_false);
+                        CSDN_Color.setBackgroundDrawable(btnColor1);
+                        break;
+                    case 4:
+                        color = "light_green";
+                        btnColor1 = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_light_green_false);
+                        CSDN_Color.setBackgroundDrawable(btnColor1);
+                        break;
+                    case 5:
+                        color = "turquoise";
+                        btnColor1 = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_turquoise_false);
+                        CSDN_Color.setBackgroundDrawable(btnColor1);
+                        break;
+                    case 6:
+                        color = "pastel_blue";
+                        btnColor1 = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_pastel_blue_false);
+                        CSDN_Color.setBackgroundDrawable(btnColor1);
+                        break;
+                    case 7:
+                        color = "pastel_purple";
+                        btnColor1 = ContextCompat.getDrawable(CalSetDateModify.this, R.drawable.category_pastel_purple_false);
+                        CSDN_Color.setBackgroundDrawable(btnColor1);
+                        break;
+                }
+            });
+            CPD.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            CPD.setCanceledOnTouchOutside(true);
+            CPD.setCancelable(true);
+            CPD.show();
         });
 
         // 하루 종일 true 레이아웃
@@ -229,7 +215,8 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         CSDN_AllDayFalse = findViewById(R.id.CSDN_AllDayFalse);
 
         // 하루 종일 스위치 xml 연동
-        CSDN_AllDaySwitch = findViewById(R.id.CSDN_AllDaySwitch);
+        // 날짜 스위치
+        SwitchCompat CSDN_AllDaySwitch = findViewById(R.id.CSDN_AllDaySwitch);
         if (Objects.equals(getCalAPI.getValue("cal_allDay"), "1")){
             CSDN_AllDaySwitch.setChecked(true);
             CSDN_AllDayTrue.setVisibility(View.VISIBLE);
@@ -250,29 +237,23 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
 
         /////////// 스위치 안에 있을 경우 처음에 클릭 안돼서 밖으로 뺌 ////////////
         // 시작 날짜 버튼 클릭
-        CSDN_AllDayTrueStartDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchNum = 0;
+        CSDN_AllDayTrueStartDate.setOnClickListener(v -> {
+            switchNum = 0;
 
-                // Pass the selected date to the DatePickerFragment
-                // 현재 날짜 데이트 피커로 보내기
-                DialogFragment CSDN_DateDialog = new DatePickerFragment(startSelectedDate, CalSetDateModify.this);
-                CSDN_DateDialog.show(getSupportFragmentManager(), "datePicker");
-            }
+            // Pass the selected date to the DatePickerFragment
+            // 현재 날짜 데이트 피커로 보내기
+            DialogFragment CSDN_DateDialog = new DatePickerFragment(startSelectedDate, CalSetDateModify.this);
+            CSDN_DateDialog.show(getSupportFragmentManager(), "datePicker");
         });
 
         // 종료 날짜 버튼 클릭
-        CSDN_ALlDayTrueEndDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchNum = 1;
+        CSDN_ALlDayTrueEndDate.setOnClickListener(v -> {
+            switchNum = 1;
 
-                // Pass the selected date to the DatePickerFragment
-                // 현재 날짜 데이트 피커로 보내기
-                DialogFragment CSDN_DateDialog = new DatePickerFragment(endSelectedDate, CalSetDateModify.this);
-                CSDN_DateDialog.show(getSupportFragmentManager(), "datePicker");
-            }
+            // Pass the selected date to the DatePickerFragment
+            // 현재 날짜 데이트 피커로 보내기
+            DialogFragment CSDN_DateDialog = new DatePickerFragment(endSelectedDate, CalSetDateModify.this);
+            CSDN_DateDialog.show(getSupportFragmentManager(), "datePicker");
         });
         //////////////////////////////////////////////////////////
 
@@ -294,75 +275,60 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         }
 
         // 시작 날짜 버튼 클릭
-        CSDN_AllDayFalseStartDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchNum = 0;
+        CSDN_AllDayFalseStartDate.setOnClickListener(v -> {
+            switchNum = 0;
 
-                // Pass the selected date to the DatePickerFragment
-                // 현재 날짜 데이트 피커로 보내기
-                DialogFragment CSDN_DateDialog = new DatePickerFragment(startSelectedDate, CalSetDateModify.this);
-                CSDN_DateDialog.show(getSupportFragmentManager(), "datePicker");
+            // Pass the selected date to the DatePickerFragment
+            // 현재 날짜 데이트 피커로 보내기
+            DialogFragment CSDN_DateDialog = new DatePickerFragment(startSelectedDate, CalSetDateModify.this);
+            CSDN_DateDialog.show(getSupportFragmentManager(), "datePicker");
 
-            }
         });
 
         // 시작 시간 버튼 클릭
-        CSDN_AllDayFalseStartTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                time = 0;
+        CSDN_AllDayFalseStartTime.setOnClickListener(v -> {
+            time = 0;
 
-                // 현재 시간 타임 피커로 보내기
-                DialogFragment HSDN_TimeDialog = new TimePickerFragment(startSelectedDate, CalSetDateModify.this);
-                HSDN_TimeDialog.show(getSupportFragmentManager(), "timePicker");
+            // 현재 시간 타임 피커로 보내기
+            DialogFragment HSDN_TimeDialog = new TimePickerFragment(startSelectedDate, CalSetDateModify.this);
+            HSDN_TimeDialog.show(getSupportFragmentManager(), "timePicker");
 
-            }
         });
 
         // 종료 날짜 버튼 클릭
-        CSDN_AllDayFalseEndDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchNum = 1;
+        CSDN_AllDayFalseEndDate.setOnClickListener(v -> {
+            switchNum = 1;
 
-                // Pass the selected date to the DatePickerFragment
-                // 현재 날짜 데이트 피커로 보내기
-                DialogFragment CSDN_DateDialog = new DatePickerFragment(endSelectedDate, CalSetDateModify.this);
-                CSDN_DateDialog.show(getSupportFragmentManager(), "datePicker");
+            // Pass the selected date to the DatePickerFragment
+            // 현재 날짜 데이트 피커로 보내기
+            DialogFragment CSDN_DateDialog = new DatePickerFragment(endSelectedDate, CalSetDateModify.this);
+            CSDN_DateDialog.show(getSupportFragmentManager(), "datePicker");
 
-            }
         });
 
         // 종료 시간 버튼 클릭
-        CSDN_AllDayFalseEndTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                time = 1;
+        CSDN_AllDayFalseEndTime.setOnClickListener(v -> {
+            time = 1;
 
-                // 현재 시간 타임 피커로 보내기
-                DialogFragment HSDN_TimeDialog = new TimePickerFragment(endSelectedDate, CalSetDateModify.this);
-                HSDN_TimeDialog.show(getSupportFragmentManager(), "timePicker");
-            }
+            // 현재 시간 타임 피커로 보내기
+            DialogFragment HSDN_TimeDialog = new TimePickerFragment(endSelectedDate, CalSetDateModify.this);
+            HSDN_TimeDialog.show(getSupportFragmentManager(), "timePicker");
         });
 
         // 스위치 온오프
-        CSDN_AllDaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-             @Override
-             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                 if (isChecked) {
-                     // 하루 종일 on 레이아웃 나타내기
-                     CSDN_AllDayTrue.setVisibility(View.VISIBLE);
-                     CSDN_AllDayFalse.setVisibility((View.GONE));
-                     // 위에 작동부 있음
-                     allDay = 1;
-                 } else {
-                     allDay = 0;
-                     // 하루 종일 off 레이아웃 나타내기
-                     CSDN_AllDayTrue.setVisibility(View.GONE);
-                     CSDN_AllDayFalse.setVisibility((View.VISIBLE));
-                 }
-             }
+        CSDN_AllDaySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // 하루 종일 on 레이아웃 나타내기
+                CSDN_AllDayTrue.setVisibility(View.VISIBLE);
+                CSDN_AllDayFalse.setVisibility((View.GONE));
+                // 위에 작동부 있음
+                allDay = 1;
+            } else {
+                allDay = 0;
+                // 하루 종일 off 레이아웃 나타내기
+                CSDN_AllDayTrue.setVisibility(View.GONE);
+                CSDN_AllDayFalse.setVisibility((View.VISIBLE));
+            }
         });
 
 
@@ -371,7 +337,7 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
             CSDN_LocationET.setText(getCalAPI.getValue("cal_location"));
         }
 
-        final String alarmOption[] = {"일정 시작시간", "10분 전", "1시간 전", "1일 전"};
+        final String[] alarmOption = {"일정 시작시간", "10분 전", "1시간 전", "1일 전"};
 
         Spinner CSDN_SetAlarmSpinner = findViewById(R.id.CSDN_SetAlarmSpinner);
 
@@ -426,204 +392,137 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         }
 
 
-        CSDN_Save = findViewById(R.id.CSDN_Save);
-        CSDN_Save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    if (CSDN_CalTitle.getText() != null) {
-                        name = CSDN_CalTitle.getText().toString();
-                    }
-                } catch (NullPointerException e) {
-                    name = "";
+        // 저장
+        AppCompatButton CSDN_Save = findViewById(R.id.CSDN_Save);
+        CSDN_Save.setOnClickListener(view -> {
+            try {
+                if (CSDN_CalTitle.getText() != null) {
+                    name = CSDN_CalTitle.getText().toString();
                 }
+            } catch (NullPointerException e) {
+                name = "";
+            }
 
-                // 하루종일이 아니면
-                if (allDay == 0){
-                    //CSDN_AllDayFalseStartDate
-                    try{
-                        if (CSDN_AllDayFalseStartDate.getText() != null){
-                            startDate = CSDN_AllDayFalseStartDate.getText().toString();
-                        }
-                    }catch (NullPointerException e){
-                        startDate = "";
-                    }
-
-
-                    //CSDN_AllDayFalseStartTime
-                    /*try{
-                        if (CSDN_AllDayFalseStartTime.getText() != null){
-                            int hour = startSelectedDate.get(Calendar.HOUR);
-                            int minute = startSelectedDate.get(Calendar.MINUTE);
-                            String timeServerFormat = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
-                            startTime = timeServerFormat;
-                        }
-                    }catch (NullPointerException e){
-                        startTime = "";
-                    }*/
-
-
-                    //CSDN_AllDayFalseEndDate
-                    try{
-                        if (CSDN_AllDayFalseEndDate.getText() != null){
-                            endDate = CSDN_AllDayFalseEndDate.getText().toString();
-                        }
-                    }catch (NullPointerException e){
-                        endDate = "";
-                    }
-
-
-                    //CSDN_AllDayFalseEndTime
-                    /*try{
-                        if (CSDN_AllDayFalseEndTime.getText() != null){
-                            int hour = endSelectedDate.get(Calendar.HOUR);
-                            int minute = endSelectedDate.get(Calendar.MINUTE);
-                            String timeServerFormat = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
-                            endTime = timeServerFormat;
-                        }
-                    }catch (NullPointerException e){
-                        endTime = "";
-                    }*/
-
-                } else {    // 하루 종일 이면
-                    //CSDN_AllDayTrueStartDate
-                    try{
-                        if (CSDN_AllDayTrueStartDate.getText() != null){
-                            startDate = CSDN_AllDayTrueStartDate.getText().toString();
-                        }
-                    }catch (NullPointerException e){
-                        startDate = "";
-                    }
-
-
-                    //CSDN_ALlDayTrueEndDate
-                    try{
-                        if (CSDN_ALlDayTrueEndDate.getText() != null){
-                            endDate = CSDN_ALlDayTrueEndDate.getText().toString();
-                        }
-                    }catch (NullPointerException e){
-                        endDate = "";
-                    }
-
-                    startTime = "";
-                    endTime = "";
-                }
-
+            // 하루종일이 아니면
+            if (allDay == 0){
+                //CSDN_AllDayFalseStartDate
                 try{
-                    if (CSDN_LocationET.getText() != null) {
-                        location = CSDN_LocationET.getText().toString();
-                    }else{
-                        location = "";
+                    if (CSDN_AllDayFalseStartDate.getText() != null){
+                        startDate = CSDN_AllDayFalseStartDate.getText().toString();
                     }
                 }catch (NullPointerException e){
+                    startDate = "";
+                }
+
+                //CSDN_AllDayFalseEndDate
+                try{
+                    if (CSDN_AllDayFalseEndDate.getText() != null){
+                        endDate = CSDN_AllDayFalseEndDate.getText().toString();
+                    }
+                }catch (NullPointerException e){
+                    endDate = "";
+                }
+
+            } else {    // 하루 종일 이면
+                //CSDN_AllDayTrueStartDate
+                try{
+                    if (CSDN_AllDayTrueStartDate.getText() != null){
+                        startDate = CSDN_AllDayTrueStartDate.getText().toString();
+                    }
+                }catch (NullPointerException e){
+                    startDate = "";
+                }
+
+
+                //CSDN_ALlDayTrueEndDate
+                try{
+                    if (CSDN_ALlDayTrueEndDate.getText() != null){
+                        endDate = CSDN_ALlDayTrueEndDate.getText().toString();
+                    }
+                }catch (NullPointerException e){
+                    endDate = "";
+                }
+
+                startTime = "";
+                endTime = "";
+            }
+
+            try{
+                if (CSDN_LocationET.getText() != null) {
+                    location = CSDN_LocationET.getText().toString();
+                }else{
                     location = "";
                 }
+            }catch (NullPointerException e){
+                location = "";
+            }
 
-                try{
-                    if (CSDN_MemoET.getText() != null) {
-                        memo = CSDN_MemoET.getText().toString();
-                    }else{
-                        memo = "";
-                    }
-                }catch (NullPointerException e){
+            try{
+                if (CSDN_MemoET.getText() != null) {
+                    memo = CSDN_MemoET.getText().toString();
+                }else{
                     memo = "";
                 }
+            }catch (NullPointerException e){
+                memo = "";
+            }
 
-                // 종료 날짜가 시작 날짜보다 빠르면 저장 불가능
-                int compare = endSelectedDate.compareTo(startSelectedDate);
+            // 종료 날짜가 시작 날짜보다 빠르면 저장 불가능
+            int compare = endSelectedDate.compareTo(startSelectedDate);
 
-                if (name.length() == 0) {
-                    toast = Toast.makeText(CalSetDateModify.this, "해빗 타이틀을 입력하세요.", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else if (startDate.length() == 0){
-                    toast = Toast.makeText(CalSetDateModify.this, "시작 날짜를 선택해주세요.", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else if (endDate.length() == 0){
-                    toast = Toast.makeText(CalSetDateModify.this, "종료 날짜를 선택해주세요.", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else if (allDay == 0 && startTime.length() == 0){
-                    toast = Toast.makeText(CalSetDateModify.this, "시작 시각을 선택해주세요.", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else if (allDay == 0 && endTime.length() == 0){
-                    toast = Toast.makeText(CalSetDateModify.this, "종료 시각을 선택해주세요.", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else if (compare < 0) {   // 종료 날짜가 시작 날짜보다 빠르면 저장 불가능
-                    toast = Toast.makeText(CalSetDateModify.this, "종료 날짜/시간를 시작날짜 이후로 선택해주세요.", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else{
+            if (name.length() == 0) {
+                toast = Toast.makeText(CalSetDateModify.this, "해빗 타이틀을 입력하세요.", Toast.LENGTH_SHORT);
+                toast.show();
+            } else if (startDate.length() == 0){
+                toast = Toast.makeText(CalSetDateModify.this, "시작 날짜를 선택해주세요.", Toast.LENGTH_SHORT);
+                toast.show();
+            } else if (endDate.length() == 0){
+                toast = Toast.makeText(CalSetDateModify.this, "종료 날짜를 선택해주세요.", Toast.LENGTH_SHORT);
+                toast.show();
+            } else if (allDay == 0 && startTime.length() == 0){
+                toast = Toast.makeText(CalSetDateModify.this, "시작 시각을 선택해주세요.", Toast.LENGTH_SHORT);
+                toast.show();
+            } else if (allDay == 0 && endTime.length() == 0){
+                toast = Toast.makeText(CalSetDateModify.this, "종료 시각을 선택해주세요.", Toast.LENGTH_SHORT);
+                toast.show();
+            } else if (compare < 0) {   // 종료 날짜가 시작 날짜보다 빠르면 저장 불가능
+                toast = Toast.makeText(CalSetDateModify.this, "종료 날짜/시간를 시작날짜 이후로 선택해주세요.", Toast.LENGTH_SHORT);
+                toast.show();
+            } else{
 
-                    if (startTime.length() == 0){
-                        startTime = "null";
-                    }
-                    if (endTime.length() == 0){
-                        endTime = "null";
-                    }
-                    if (location.length() == 0){
-                        location = "null";
-                    }
-                    if (memo.length() == 0){
-                        memo = "null";
-                    }
-
-
-                    updateCalURL = "http://203.250.133.162:8080/calendarAPI/update_cal/" + login_id + "/" + list_id + "/" + name + "/" + color + "/" +
-                            allDay + "/" + startDate + "/" + startTime + "/" + endDate + "/" + endTime + "/" + location + "/" + alarm +
-                            "/" +  memo;
-                    updateCalAPI = new ApiService();
-                    updateCalAPI.putUrl(updateCalURL);
-                    System.out.println(updateCalURL);
-
-
-
-                    finish();
-
-
-
-
-                    /*toast = Toast.makeText(CalSetDateNew.this, "서버", Toast.LENGTH_SHORT);
-                    toast.show();
-                    System.out.println("loginid:" + login_id);
-                    System.out.println("name:" + name);
-                    System.out.println("color:" + color);
-                    System.out.println("allDay:" + allDay);
-                    System.out.println("startDate:" + startDate);
-                    System.out.println("startTime:" + startTime);
-                    System.out.println("endDate:" + endDate);
-                    System.out.println("endTime:" + endTime);
-                    System.out.println("location:" + location);
-                    System.out.println("alarm:" + alarm);
-                    System.out.println("memo:" + memo);
-*/
-
+                if (startTime.length() == 0){
+                    startTime = "null";
                 }
-            }
-        });
+                if (endTime.length() == 0){
+                    endTime = "null";
+                }
+                if (location.length() == 0){
+                    location = "null";
+                }
+                if (memo.length() == 0){
+                    memo = "null";
+                }
+
+
+                updateCalURL = "http://203.250.133.162:8080/calendarAPI/update_cal/" + login_id + "/" + list_id + "/" + name + "/" + color + "/" +
+                        allDay + "/" + startDate + "/" + startTime + "/" + endDate + "/" + endTime + "/" + location + "/" + alarm +
+                        "/" +  memo;
+                updateCalAPI = new ApiService();
+                updateCalAPI.putUrl(updateCalURL);
+                System.out.println(updateCalURL);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        CSDN_Cancle = findViewById(R.id.CSDN_Cancle);
-        CSDN_Cancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
                 finish();
+
+
             }
         });
+
+
+        // 취소
+        AppCompatButton CSDN_Cancle = findViewById(R.id.CSDN_Cancle);
+        CSDN_Cancle.setOnClickListener(view -> finish());
     }
 
 

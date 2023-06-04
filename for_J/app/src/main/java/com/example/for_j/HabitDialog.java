@@ -37,7 +37,7 @@ public class HabitDialog {
     private String updateHabitURL;
     private ApiService updateHabitAPI;
 
-    private String loginId = "123";
+    private String loginId;
     private String name;
     private String today;
     private String id;
@@ -55,6 +55,9 @@ public class HabitDialog {
         this.listItemAdapter = listItemAdapter;
         this.clickedPosition = clickedPosition;
         this.dialogTitle = dialogTitle;
+
+        IdSave idSave = (IdSave) context.getApplicationContext();
+        loginId = idSave.getUserId();
 
         // 다이얼로그 객체 생성 -  checK_box_dialog.xml설정
         dialog = new Dialog(context);

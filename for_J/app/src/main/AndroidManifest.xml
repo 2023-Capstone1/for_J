@@ -159,6 +159,9 @@
             android:name=".TimeTrackerSetDateNew"
             android:exported="false" />
         <activity
+            android:name=".TimeSetDateModify"
+            android:exported="false" />
+        <activity
             android:name=".TimeTrackerTimeTable"
             android:exported="false" />
         <activity

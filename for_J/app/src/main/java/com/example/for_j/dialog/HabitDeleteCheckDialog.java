@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,44 +17,39 @@ import com.example.for_j.R;
 import java.text.ParseException;
 
 public class HabitDeleteCheckDialog extends Dialog {
-    private HabitDeleteCheckDialog.HabitDeleteCheckDialogListener  habitDeleteCheckDialogListener;
+    private final HabitDeleteCheckDialog.HabitDeleteCheckDialogListener  habitDeleteCheckDialogListener;
     public interface HabitDeleteCheckDialogListener {
         void IsPositive(int isPositive) throws ParseException;
     }
-    private Context context;
+
     int deletePosition;
     public HabitDeleteCheckDialog(@NonNull Context context, HabitDeleteCheckDialog.HabitDeleteCheckDialogListener habitDeleteCheckDialogListener, int deletePosition){
         super(context);
-        this.context = context;
         this.habitDeleteCheckDialogListener = habitDeleteCheckDialogListener;
         this.deletePosition = deletePosition;
     }
 
-    private HabitFragment HparentFragment = null;
-    private HalfCalendarFragment HCparentFragment = null;
+    private HabitFragment ParentFragment = null;
+    private HalfCalendarFragment HCParentFragment = null;
 
     public void setParentFragment(HabitFragment parentFragment){
-        this.HparentFragment = parentFragment;
+        this.ParentFragment = parentFragment;
     }
 
     public void setParentFragment(HalfCalendarFragment parentFragment){
-        this.HCparentFragment = parentFragment;
+        this.HCParentFragment = parentFragment;
     }
 
-    private LinearLayout HDCD_layout;
-    private TextView deleteMessage;
-    private Button positiveBtn;
-    private Button negativeBtn;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delete_check_dialog);
 
-        HDCD_layout = findViewById(R.id.HDCD_layout);
-        deleteMessage = findViewById(R.id.deleteMessage);
+        TextView deleteMessage = findViewById(R.id.deleteMessage);
 
-        positiveBtn = findViewById(R.id.positiveBtn);
-        negativeBtn = findViewById(R.id.negativeBtn);
+        Button positiveBtn = findViewById(R.id.positiveBtn);
+        Button negativeBtn = findViewById(R.id.negativeBtn);
 
         String message = null;
 
@@ -77,39 +70,31 @@ public class HabitDeleteCheckDialog extends Dialog {
         deleteMessage.setText(message);
 
 
-        positiveBtn.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View view) {
-                try {
-                    habitDeleteCheckDialogListener.IsPositive(1);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-
-                if (HparentFragment != null){
-                    HparentFragment.onResume();
-                }
-                if (HCparentFragment != null){
-                    HCparentFragment.onResume();
-                }
-
-                dismiss();
+        positiveBtn.setOnClickListener(view -> {
+            try {
+                habitDeleteCheckDialogListener.IsPositive(1);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+
+
+            if (ParentFragment != null){
+                ParentFragment.onResume();
+            }
+            if (HCParentFragment != null){
+                HCParentFragment.onResume();
+            }
+
+            dismiss();
         });
 
-        negativeBtn.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View view) {
-                try {
-                    habitDeleteCheckDialogListener.IsPositive(0);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                dismiss();
+        negativeBtn.setOnClickListener(view -> {
+            try {
+                habitDeleteCheckDialogListener.IsPositive(0);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+            dismiss();
         });
     }
 }

@@ -103,4 +103,7 @@
     <string name="title_activity_profile_secession_wd">ProfileSecessionWd</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="calendar_title">Calendar Title</string>
+    <string name="todo">TODO</string>
+    <string name="allDay">하루종일</string>
 </resources>

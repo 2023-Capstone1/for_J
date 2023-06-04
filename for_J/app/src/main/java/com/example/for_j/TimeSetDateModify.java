@@ -69,14 +69,12 @@ public class TimeSetDateModify extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_tracker_set_date_new);
 
-        // 타이틀바 텍스트 색상 지정
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setTitle(Html.fromHtml("<font color='#D9EAF5'>CapstoneNewEditWidget</font>"));  // @colors/blue_white랑 같은색
+        IdSave idSave = (IdSave) getApplication();
+        loginID = idSave.getUserId();
 
         // 이전 인텐트에서 받아온 값 읽어오기
         listId = getIntent().getStringExtra("id");
 
-        loginID = "123"; // 이거 나중에 다시 설정해야함!!!!!! 임의로 넣은 값임!!!!!
         url = "http://203.250.133.162:8080/timeAPI/get_time_to_update/" + loginID + "/" + listId;
         timeApiService.getUrl(url);
 
@@ -163,8 +161,8 @@ public class TimeSetDateModify extends AppCompatActivity  {
                         //timeSchemaClass.setCColor(cColor);
 
                         TRSDN_CategortBtn.setText(cName);
-                        //caName = cName;
-                        //caColor = cColor;
+                        caName = cName;
+                        System.out.println("버튼임"+caName);
                         // 컬러설정
                         int colorValue;
                         switch (cColor) {
@@ -257,9 +255,6 @@ public class TimeSetDateModify extends AppCompatActivity  {
                     private int state = 0;
                  */
 
-                // loginId는 123으로 통일
-                // 나중에 바꿀거임 여기 수정해야함!!!!!!!
-                loginID = "123";
 
                 // 타임 이름
                 if (TRSDN_Title.getText() != null){
@@ -279,13 +274,10 @@ public class TimeSetDateModify extends AppCompatActivity  {
                     Toast toast = Toast.makeText(TimeSetDateModify.this, "카테고리를 선택해주세요.", Toast.LENGTH_SHORT);
                     toast.show();
                 }
-                else if (nfc.length() == 0){
-                    Toast toast = Toast.makeText(TimeSetDateModify.this, "nfc를 등록해주세요.", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
                 else{
+                    System.out.println("서버 연동부임"+caName);
                     url = "http://203.250.133.162:8080/timeAPI/update_time/" + loginID + "/" + listId + "/" + name + "/" + today + "/" + caName;
-                    timeApiService.postUrl(url);
+                    timeApiService.putUrl(url);
                     if (timeApiService.getStatus()==200){
                         finish();
                     }

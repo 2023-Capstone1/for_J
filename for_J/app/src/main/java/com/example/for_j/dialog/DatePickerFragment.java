@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
@@ -15,8 +16,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         void onDateSelected(int year, int month, int day);
     }
 
-    private Calendar selectedDate;
-    private OnDateSelectedListener mListener;
+    private final Calendar selectedDate;
+    private final OnDateSelectedListener mListener;
 
     public DatePickerFragment(Calendar selectedDate, OnDateSelectedListener mListener) {
         this.selectedDate = selectedDate;
@@ -24,6 +25,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     }
 
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Get the current date

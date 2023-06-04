@@ -110,18 +110,7 @@ public class ListItemAdapter extends BaseAdapter {
         /*
         0: 빈칸 1: 다음날 2: 안함 3: 체크
          */
-        /*// 서버에서 state 가지고 와서 버튼 이미지 바꾸기
-        String loginId = "123";
-        String name = items.get(position).getListName();
-        String today = items.get(position).getListToday();
-        String id = items.get(position).getListId();*/
         int state = items.get(position).getListState();
-
-        /*String getStateURL = "http://203.250.133.162:8080/todoAPI/get_todo_list_state/" + loginId + "/" + id + "/" + name + "/" + today;
-        ApiService getStateAPI = new ApiService();
-        getStateAPI.getUrl(getStateURL);
-        state = Integer.parseInt(getStateAPI.getValue("todo_state"));
-        items.get(position).setListState(state);*/
 
 
         Drawable selectedImg = null;

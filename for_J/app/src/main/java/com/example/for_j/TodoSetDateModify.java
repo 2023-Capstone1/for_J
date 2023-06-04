@@ -68,16 +68,14 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_set_date_new);
 
-        // 타이틀바 텍스트 색상 지정
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setTitle(Html.fromHtml("<font color='#D9EAF5'>CapstoneNewEditWidget</font>"));  // @colors/blue_white랑 같은색
+        IdSave idSave = (IdSave) getApplication();
+        loginID = idSave.getUserId();
 
         // 이전 인텐트에서 받아온 값 읽어오기
         name = getIntent().getStringExtra("title");
         date = getIntent().getStringExtra("today");
         listId = getIntent().getStringExtra("id");
 
-        loginID = "123"; // 이거 나중에 다시 설정해야함!!!!!! 임의로 넣은 값임!!!!!
         url = "http://203.250.133.162:8080/todoAPI/get_todo_to_update/" + loginID+ "/" + listId + "/" + name + "/" + date;
         todoApiService.getUrl(url);
 

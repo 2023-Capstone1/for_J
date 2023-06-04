@@ -7,10 +7,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -18,45 +16,32 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 
 import com.example.for_j.ApiService;
+import com.example.for_j.IdSave;
 import com.example.for_j.R;
-import com.example.for_j.dbSchemaClass.CategorySchemaClass;
-
-import java.util.List;
 
 public class TodoPickCategoryDialog extends Dialog {
 
-    private TodoPickCategoryDialog.PickCategoryDialogListener PickCategoryDialogListener;
+    private final TodoPickCategoryDialog.PickCategoryDialogListener PickCategoryDialogListener;
     public interface PickCategoryDialogListener {
         void getCategoryData(String cName, String cColor);
     }
-    private Context context;
+    private final Context context;
     public TodoPickCategoryDialog(@NonNull Context context, PickCategoryDialogListener pickCategoryDialogListener) {
         super(context);
         this.context = context;
         this.PickCategoryDialogListener = pickCategoryDialogListener;
     }
 
-    private RadioGroup PC_listRG;
-    // 로그인 id는 나중에 class로 수정할 거임
-    private String loginID;
-    private int isTodo = 1;
-
     // 카테고리 갯수
-    private int cateNumMax = 20;
+    private final int cateNumMax = 20;
     int cateNum = 0;
 
-    // 취소 저장
-    private LinearLayout addCategory;
-    private AppCompatButton PC_save;
 
     private String[] cName;
     private String[] cColor;
-
-    private LinearLayout PC_layout;
 
     @SuppressLint("MissingInflatedId")
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -65,17 +50,16 @@ public class TodoPickCategoryDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pick_category);
 
-        PC_layout = findViewById(R.id.PC_layout);
-
-        
         // 디비에서 카테고리 모든 튜플 가지고 와서 라디오 버튼 만들기
         // showCategoryLayout 안에 for문으로 라디오 버튼 만들기
-        PC_listRG = findViewById(R.id.PC_listRG);
+        RadioGroup PC_listRG = findViewById(R.id.PC_listRG);
 
-        // 로그인 아이디는 나중에 수정할 거임
-        loginID = "123";
+        IdSave idSave = (IdSave) context.getApplicationContext();
+        // 로그인 id는 나중에 class로 수정할 거임
+        String loginID = idSave.getUserId();
 
 
+        int isTodo = 1;
         String getCategoryUrl = "http://203.250.133.162:8080/categoryAPI/get_todo_category_all/" + loginID + "/" + isTodo;
         ApiService todoApiService = new ApiService();
         todoApiService.getUrl(getCategoryUrl);
@@ -177,15 +161,12 @@ public class TodoPickCategoryDialog extends Dialog {
         }
 
         // 버튼 눌리면 이전으로
-        PC_listRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                for(int i = 0; i< cateNum; i++){
-                    if (PC_categoryRB[i].getId() == checkedId){
-                        PickCategoryDialogListener.getCategoryData(cName[i], cColor[i]);
-                        dismiss();
-                        break; // exit the loop once a match is found
-                    }
+        PC_listRG.setOnCheckedChangeListener((radioGroup, checkedId) -> {
+            for(int i = 0; i< cateNum; i++){
+                if (PC_categoryRB[i].getId() == checkedId){
+                    PickCategoryDialogListener.getCategoryData(cName[i], cColor[i]);
+                    dismiss();
+                    break; // exit the loop once a match is found
                 }
             }
         });
@@ -193,81 +174,26 @@ public class TodoPickCategoryDialog extends Dialog {
 
 //
         // 추가 눌렀을 때
-        addCategory = findViewById(R.id.PC_Add);
-        addCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cateNum >= cateNumMax){
-                    Toast toast = Toast.makeText(context, "카테고리는 20개까지만 입력 가능합니다.", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                else {
-                    // add_category 다이얼로그 열기
-                    TodoAddCategory AC = new TodoAddCategory(TodoPickCategoryDialog.this.getContext());
-                    AC.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-                    // 다이얼로그 밖을 터치했을 때, 다이얼로그 꺼짐
-                    AC.setCanceledOnTouchOutside(true);
-                    AC.setCancelable(true);
-                    AC.show();
-                    dismiss();
-                }
+        // 취소 저장
+        LinearLayout addCategory = findViewById(R.id.PC_Add);
+        addCategory.setOnClickListener(v -> {
+            if (cateNum >= cateNumMax){
+                Toast toast = Toast.makeText(context, "카테고리는 20개까지만 입력 가능합니다.", Toast.LENGTH_SHORT);
+                toast.show();
             }
-        });
+            else {
+                // add_category 다이얼로그 열기
+                TodoAddCategory AC = new TodoAddCategory(TodoPickCategoryDialog.this.getContext());
+                AC.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        // 저장 눌렀을 때
-//        PC_save = findViewById(R.id.PC_save);
-//        PC_save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                for(int i = 0; i< cateNum; i++){
-//                    if (PC_categoryRB[i].isChecked()){
-//                        PickCategoryDialogListener.getCategoryData(cName[i], cColor[i]);
-////                        PickCategoryDialogListener.getCategoryData(categorySchemaClass[i].getName(), categorySchemaClass[i].getColor());
-//                    }
-//                }
-//                dismiss();
-//            }
-//        });
-
-        // 카테고리 눌렀을 때 카테고리 이름, 색상 반환
-        // 버튼 눌렀을 때 밑꺼 참고해서 만들기
-        /*
-        // 저장 버튼 누를 시
-        RC_Save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String dayofWeek = "";
-                if (DRC_Sun.isChecked()) {
-                    dayofWeek += DRC_Sun.getText().toString();
-                }
-                if (DRC_Mon.isChecked()) {
-                    dayofWeek += DRC_Mon.getText().toString();
-                }
-                if (DRC_Tue.isChecked()) {
-                    dayofWeek += DRC_Tue.getText().toString();
-                }
-                if (DRC_Wed.isChecked()) {
-                    dayofWeek += DRC_Wed.getText().toString();
-                }
-                if (DRC_Thu.isChecked()) {
-                    dayofWeek += DRC_Thu.getText().toString();
-                }
-                if (DRC_Fri.isChecked()) {
-                    dayofWeek += DRC_Fri.getText().toString();
-                }
-                if (DRC_Sat.isChecked()) {
-                    dayofWeek += DRC_Sat.getText().toString();
-                }
-
-                int repeatN = RC_WNRnum.getValue();
-                ;
-
-                repeatDialogListener.getRepeatData(dayofWeek, repeatN);
+                // 다이얼로그 밖을 터치했을 때, 다이얼로그 꺼짐
+                AC.setCanceledOnTouchOutside(true);
+                AC.setCancelable(true);
+                AC.show();
                 dismiss();
             }
         });
-         */
+
     }
 }
 

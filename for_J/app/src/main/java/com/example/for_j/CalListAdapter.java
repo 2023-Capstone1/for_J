@@ -1,21 +1,16 @@
 package com.example.for_j;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -105,12 +100,12 @@ public class CalListAdapter extends BaseAdapter {
             String[] startTimeParts = listItem.getListStartTime().split(":");
             int startHour = Integer.parseInt(startTimeParts[0]);
             int startMinute = Integer.parseInt(startTimeParts[1]);
-            String startTimeFormatted = String.format("%d:%02d %s", startHour % 12 == 0 ? 12 : startHour % 12, startMinute, startHour < 12 ? "AM" : "PM");
+            @SuppressLint("DefaultLocale") String startTimeFormatted = String.format("%d:%02d %s", startHour % 12 == 0 ? 12 : startHour % 12, startMinute, startHour < 12 ? "AM" : "PM");
 
             String[] endTimeParts = listItem.getListEndTime().split(":");
             int endHour = Integer.parseInt(endTimeParts[0]);
             int endMinute = Integer.parseInt(endTimeParts[1]);
-            String endTimeFormatted = String.format("%d:%02d %s", endHour % 12 == 0 ? 12 : endHour % 12, endMinute, endHour < 12 ? "AM" : "PM");
+            @SuppressLint("DefaultLocale") String endTimeFormatted = String.format("%d:%02d %s", endHour % 12 == 0 ? 12 : endHour % 12, endMinute, endHour < 12 ? "AM" : "PM");
 
             String timeRange = startTimeFormatted + " - " + endTimeFormatted;
             cal_time.setText(timeRange);

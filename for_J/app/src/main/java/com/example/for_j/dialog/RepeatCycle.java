@@ -1,7 +1,6 @@
 package com.example.for_j.dialog;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -26,7 +25,7 @@ public class RepeatCycle extends DialogFragment {
     private AppCompatButton RC_DateOfWeek, RC_WeekNRepeat;
     private LinearLayout RC_DRC, RC_WNR;
     // 요일, n회 어떤 것이 선택되었는지 확인하는 변수
-    private Boolean isWeekClick = true;    // ture: RC_DateofWeek false: RC_WeekNRepeat
+    private Boolean isWeekClick = true;    // ture: RC_DateOfWeek false: RC_WeekNRepeat
     // n회 숫자 저장 변수
     private NumberPicker RC_WNRnum;
 
@@ -40,17 +39,9 @@ public class RepeatCycle extends DialogFragment {
             DRC_Sat;
 
 
-    // 취소 버튼
-    private ImageView RC_Close;
-    // 저장 버튼
-    private AppCompatButton RC_Save;
-
-
-    private Context context;
-    private RepeatDialogListener repeatDialogListener;
-    public RepeatCycle(Context context, RepeatDialogListener repeatDialogListener) {
+    private final RepeatDialogListener repeatDialogListener;
+    public RepeatCycle(RepeatDialogListener repeatDialogListener) {
         super();
-        this.context = context;
         this.repeatDialogListener = repeatDialogListener;
     }
     public interface RepeatDialogListener {
@@ -90,83 +81,73 @@ public class RepeatCycle extends DialogFragment {
 
 
         // 요일별로 반복
-        RC_DateOfWeek.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isWeekClick = true;
-                RC_DRC.setVisibility(View.VISIBLE);
-                RC_WNR.setVisibility(View.GONE);
+        RC_DateOfWeek.setOnClickListener(v -> {
+            isWeekClick = true;
+            RC_DRC.setVisibility(View.VISIBLE);
+            RC_WNR.setVisibility(View.GONE);
 
-                // Change button colors
-                RC_DateOfWeek.setSelected(true);
-                RC_WeekNRepeat.setSelected(false);
-            }
+            // Change button colors
+            RC_DateOfWeek.setSelected(true);
+            RC_WeekNRepeat.setSelected(false);
         });
 
         // 주 n회 반복
-        RC_WeekNRepeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isWeekClick = false;
-                RC_DRC.setVisibility(View.GONE);
-                RC_WNR.setVisibility(View.VISIBLE);
+        RC_WeekNRepeat.setOnClickListener(v -> {
+            isWeekClick = false;
+            RC_DRC.setVisibility(View.GONE);
+            RC_WNR.setVisibility(View.VISIBLE);
 
-                // Change button colors
-                RC_DateOfWeek.setSelected(false);
-                RC_WeekNRepeat.setSelected(true);
+            // Change button colors
+            RC_DateOfWeek.setSelected(false);
+            RC_WeekNRepeat.setSelected(true);
 
-            }
         });
 
 
         // x 버튼
-        RC_Close = view.findViewById(R.id.RC_Close);
+        // 취소 버튼
+        ImageView RC_Close = view.findViewById(R.id.RC_Close);
         // 저장 버튼
-        RC_Save = view.findViewById(R.id.RC_Save);
+        // 저장 버튼
+        AppCompatButton RC_Save = view.findViewById(R.id.RC_Save);
 
         // x 버튼 클릭 시 다이얼로그 종료
-        RC_Close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 전 화면으로 이동
-                dismiss();
-            }
+        RC_Close.setOnClickListener(v -> {
+            // 전 화면으로 이동
+            dismiss();
         });
 
 
         // 저장 버튼 누를 시
-        RC_Save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String dayofWeek = "";
-                if (DRC_Sun.isChecked()) {
-                    dayofWeek += DRC_Sun.getText().toString();
-                }
-                if (DRC_Mon.isChecked()) {
-                    dayofWeek += DRC_Mon.getText().toString();
-                }
-                if (DRC_Tue.isChecked()) {
-                    dayofWeek += DRC_Tue.getText().toString();
-                }
-                if (DRC_Wed.isChecked()) {
-                    dayofWeek += DRC_Wed.getText().toString();
-                }
-                if (DRC_Thu.isChecked()) {
-                    dayofWeek += DRC_Thu.getText().toString();
-                }
-                if (DRC_Fri.isChecked()) {
-                    dayofWeek += DRC_Fri.getText().toString();
-                }
-                if (DRC_Sat.isChecked()) {
-                    dayofWeek += DRC_Sat.getText().toString();
-                }
-
-                int repeatN = RC_WNRnum.getValue();
-
-
-                repeatDialogListener.getRepeatData(dayofWeek, repeatN, isWeekClick);
-                dismiss();
+        RC_Save.setOnClickListener(v -> {
+            String dayofWeek = "";
+            if (DRC_Sun.isChecked()) {
+                dayofWeek += DRC_Sun.getText().toString();
             }
+            if (DRC_Mon.isChecked()) {
+                dayofWeek += DRC_Mon.getText().toString();
+            }
+            if (DRC_Tue.isChecked()) {
+                dayofWeek += DRC_Tue.getText().toString();
+            }
+            if (DRC_Wed.isChecked()) {
+                dayofWeek += DRC_Wed.getText().toString();
+            }
+            if (DRC_Thu.isChecked()) {
+                dayofWeek += DRC_Thu.getText().toString();
+            }
+            if (DRC_Fri.isChecked()) {
+                dayofWeek += DRC_Fri.getText().toString();
+            }
+            if (DRC_Sat.isChecked()) {
+                dayofWeek += DRC_Sat.getText().toString();
+            }
+
+            int repeatN = RC_WNRnum.getValue();
+
+
+            repeatDialogListener.getRepeatData(dayofWeek, repeatN, isWeekClick);
+            dismiss();
         });
 
 

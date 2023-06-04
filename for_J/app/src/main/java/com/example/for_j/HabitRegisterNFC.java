@@ -18,12 +18,15 @@ public class HabitRegisterNFC extends AppCompatActivity {
     private PendingIntent pendingIntent;
     boolean readTagEnabled = false;
     String habit_nfc = null;
-    String loginID = "123";
+    String loginID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_nfc);
+
+        IdSave idSave = (IdSave) getApplication();
+        loginID = idSave.getUserId();
 
         pendingIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);

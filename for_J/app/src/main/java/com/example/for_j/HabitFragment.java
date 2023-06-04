@@ -67,7 +67,7 @@ public class HabitFragment extends Fragment implements HabitListAdapter.HabitLis
     private ApiService getHabitListAPI;
     String habitURL;
     private Calendar calendar = Calendar.getInstance();
-    private String loginID = "123";
+    private String loginID;
     private String selectedDateStr;
 
     private LinearLayout listLayout;
@@ -85,8 +85,10 @@ public class HabitFragment extends Fragment implements HabitListAdapter.HabitLis
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        IdSave idSave = (IdSave) requireActivity().getApplication();
+        loginID = idSave.getUserId();
         // 헤빗 프래그먼트 뷰 생성
         View habitView = inflater.inflate(R.layout.fragment_habit, container, false);
 

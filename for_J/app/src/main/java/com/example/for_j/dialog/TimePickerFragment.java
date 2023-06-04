@@ -22,8 +22,8 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     public interface OnTimeSelectedListener {
         void onTimeSelected(int hour, int minute);
     }
-    private Calendar selectedDate;
-    private OnTimeSelectedListener tListener;
+    private final Calendar selectedDate;
+    private final OnTimeSelectedListener tListener;
 
     public TimePickerFragment(Calendar selectedDate, OnTimeSelectedListener tListener) {
         this.selectedDate = selectedDate;
@@ -63,13 +63,10 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
         // Schedule a task to run at the selected time using a ScheduledExecutorService
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.schedule(new Runnable() {
-            @Override
-            public void run() {
-                // Do something at the selected time
-                // For example, show a notification or start an activity
-                Log.d(TAG, "Scheduled task executed at " + selectedTime.getTime());
-            }
+        executor.schedule(() -> {
+            // Do something at the selected time
+            // For example, show a notification or start an activity
+            Log.d(TAG, "Scheduled task executed at " + selectedTime.getTime());
         }, delayInMillis, TimeUnit.MILLISECONDS);
 
         if (tListener != null) {

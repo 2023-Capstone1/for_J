@@ -1,7 +1,11 @@
 package com.example.for_j;
 
+import android.widget.Chronometer;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class TimeListItem {
@@ -21,12 +25,15 @@ public class TimeListItem {
     private List<String> listEndTime = null;
     private List<String> listTimeTaken = null;
     private String totalTimeTaken = null;
+    Chronometer chrono;
+    LocalDate today;
+
 
     TimeListItem(String listName) {
         this.listName = listName;
     }
 
-    TimeListItem(String listId, String listName, String listToday, String listCName, String listColor){
+    TimeListItem(String listId, String listName, String listToday, String listCName, String listColor, LocalDate today){
         this.listId = listId;
         this.listName = listName;
         this.listToday = listToday;
@@ -37,7 +44,7 @@ public class TimeListItem {
         this.listStartTime = new ArrayList<>();
         this.listEndTime = new ArrayList<>();
         this.listTimeTaken = new ArrayList<>();
-
+        this.today = today;
     }
 
     public void addListOrder (int listOrder){
@@ -54,6 +61,15 @@ public class TimeListItem {
 
     public void addListTimeTaken (String listTimeTaken){
         this.listTimeTaken.add(listTimeTaken);
+        numOfOrder += 1;
+    }
+
+    public void removeLast() {
+        this.listOrder.remove(getLastOrder());
+        this.listStartTime.remove(getLastOrder());
+        this.listEndTime.remove(getLastOrder());
+        this.listTimeTaken.remove(getLastOrder());
+        numOfOrder -= 1;
     }
 
     public String getListId() {
@@ -99,12 +115,19 @@ public class TimeListItem {
     }
 
     public int getLastOrder() {
-        int last = listOrder.size() - 1;
-        if (last < 0){
+        if (numOfOrder <= 0){
+            return numOfOrder;
+        }else{
+            return numOfOrder - 1;
+        }
+
+
+        /*int last = listOrder.size() -1;
+        if (last <= 0){
             return 0;
         }{
             return listOrder.get(last);
-        }
+        }*/
     }
 
     public void setNumOfOrder(int numOfOrder) {

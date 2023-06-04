@@ -54,6 +54,9 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_tracker_set_date_new);
 
+        IdSave idSave = (IdSave) getApplication();
+        loginID = idSave.getUserId();
+
         int year = todayCal.get(Calendar.YEAR);
         int month = todayCal.get(Calendar.MONTH) + 1; // Add 1 to the month to represent 1-12 range
         int day = todayCal.get(Calendar.DAY_OF_MONTH);

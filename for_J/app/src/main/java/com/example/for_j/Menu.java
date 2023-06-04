@@ -20,6 +20,8 @@ public class Menu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        IdSave idSave = (IdSave) getApplication();
+
         //뒤로 가기 버튼
         Main_Back_Button = findViewById(R.id.main_back_button);
         Main_Back_Button.setOnClickListener(v -> onBackPressed() );
@@ -46,6 +48,7 @@ public class Menu extends AppCompatActivity {
         Main_Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                idSave.clearData();
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
             }
@@ -54,6 +57,7 @@ public class Menu extends AppCompatActivity {
         Main_Logout_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                idSave.clearData();
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
             }

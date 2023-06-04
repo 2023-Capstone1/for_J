@@ -1,12 +1,9 @@
 package com.example.for_j;
 
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,7 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
@@ -36,10 +32,12 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
     // Toast
     private Toast toast;
 
+    // habit 알림 변수
+    private CalAlarm CalAlarm;
+
     // 날짜 저장 변수
-    private Calendar startSelectedDate = Calendar.getInstance();
-    private Calendar endSelectedDate = Calendar.getInstance();
-    private final Calendar currentSelectedDate = Calendar.getInstance();
+    private final Calendar startSelectedDate = Calendar.getInstance();
+    private final Calendar endSelectedDate = Calendar.getInstance();
 
     // 색 버튼
     private AppCompatButton CSDN_Color;
@@ -47,8 +45,6 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
     // 타이틀
     private EditText CSDN_CalTitle;
 
-    // 날짜 스위치
-    private SwitchCompat CSDN_AllDaySwitch;
     private int switchNum = 0;
 
     // *하루종일 on* //
@@ -75,11 +71,6 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
     // 메모
     private EditText CSDN_MemoET;
 
-    // 저장
-    private AppCompatButton CSDN_Save;
-    // 취소
-    private AppCompatButton CSDN_Cancle;
-
     // 서버 통신 변수
     String login_id = "123";
     String name = null;
@@ -92,9 +83,13 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
     String location = null;
     int alarm = 0;
     String memo = null;
+    String TIME;
+    int hour,minute;
 
     String setCalURL;
+    String CalAlarmURL;
     ApiService setCalAPI;
+    ApiService calApiService;
 
 
 
@@ -103,7 +98,13 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cal_set_date_new);
 
+        IdSave idSave = (IdSave) getApplication();
+        login_id = idSave.getUserId();
+
         CSDN_CalTitle = findViewById(R.id.CSDN_CalTitle);
+
+
+        CalAlarm = new CalAlarm(getApplicationContext());
 
         // 색상 선택
         CSDN_Color = findViewById(R.id.CSDN_Color);
@@ -175,7 +176,8 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
         });
 
         // 하루 종일 스위치 xml 연동
-        CSDN_AllDaySwitch = findViewById(R.id.CSDN_AllDaySwitch);
+        // 날짜 스위치
+        SwitchCompat CSDN_AllDaySwitch = findViewById(R.id.CSDN_AllDaySwitch);
         // *하루 종일 on* //
         // 하루 종일 true 레이아웃
         CSDN_AllDayTrue = findViewById(R.id.CSDN_AllDayTrue);
@@ -341,10 +343,8 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
         CSDN_MemoET = findViewById(R.id.CSDN_MemoET);
 
 
-
-
-
-        CSDN_Save = findViewById(R.id.CSDN_Save);
+        // 저장
+        AppCompatButton CSDN_Save = findViewById(R.id.CSDN_Save);
         CSDN_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -490,6 +490,24 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
                     setCalAPI = new ApiService();
                     setCalAPI.postUrl(setCalURL);
 
+
+                    CalAlarmURL = "http://203.250.133.162:8080/calendarAPI/get_cal_Alarm/" + login_id + "/" + name + "/" + color + "/" +
+                            allDay + "/" + startDate + "/" + startTime + "/" + endDate + "/" + endTime + "/" + location + "/" + alarm +
+                            "/" +  memo;
+                    calApiService = new ApiService();
+                    calApiService.getUrl(CalAlarmURL);
+
+                    TIME = calApiService.getValue("cal_startTime");
+
+                    String[] splitHourMinute = TIME.split(":");
+                    hour = Integer.parseInt(splitHourMinute[0]); // 12시간 형식으로 된 시간
+                    minute = Integer.parseInt(splitHourMinute[1]);
+
+                    String cal_alarm = calApiService.getValue("cal_alarm");
+                    String cal_name = calApiService.getValue("cal_name");
+
+                    CalAlarm.setAlarm(hour, minute,Integer.parseInt(cal_alarm) , cal_name);
+
                     finish();
 
 
@@ -514,7 +532,8 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
             }
         });
 
-        CSDN_Cancle = findViewById(R.id.CSDN_Cancle);
+        // 취소
+        AppCompatButton CSDN_Cancle = findViewById(R.id.CSDN_Cancle);
         CSDN_Cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

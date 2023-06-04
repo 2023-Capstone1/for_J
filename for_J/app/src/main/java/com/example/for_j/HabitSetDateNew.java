@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
@@ -26,14 +25,15 @@ import com.example.for_j.dialog.RepeatCycle;
 import com.example.for_j.dialog.TimePickerFragment;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 
 public class HabitSetDateNew extends AppCompatActivity implements DatePickerFragment.OnDateSelectedListener, TimePickerFragment.OnTimeSelectedListener {
     // Toast
     private Toast toast;
+
+    // habit 알림 변수
+    private HibitAlarm habitAlarm;
 
     // 날짜 저장 변수
     private Calendar startSelectedDate = Calendar.getInstance();
@@ -83,6 +83,7 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
     String Shabit_color = null;
     String Shabit_nfc = "";
     int Shabit_state = 0;
+    int hour, minute;
 
     boolean isRepeatNull = true;
 
@@ -91,6 +92,8 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
         setContentView(R.layout.activity_habit_set_date_new);
 
         HSDN_Title = findViewById(R.id.HSDN_HabitTitle);
+
+        habitAlarm = new HibitAlarm(getApplicationContext());
 
         // 색상 선택
         HSDN_Color = findViewById(R.id.HSDN_Color);
@@ -232,7 +235,7 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
             @Override
             public void onClick(View v) {
                 // pickCategory 띄우기
-                RepeatCycle RCD = new RepeatCycle(HabitSetDateNew.this, new RepeatCycle.RepeatDialogListener() {
+                RepeatCycle RCD = new RepeatCycle(new RepeatCycle.RepeatDialogListener() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void getRepeatData(String dayofWeek, int repeatN, boolean isWeekClick) {
@@ -268,9 +271,8 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
         HSDN_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // loginId는 123으로 통일
-                // 나중에 바꿀거임 여기 수정해야함!!!!!
-                SloginId = "123";
+                IdSave idSave = (IdSave) getApplication();
+                SloginId = idSave.getUserId();
 
                 try {
                     if (HSDN_Title.getText() != null) {
@@ -313,6 +315,28 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                     try {
                         if (HSDN_AlarmBtn.getText() != null) {
                             Salarm = HSDN_AlarmBtn.getText().toString();
+                            String[] splitTime = Salarm.split(" ");
+                            String timeIndicator = splitTime[0]; // "오전" 또는 "오후"
+
+                            // 시간과 분을 분리
+                            String[] splitHourMinute = splitTime[1].split(":");
+                            int originalHour = Integer.parseInt(splitHourMinute[0]); // 12시간 형식으로 된 시간
+                            int originalMinute = Integer.parseInt(splitHourMinute[1]);
+
+                            // 오전인 경우
+                            if (timeIndicator.equals("오전")) {
+                                // 시간과 분 그대로 저장
+                                hour = originalHour;
+                                minute = originalMinute;
+                                // 알림 설정
+                                habitAlarm.setAlarm(hour, minute, Sname);
+                            } else { // 오후인 경우
+                                // 시간에 12를 더하여 24시간 형식으로 변환
+                                hour = originalHour + 12;
+                                minute = originalMinute;
+                                // 알림 설정
+                                habitAlarm.setAlarm(hour, minute, Sname);
+                            }
                         }
                     } catch (NullPointerException e) {
                         Salarm = "";

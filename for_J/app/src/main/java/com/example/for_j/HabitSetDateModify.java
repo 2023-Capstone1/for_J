@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -113,7 +112,8 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
         Stoday = getIntent().getStringExtra("today");
         SlistId = getIntent().getStringExtra("id");
 
-        SloginId = "123";
+        IdSave idSave = (IdSave) getApplication();
+        SloginId = idSave.getUserId();
 
         getHabitToUpdateURL = "http://203.250.133.162:8080/habitAPI/get_habit_to_update/" + SloginId+ "/" + SlistId;
         getHabitToUpdateAPI.getUrl(getHabitToUpdateURL);
@@ -351,7 +351,7 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
             @Override
             public void onClick(View v) {
                 // pickCategory 띄우기
-                RepeatCycle RCD = new RepeatCycle(HabitSetDateModify.this, new RepeatCycle.RepeatDialogListener() {
+                RepeatCycle RCD = new RepeatCycle(new RepeatCycle.RepeatDialogListener() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void getRepeatData(String dayofWeek, int repeatN, boolean isWeekClick) {

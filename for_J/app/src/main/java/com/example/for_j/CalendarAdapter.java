@@ -1,6 +1,7 @@
 // 리사이클러뷰에 들어가는 날짜 어댑터 -풀캘린더 어댑터
 package com.example.for_j;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -10,7 +11,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.Instant;
@@ -23,9 +27,11 @@ import java.util.Date;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder> {
 
+    private Context context;
     ArrayList<LocalDate> dayList;
 
-    public CalendarAdapter(ArrayList<LocalDate> dayList) {
+    public CalendarAdapter(Context context, ArrayList<LocalDate> dayList) {
+        this.context = context;
         this.dayList = dayList;
     }
 
@@ -115,23 +121,25 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-
-                // Get the date of the clicked holder
                 LocalDate clickedDate = dayList.get(holder.getAdapterPosition());
 
                 if (clickedDate != null){
-                    // Set the selected date to the clicked date
                     CalendarUtill.selectedDate = clickedDate;
-
-                    // Update the views to reflect the new selected date
                     notifyDataSetChanged();
 
                     if (parentFragment != null){
-                        parentFragment.onResume();
+                        HalfCalendarFragment halfCalendarFragment = new HalfCalendarFragment(CalendarUtill.selectedDate);
+                        FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.containers, halfCalendarFragment)
+                                .addToBackStack(null)  // 이전 Fragment로 돌아갈 수 있도록 백 스택에 추가
+                                .commit();
                     }
                 }
             }
         });
+
+
 
 
     }
@@ -142,7 +150,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
     }
 
     // 뷰 홀더
-    public class CalendarViewHolder extends RecyclerView.ViewHolder {
+    public static class CalendarViewHolder extends RecyclerView.ViewHolder {
         // 초기화
         TextView dayText;
         View parentView;
@@ -155,5 +163,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             // calendar_cell.xml에서 dayText의 부모 뷰
             parentView = itemView.findViewById(R.id.dateTextParentView); // calendar_cell.xml -LieanrLayout id
         }
+
     }
+
+
 }

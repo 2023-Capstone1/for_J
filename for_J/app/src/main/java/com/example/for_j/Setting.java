@@ -448,6 +448,7 @@ public class Setting extends AppCompatActivity {
         Dialog dialog = new Dialog(Setting.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.delete_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         Button cancelButton = dialog.findViewById(R.id.no_Btn);
         Button deleteButton = dialog.findViewById(R.id.delete_Btn);

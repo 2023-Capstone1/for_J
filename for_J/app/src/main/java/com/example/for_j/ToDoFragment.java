@@ -81,7 +81,7 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
     private ApiService getTodoListAPI;
     private String todoUrl;
     private Calendar calendar = Calendar.getInstance();
-    private String loginID = "123";
+    private String loginID;
 //    @SuppressLint("DefaultLocale")
 //    private String today = calendar.get(Calendar.YEAR) + "-" + String.format("%02d", calendar.get(Calendar.MONTH)+1) + "-" + String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH));
     private String selectedDateStr;
@@ -106,6 +106,8 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        IdSave idSave = (IdSave) requireActivity().getApplication();
+        loginID = idSave.getUserId();
         // 투두 프래그먼트 뷰 생성
         todoView = inflater.inflate(R.layout.fragment_to_do, container, false);
 

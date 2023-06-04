@@ -1,8 +1,6 @@
 // 하프캘린더 -> 풀캘린더에서 날짜 클릭 시 그날 하프캘린더 프래그먼트 보여주도록 수정부탁~!~!!~!
 package com.example.for_j;
 
-import static com.example.for_j.CalendarUtill.selectedDate;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
@@ -14,33 +12,31 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 
 public class HalfCalendarFragment extends Fragment implements CalListAdapter.CalListAdapterListener, CalHabitListAdapter.HabitListAdapterListener, CalTodoListAdapter.TodoListAdapterListener {
 
+    private LocalDate selectedDate;
+
+    public HalfCalendarFragment(LocalDate selectedDate) {
+        this.selectedDate = selectedDate;
+    }
+
     private Calendar calendar = Calendar.getInstance();
-    private String loginID = "123";
+    private String loginID;
 
     private DateTimeFormatter formatter;
     private String selectedDateStr;
@@ -63,6 +59,7 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
 
     // +버튼
     private ImageButton moveTimeSetDateNew;
+    private ImageButton Btn_Option;
 
     // 리스트 관리 변수
     private LinearLayout HalfCal_AllList;
@@ -113,7 +110,15 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+
+//        halfCalView = inflater.inflate(R.layout.fragment_half_calendar, null);
         halfCalView = inflater.inflate(R.layout.fragment_half_calendar, container, false);
+
+
+
+
+        IdSave idSave = (IdSave) requireActivity().getApplication();
+        loginID = idSave.getUserId();
 
         // 타임 리스트 추가 인텐트로 이동
         moveTimeSetDateNew = halfCalView.findViewById(R.id.time_listAddBtn);
@@ -126,6 +131,18 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
             }
         });
 
+        // 옵션 버튼 클릭 이벤트
+        Btn_Option = halfCalView.findViewById(R.id.Calendar_BtnOption);
+
+        Btn_Option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Menu.java로 이동하는 인텐트 생성
+                Intent intent = new Intent(getActivity(), Menu.class);
+                startActivity(intent);
+            }
+        });
+
         // 초기화
         HalfFragment_monthYearText = halfCalView.findViewById(R.id.Calendar_MonthYearText);
         HalfFragment_prevBtn = halfCalView.findViewById(R.id.Calendar_PreBtn);
@@ -133,10 +150,11 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
         HalfFragment_recyclerView = halfCalView.findViewById(R.id.Calendar_RecyclerView);
 
         // 현재 날짜
-        selectedDate = LocalDate.now();
+//        selectedDate = LocalDate.now();
 
         // 달력 화면 설정
         setMonthView();
+
 
         // 이전달 버튼 이벤트
         HalfFragment_prevBtn.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +164,7 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
                 // 현재 월-1 변수에 담기
                 CalendarUtill.selectedDate = CalendarUtill.selectedDate.minusMonths(1);
                 setMonthView();
+
             }
         });
         // 다음달 버튼 이벤트
@@ -186,8 +205,10 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
 
         setMonthView();
 
+
         // selectedDate 포매팅하기
         selectedDateStr = selectedDate.format(formatter);
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+selectedDateStr);
 
         // 캘린더 레이아웃 설정
         if (HalfCal_CalList != null){
@@ -331,7 +352,7 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
                 System.out.println("이거 실행됨");
                 clickedPosition = position;
 
-                cDialog = new CalDialog(getActivity(), Cal_listAdapter, clickedPosition, "Calendar", Cal_listView);
+                cDialog = new CalDialog(getActivity(), Cal_listAdapter, clickedPosition);
                 cDialog.setParentFragment(HalfCalendarFragment.this);
                 cDialog.show();
                 onResume();
@@ -405,7 +426,7 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
                 System.out.println("이거 실행됨");
                 clickedPosition = position;
 
-                hDialog = new CalHabitDialog(getActivity(), Habit_listAdapter, clickedPosition, "HABIT", Habit_listView);
+                hDialog = new CalHabitDialog(getActivity(), Habit_listAdapter, clickedPosition);
                 hDialog.setParentFragment(HalfCalendarFragment.this);
                 hDialog.show();
                 onResume();
@@ -486,6 +507,7 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
 
 
 
+
     // 날짜 타입 설정
     // 년월 텍스트뷰
     @SuppressLint("NewApi")
@@ -511,6 +533,7 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
 
         HalfCalendarAdapter halfAdapter = new HalfCalendarAdapter(dayList);
         halfAdapter.setParentFragment(HalfCalendarFragment.this);
+        selectedDate = halfAdapter.getSelectedDate();
 
         // 레이아웃 설정 (열 7개)
         RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity().getApplicationContext(), 7);

@@ -41,16 +41,16 @@
                     android:hint="date"
                     android:textSize="25sp" />
 
-                <ImageView
+<!--                <ImageView
                     android:id="@+id/timecalender"
                     android:layout_width="36dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="180dp"
-                    android:src="@drawable/ic_calender_month" />
+                    android:src="@drawable/ic_calender_month" />-->
 
 
-                <ImageView
+<!--                <ImageView
                     android:id="@+id/back_pointer"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -64,7 +64,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/next_arrow" />
+                    android:src="@drawable/next_arrow" />-->
 
 
             </LinearLayout>

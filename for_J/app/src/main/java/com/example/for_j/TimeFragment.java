@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.lang.annotation.Annotation;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -79,7 +80,7 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
     private ApiService getTimeListAPI;
     private String timeUrl;
     private Calendar calendar = Calendar.getInstance();
-    private String loginID = "123";
+    private String loginID;
 /*    private String startTime;
     private String endTime;
     private String timeTaken;
@@ -108,6 +109,10 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        IdSave idSave = (IdSave) requireActivity().getApplication();
+        loginID = idSave.getUserId();
+
         // 타임 프래그먼트 뷰 생성
         timeView = inflater.inflate(R.layout.fragment_time, container, false);
 
@@ -432,7 +437,8 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
                                     getTimeListAPI.getValue("time_name"+j),
                                     selectedDateStr,
                                     getTimeListAPI.getValue("time_cName"+j),
-                                    distinctCColorlist.get(i))
+                                    distinctCColorlist.get(i),
+                                    selectedDate)
                     );
                 }
 
@@ -451,15 +457,15 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
                 // 모든 항목을 표시하기 위해 리스트뷰의 높이를 계산
                 View listItem = timeFragment_listAdapter[i].getView(j, null, timeFragment_listView[i]);
                 listItem.measure(0,0);
-                totalHeight += listItem.getMeasuredHeight();
+                totalHeight += listItem.getMeasuredHeight() + 20;
             }
             // 리스트뷰의 높이를 고정
             ViewGroup.LayoutParams params = timeFragment_listView[i].getLayoutParams();
-            params.height = totalHeight + (timeFragment_listView[i].getDividerHeight() * (timeFragment_listAdapter[i].getCount() - 1));
+            params.height = totalHeight + (timeFragment_listView[i].getDividerHeight() * (timeFragment_listAdapter[i].getCount()));
             timeFragment_listView[i].setLayoutParams(params);
         }
 
-        for (int i = 0; i < cateNum; i++){
+        /*for (int i = 0; i < cateNum; i++){
             final int listViewPage = i;
             timeFragment_listView[listViewPage].setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -467,17 +473,14 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
                     clickedPosition = position; // 클릭 위치 전역변수로 넘김
 
                     Intent intent = new Intent(getContext(), TimeTrackerTimeTable.class);
-                    intent.putExtra("date", new Date().getTime());
+                    String dateString = selectedDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+                    intent.putExtra("date", dateString);
+                    intent.putExtra("listId", timeFragment_listAdapter[listViewPage].getListId(position));
+                    intent.putExtra("color", timeFragment_listAdapter[listViewPage].getListColor(position));
                     getContext().startActivity(intent);
-                    /*System.out.println("listViewPage: " + listViewPage);
-                    dialog = new TimeTrackerListDialog(getActivity(), timeFragment_listAdapter[listViewPage], clickedPosition, "Time", timeFragment_listView[listViewPage]);
-                    dialog.setParentFragment(TimeFragment.this);
-                    dialog.show();*/
-                    // 몇 번째 리스트 아이템 클릭했는지 확인용 토스트 메시지 -> 나중에 삭제하기
-//                    Toast.makeText(getActivity(), position + "번째 선택", Toast.LENGTH_SHORT).show();
                 }
             });
-        }
+        }*/
     }
 
     // 날짜 타입 설정
