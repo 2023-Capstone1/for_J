@@ -26,6 +26,7 @@ import com.example.for_j.dialog.TimePickerFragment;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 
 public class HabitSetDateNew extends AppCompatActivity implements DatePickerFragment.OnDateSelectedListener, TimePickerFragment.OnTimeSelectedListener {
@@ -439,13 +440,17 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                         if (habitApiService.getStatus() == 200) {
                             success += 1;
                         }
-                        String Alarm_url = "http://203.250.133.162:8080/habitAPI/get_habit_Alarm/" + SloginId + "/" + Sname + "/" + SstartDate + "/"
-                                + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-                                + Shabit_nfc + "/" + Shabit_state;
-                        AlarmApiService.getUrl(Alarm_url);
 
-                        // 알림 설정
-                        habitAlarm.setAlarm(hour, minute, AlarmApiService.getValue("habit_list_id"),Sname);
+                        if (!Objects.equals(Salarm, "none")) {
+                            String Alarm_url = "http://203.250.133.162:8080/habitAPI/get_habit_Alarm/" + SloginId + "/" + Sname + "/" + SstartDate + "/"
+                                    + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
+                                    + Shabit_nfc + "/" + Shabit_state;
+                            AlarmApiService.getUrl(Alarm_url);
+
+
+                            // 알림 설정
+                            habitAlarm.setAlarm(hour, minute, AlarmApiService.getValue("habit_list_id"), Sname);
+                        }
 
                         /*// 종료 날짜 전까지 반복
                         currentDate = (Calendar) startSelectedDate.clone();

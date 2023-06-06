@@ -600,15 +600,16 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
                         updateHabitAPI = new ApiService();
                         updateHabitAPI.putUrl(updateHabitURL);
 
-                        String Alarm_url = "http://203.250.133.162:8080/habitAPI/get_habit_Alarm/" + SloginId + "/" + Sname + "/" + SstartDate + "/"
-                                + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-                                + Shabit_nfc + "/" + Shabit_state;
-                        AlarmApiService.getUrl(Alarm_url);
+                        if (!Objects.equals(Salarm, "none")) {
+                            String Alarm_url = "http://203.250.133.162:8080/habitAPI/get_habit_Alarm/" + SloginId + "/" + Sname + "/" + SstartDate + "/"
+                                    + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
+                                    + Shabit_nfc + "/" + Shabit_state;
+                            AlarmApiService.getUrl(Alarm_url);
 
-                        habitAlarm.cancelAlarm(AlarmApiService.getValue("habit_list_id"));
-
-                        // 알림 설정
-                        habitAlarm.setAlarm(hour, minute, AlarmApiService.getValue("habit_list_id"),Sname);
+                            habitAlarm.cancelAlarm(AlarmApiService.getValue("habit_list_id"));
+                            // 알림 설정
+                            habitAlarm.setAlarm(hour, minute, AlarmApiService.getValue("habit_list_id"), Sname);
+                        }
                     }
                     finish();
                 }
