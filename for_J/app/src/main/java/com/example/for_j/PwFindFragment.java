@@ -72,11 +72,15 @@ public class PwFindFragment extends Fragment {
                 }
 
                 // url 작성
-                String url = "http://203.250.133.162:8080/usersAPI/pw_find/" + Id + "/" + Name + "/" + Email;
+                String url = "http://203.250.133.162:8080/usersAPI/user_info" + Id;
                 ApiService PwFindApiService = new ApiService();
                 PwFindApiService.getUrl(url);
 
-                if (PwFindApiService.getStatus() == 200) {
+                String id_Check = PwFindApiService.getValue("user_id");
+                String name_Check = PwFindApiService.getValue("user_name");
+                String email_Check = PwFindApiService.getValue("user_email");
+
+                if (Id.equals(id_Check) && Name.equals(name_Check) && Email.equals(email_Check) && PwFindApiService.getStatus() == 200) {
                     Intent intent = new Intent(getActivity(), LoginPwChange.class);
                     startActivity(intent);
                 } else {
