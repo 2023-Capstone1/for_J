@@ -185,10 +185,6 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
                     private int state = 0;
                  */
 
-                // loginId는 123으로 통일
-                // 나중에 바꿀거임 여기 수정해야함!!!!!!!
-                loginID = "123";
-
                 // 투두 이름
                 if (TSDN_Title.getText() != null){
                     name = TSDN_Title.getText().toString();

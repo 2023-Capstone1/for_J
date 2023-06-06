@@ -23,6 +23,7 @@ public class NotificationService extends Service {
     private int minute;
     private int cal_Alarm;
     private String Sname;
+    private String id;
     private String selectedDateStr;
 
     @Override
@@ -31,15 +32,17 @@ public class NotificationService extends Service {
         hour = intent.getIntExtra("hour", 0);
         minute = intent.getIntExtra("minute", 0);
         cal_Alarm = intent.getIntExtra("cal_Alarm",0);
+        id = intent.getStringExtra("id"); // id를 Intent에 추가
         Sname = intent.getStringExtra("name");
-
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         selectedDateStr = dateFormat.format(calendar.getTime());
 
+        Log.d("selectedDateStr",selectedDateStr);
+
         String contentText;
-        if(cal_Alarm == 0 || cal_Alarm == 1 || cal_Alarm == 2 || cal_Alarm == 3){
+        if(code == 0 && cal_Alarm == 0 || cal_Alarm == 1 || cal_Alarm == 2 || cal_Alarm == 3){
             if (cal_Alarm == 1) {
                 // case 1: 시간과 분에서 10분을 빼는 조작
                 Log.d("hour",String.valueOf(hour));
@@ -102,31 +105,57 @@ public class NotificationService extends Service {
 
     // 코드에 따른 알림 내용 가져오기
     private String getContentTextForCode(int code, int hour, int minute) {
+        IdSave idSave = (IdSave) getApplication();
+        String user_id = idSave.getUserId();
         switch (code) {
             case 1:
             {
-//                IdSave idSave = (IdSave) getApplication();
-//                String user_id = idSave.getUserId();
-//                // url 작성
-//                ApiService AlarmApiService = new ApiService();
-//                String url = "http://203.250.133.162:8080/settingAPI/get_todo_list/" + user_id + selectedDateStr;
-//                AlarmApiService.getUrl(url);
-//                + AlarmApiService.getValue("todo_total")
-                return "To_do : 오늘의 To_do가 "  + "개 남았습니다.";
+                // url 작성
+                ApiService AlarmApiService = new ApiService();
+                String url = "http://203.250.133.162:8080/settingAPI/get_todo_list/" + user_id + selectedDateStr;
+                AlarmApiService.getUrl(url);
+
+                String num = AlarmApiService.getValue("todo_total");
+
+                if(num == null){
+                    return "오늘의 To_do가 " + "0개 남았습니다.";
+                }else{
+                    return "오늘의 To_do가 " + AlarmApiService.getValue("todo_total") + "개 남았습니다.";
+                }
             }
             case 2:
             {
-                return "code 2 알람이 울립니다!! 시간: " + hour + ":" + minute+ ", 선택된 날짜: " + selectedDateStr;
+                // url 작성
+                ApiService AlarmApiService = new ApiService();
+                String url = "http://203.250.133.162:8080/settingAPI/get_habit_today/" + user_id + selectedDateStr;
+                AlarmApiService.getUrl(url);
 
+                String num = AlarmApiService.getValue("habit_today_total");
+
+                if(num == null){
+                    return "오늘의 Habit이 " + "0개 남았습니다.";
+                }else{
+                    return "오늘의 Habit이 " + AlarmApiService.getValue("habit_today_total") + "개 남았습니다.";
+                }
             }
             case 3:
             {
-                return "code 3 알람이 울립니다!! 시간: " + hour + ":" + minute+ ", 선택된 날짜: " + selectedDateStr;
+                // url 작성
+                ApiService AlarmApiService = new ApiService();
+                String url = "http://203.250.133.162:8080/settingAPI/get_cal_list/" + user_id + selectedDateStr;
+                AlarmApiService.getUrl(url);
 
+                String num = AlarmApiService.getValue("total");
+
+                if(num == null){
+                    return "오늘의 Calendar 일정이 " + "0개 남았습니다.";
+                }else{
+                    return "오늘의 Calendar 일정이 " + AlarmApiService.getValue("habit_today_total") + "개 남았습니다.";
+                }
             }
             default:
             {
-                return "code ? 알람이 울립니다!! 시간: " + hour + ":" + minute+ ", 선택된 날짜: " + selectedDateStr;
+                return "자신의 일정을 추가해 보아요";
 
             }
         }

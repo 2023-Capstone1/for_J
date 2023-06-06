@@ -57,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#d0d0d0"
-        android:layout_marginTop="160dp">
+        android:layout_marginTop="110dp">
         <Button
             android:id="@+id/profile_secession_wd_check_btn"
             android:layout_width="match_parent"

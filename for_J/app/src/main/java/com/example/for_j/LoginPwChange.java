@@ -37,6 +37,18 @@ public class LoginPwChange extends AppCompatActivity {
                 String input_New_pw = LoginPwChange_Edit_New_Pw.getText().toString();
                 String input_New_pw_check = LoginPwChange_Edit_New_Pw_Check.getText().toString();
 
+                if(inputId.isEmpty()){
+                    Toast.makeText(LoginPwChange.this, "Id를 작성해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(input_New_pw.isEmpty()){
+                    Toast.makeText(LoginPwChange.this, "새로운 비밀번호를 작성해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(input_New_pw_check.isEmpty()){
+                    Toast.makeText(LoginPwChange.this, "비밀번호를 다시 한번 작성해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 // url 작성
                 String url = "http://203.250.133.162:8080/usersAPI/pw_update/" + inputId +  "/" + input_New_pw + "/" + input_New_pw_check;
                 ApiService LoginPwChangeApiService = new ApiService();
@@ -44,10 +56,10 @@ public class LoginPwChange extends AppCompatActivity {
 
                 if(input_New_pw.equals(input_New_pw_check) && LoginPwChangeApiService.getStatus() == 200){
                     Toast.makeText(LoginPwChange.this, "비밀번호 변경에 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginPwChange.this, Menu.class);
+                    Intent intent = new Intent(LoginPwChange.this, Login.class);
                     startActivity(intent);
                 }else if(!input_New_pw.equals(input_New_pw_check) && LoginPwChangeApiService.getStatus() == 200){
-                    Toast.makeText(LoginPwChange.this, "새로운 비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginPwChange.this, "두 비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(LoginPwChange.this, "비밀번호 변경에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 }

@@ -1,15 +1,10 @@
 package com.example.for_j;
 
-import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -18,10 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
-
-import java.util.Calendar;
 
 public class Setting extends AppCompatActivity {
     Button  setting_todo_button, setting_habit_button, setting_calendar_button;
@@ -38,6 +30,9 @@ public class Setting extends AppCompatActivity {
 
         IdSave idSave = (IdSave) getApplication();
         user_id = idSave.getUserId();
+
+        // TimeAlarm의 인스턴스 생성
+        TimeAlarm timeAlarm = new TimeAlarm(getApplicationContext());
 
         // setting 투두 버튼을 누르면 타임 다이어리 팝업창 띄우기
         setting_todo_button = findViewById(R.id.setting_todo_button);
@@ -320,12 +315,16 @@ public class Setting extends AppCompatActivity {
                     setting_time.setTextColor(Color.BLACK);
                     // Time_Switch 상태 변경
                     Time_Switch = "1";
+                    // timeAlarm에 상태값 넘겨주기
+                    timeAlarm.setTimeSwitch(Time_Switch);
                 } else {
                     // 스위치가 Off 상태인 경우 처리할 로직을 작성합니다.
                     setting_time_switch.setEnabled(true);
                     setting_time.setTextColor(Color.GRAY);
                     // Time_Switch 상태 변경
                     Time_Switch = "0";
+                    // timeAlarm에 상태값 넘겨주기
+                    timeAlarm.setTimeSwitch(Time_Switch);
                 }
             }
         });

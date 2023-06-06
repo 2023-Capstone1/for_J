@@ -184,9 +184,6 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
 //                private String caColor = null;
 //                private String nfc = null;
 
-                // loginId는 123으로 통일
-                // 나중에 바꿀거임 여기 수정해야함!!!!!
-                loginID = "123";
                 // 타임트래커 타이틀
 //                private EditText TRSDN_Title;
 //                // 타임트래커 카테고리 버튼

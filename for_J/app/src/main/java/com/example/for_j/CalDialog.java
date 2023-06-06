@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +18,9 @@ import com.example.for_j.dialog.CalDeleteCheckDialog;
 public class CalDialog {
     private final Dialog dialog;
     private final Context context;
+
+    // calendar 알림 변수
+    private CalAlarm CalAlarm;
 
     // 서버 통신 변수
     private String deleteURL;
@@ -41,6 +45,9 @@ public class CalDialog {
 
         name = String.valueOf(listItemAdapter.getListName(clickedPosition));
         id = String.valueOf(listItemAdapter.getListId(clickedPosition));
+
+        // CalAlarm 객체 초기화
+        CalAlarm = new CalAlarm(context);
 
         // 다이얼로그 객체 생성 -  check_box_dialog.xml설정
         dialog = new Dialog(context);
@@ -86,6 +93,10 @@ public class CalDialog {
                 System.out.println(deleteURL);
                 deleteAPI = new ApiService();
                 deleteAPI.deleteUrl(deleteURL);
+
+                Log.d("id",id);
+                CalAlarm.cancelAlarm(id);
+
             }
         });
 

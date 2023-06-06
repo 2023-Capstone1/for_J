@@ -47,24 +47,34 @@ public class PwFindFragment extends Fragment {
                 String Name = PwFindFragment_Edit_Name.getText().toString();
                 String Email = PwFindFragment_Mail.getText().toString();
 
+                // CustomDialog 객체 생성
+                CustomDialog dialog = new CustomDialog(getContext());
+
+                if(Id.isEmpty()){
+                    Toast.makeText(getContext(), "아이디를 작성해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(Name.isEmpty()){
+                    Toast.makeText(getContext(), "이름을 작성해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // 인증번호 받기 버튼을 누르지 않았을 경우
+                if (!PwFindFragment_isMailCnConfirmed) {
+                  Toast.makeText(getContext(), "인증번호를 받은 후 확인 해주세요.", Toast.LENGTH_SHORT).show();
+                  return;
+                }
+                // 인증번호 확인 버튼을 누르지 않았을 경우
+                if (!PwFindFragment_isCnChecked) {
+                  Toast.makeText(getContext(), "인증번호를 확인 해주세요.", Toast.LENGTH_SHORT).show();
+                  return;
+                }
+
                 // url 작성
                 String url = "http://203.250.133.162:8080/usersAPI/pw_find/" + Id + "/" + Name + "/" + Email;
                 ApiService PwFindApiService = new ApiService();
                 PwFindApiService.getUrl(url);
-
-                // CustomDialog 객체 생성
-                CustomDialog dialog = new CustomDialog(getContext());
-
-                // 인증번호 받기 버튼을 누르지 않았을 경우
-              if (!PwFindFragment_isMailCnConfirmed) {
-                  Toast.makeText(getContext(), "인증번호를 받은 후 확인 해주세요.", Toast.LENGTH_SHORT).show();
-                  return;
-              }
-              // 인증번호 확인 버튼을 누르지 않았을 경우
-              if (!PwFindFragment_isCnChecked) {
-                  Toast.makeText(getContext(), "인증번호를 확인 해주세요.", Toast.LENGTH_SHORT).show();
-                  return;
-              }
 
                 if (PwFindApiService.getStatus() == 200) {
                     Intent intent = new Intent(getActivity(), LoginPwChange.class);
@@ -104,7 +114,7 @@ public class PwFindFragment extends Fragment {
                     PwFindFragment_isMailCnConfirmed = true;
                 }else{
                     // 메시지 설정
-                    String message = "중복된 이메일입니다.";
+                    String message = "이메일이 틀렸습니다.";
                     dialog.setMessage(message);
 
                     // 다이얼로그 보여주기

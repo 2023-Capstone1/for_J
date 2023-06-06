@@ -30,7 +30,7 @@ public class ProfileSecessionWd extends AppCompatActivity {
         });
         Profile_Secession_Wd_Check = findViewById(R.id.profile_secession_wd_check);
         Profile_Secession_Wd_Secession_Btn = findViewById(R.id.profile_secession_wd_secession_btn);
-
+        Profile_Secession_Wd_Secession_Btn.setEnabled(false);
         Profile_Secession_Wd_Check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -46,7 +46,6 @@ public class ProfileSecessionWd extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), ProfileSecessionWdCheck.class);
                 startActivity(intent);
-
             }
         });
     }

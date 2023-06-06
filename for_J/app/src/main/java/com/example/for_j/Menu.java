@@ -76,4 +76,10 @@ public class Menu extends AppCompatActivity {
         newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         getWindow().getDecorView().setSystemUiVisibility(newUiOptions);*/
     }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), CalendarMainActivity.class);
+        startActivity(intent);
+        finish(); // 현재 액티비티를 종료하여 뒤로가기 버튼을 눌렀을 때 메뉴 액티비티로 돌아오지 않도록 합니다.
+    }
 }

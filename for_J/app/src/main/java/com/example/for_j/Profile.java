@@ -44,11 +44,12 @@ public class Profile extends AppCompatActivity {
 
         // 이름 사이에 * 찍는 문자 저장
         String modifiedName;
-
-        if (Name.length() == 3) {
+        if(Name.length() == 2){
+            modifiedName = Name.charAt(0) + "*";
+        }else if (Name.length() == 3) {
             modifiedName = Name.charAt(0) + "*" + Name.charAt(2);
-        } else if (Name.length() == 4) {
-            modifiedName = Name.charAt(0) + "**" + Name.charAt(3);
+        } else if (Name.length() >= 4) {
+            modifiedName = Name.charAt(0) + "**" + Name.substring(3);
         } else {
             modifiedName = Name;
         }

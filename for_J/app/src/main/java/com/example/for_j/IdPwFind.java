@@ -25,7 +25,6 @@ public class IdPwFind extends AppCompatActivity {
         IdPwFind_Find_Back = findViewById(R.id.IdPwFind_back);
         IdPwFind_Find_Back.setOnClickListener(v -> onBackPressed() );
 
-
         // FragmentContainer 초기화
         fragment_Container = findViewById(R.id.fragment_container);
 

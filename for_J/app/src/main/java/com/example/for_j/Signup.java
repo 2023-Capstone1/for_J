@@ -74,7 +74,6 @@ public class Signup extends AppCompatActivity {
                     Signup_Pw2_No_Icon.setVisibility(View.VISIBLE);
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 // 이 메소드는 텍스트가 변경된 후에 호출됩니다.
@@ -99,6 +98,12 @@ public class Signup extends AppCompatActivity {
                     Toast.makeText(Signup.this, "아이디 중복 확인을 먼저 해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                if(NAME.isEmpty()){
+                    Toast.makeText(Signup.this, "이름을 작성해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 // 인증번호 받기 버튼을 누르지 않았을 경우
                 if (!Signup_isMailCnConfirmed) {
                     Toast.makeText(Signup.this, "인증번호를 받은 후 확인 해주세요.", Toast.LENGTH_SHORT).show();
@@ -170,6 +175,17 @@ public class Signup extends AppCompatActivity {
 
                 // CustomDialog 객체 생성
                 CustomDialog dialog = new CustomDialog(Signup.this);
+                // 이메일 형식 체크
+                if (!isValidEmail(Mail)) {
+                    // 메시지 설정
+                    String message = "올바른 이메일 형식이 아닙니다.";
+                    dialog.setMessage(message);
+
+                    // 다이얼로그 보여주기
+                    dialog.show();
+                    Signup_isMailCnConfirmed = false;
+                    return;
+                }
 
                 // url 작성
                 ApiService MailApiService = new ApiService();
@@ -232,5 +248,13 @@ public class Signup extends AppCompatActivity {
                 }
             }
         });
+    }
+    // 이메일 형식 체크 메소드
+    private boolean isValidEmail(String email) {
+        // 이메일 형식 검사하는 정규표현식
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+        // 정규표현식과 일치하는지 확인
+        return email.matches(emailPattern);
     }
 }

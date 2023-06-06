@@ -32,6 +32,9 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
     // Toast
     private Toast toast;
 
+    // calendar 알림 변수
+    private CalAlarm CalAlarm;
+
     // 날짜 저장 변수
     private final Calendar startSelectedDate = Calendar.getInstance();
     private final Calendar endSelectedDate = Calendar.getInstance();
@@ -81,11 +84,15 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
     String location = null;
     int alarm = 0;
     String memo = null;
+    String TIME;
+    int hour,minute;
 
     String getCalURL;
+    String CalAlarmURL;
     ApiService getCalAPI;
     String updateCalURL;
     ApiService updateCalAPI;
+    ApiService calApiService;
 
 
     @Override
@@ -102,6 +109,8 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         getCalURL = "http://203.250.133.162:8080/calendarAPI/get_cal_to_update/" + login_id + "/" + list_id;
         getCalAPI = new ApiService();
         getCalAPI.getUrl(getCalURL);
+
+        CalAlarm = new CalAlarm(getApplicationContext());
 
         CSDN_CalTitle = findViewById(R.id.CSDN_CalTitle);
         CSDN_CalTitle.setText(name);
@@ -511,7 +520,25 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
                 updateCalAPI.putUrl(updateCalURL);
                 System.out.println(updateCalURL);
 
+                CalAlarmURL = "http://203.250.133.162:8080/calendarAPI/get_cal_Alarm/" + login_id + "/" + name + "/" + color + "/" +
+                        allDay + "/" + startDate + "/" + startTime + "/" + endDate + "/" + endTime + "/" + location + "/" + alarm +
+                        "/" +  memo;
+                calApiService = new ApiService();
+                calApiService.getUrl(CalAlarmURL);
 
+                TIME = calApiService.getValue("cal_startTime");
+
+                String[] splitHourMinute = TIME.split(":");
+                hour = Integer.parseInt(splitHourMinute[0]); // 12시간 형식으로 된 시간
+                minute = Integer.parseInt(splitHourMinute[1]);
+
+                String cal_alarm = calApiService.getValue("cal_alarm");
+                String cal_name = calApiService.getValue("cal_name");
+                String id = calApiService.getValue("cal_id");
+                // 기존 알람 삭제
+                CalAlarm.cancelAlarm(id);
+                // 새로운 알람 설정
+                CalAlarm.setAlarm(hour, minute,Integer.parseInt(cal_alarm),id,cal_name);
 
                 finish();
 

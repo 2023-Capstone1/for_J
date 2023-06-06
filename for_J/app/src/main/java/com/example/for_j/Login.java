@@ -106,7 +106,7 @@ public class Login extends AppCompatActivity {
                     dialog.show();
                 }else {
                     // 메시지 설정
-                    String message = "서버 켜져있음?/와이파이 확인하삼";
+                    String message = "서버에 문제가 생겼거나 네트워크를 확인해주세요.";
                     dialog.setMessage(message);
 
                     // 다이얼로그 보여주기

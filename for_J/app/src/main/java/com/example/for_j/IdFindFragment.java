@@ -60,10 +60,10 @@ public class IdFindFragment extends Fragment {
                 // CustomDialog 객체 생성
                 CustomDialog dialog = new CustomDialog(getContext());
 
-                // url 작성
-                ApiService IdFindApiService = new ApiService();
-                String url = "http://203.250.133.162:8080/usersAPI/id_find/" + Name + "/" + Email;
-                IdFindApiService.getUrl(url);
+                if(Name.isEmpty()){
+                    Toast.makeText(getContext(), "이름을 작성해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 // 인증번호 받기 버튼을 누르지 않았을 경우
                 if (!IdFindFragment_isMailCnConfirmed) {
@@ -75,6 +75,11 @@ public class IdFindFragment extends Fragment {
                     Toast.makeText(getContext(), "인증번호를 확인 해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                // url 작성
+                ApiService IdFindApiService = new ApiService();
+                String url = "http://203.250.133.162:8080/usersAPI/id_find/" + Name + "/" + Email;
+                IdFindApiService.getUrl(url);
 
                 if (IdFindApiService.getStatus() == 200) {
                     showFindIdDialog(IdFindApiService.getValue("user_id"));
@@ -114,7 +119,7 @@ public class IdFindFragment extends Fragment {
                     IdFindFragment_isMailCnConfirmed = true;
                 }else{
                     // 메시지 설정
-                    String message = "이메일이 다릅니다.";
+                    String message = "이메일이 틀렸습니다.";
                     dialog.setMessage(message);
 
                     // 다이얼로그 보여주기

@@ -10,15 +10,13 @@ import java.util.Calendar;
 public class HibitAlarm {
     private Context context;
     private AlarmManager alarmManager;
-    private PendingIntent pendingIntent;
 
     public HibitAlarm(Context context) {
         this.context = context;
         this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        this.pendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(context, AlarmReceiver.class), PendingIntent.FLAG_IMMUTABLE);
     }
 
-    public void setAlarm(int hour, int minute, String name) {
+    public void setAlarm(int hour, int minute, String id, String name) {
         // 현재 시간 설정
         Calendar currentTime = Calendar.getInstance();
         currentTime.setTimeInMillis(System.currentTimeMillis());
@@ -39,18 +37,19 @@ public class HibitAlarm {
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra("hour", hour); // 시간 전달
         intent.putExtra("minute", minute); // 분 전달
+        intent.putExtra("id", id); // id를 Intent에 추가
         intent.putExtra("name", name); // name을 Intent에 추가
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, selectedTime.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
-    public void cancelAlarm(String name) {
+    public void cancelAlarm(String id) {
         Intent intent = new Intent(context, AlarmReceiver.class);
-        intent.putExtra("name", name); // name을 Intent에 추가
+        intent.putExtra("id", id); // id를 Intent에 추가
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.cancel(pendingIntent);
     }
 }

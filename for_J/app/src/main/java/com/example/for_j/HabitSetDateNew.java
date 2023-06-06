@@ -93,6 +93,9 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 
         HSDN_Title = findViewById(R.id.HSDN_HabitTitle);
 
+        IdSave idSave = (IdSave) getApplication();
+        SloginId = idSave.getUserId();
+
         habitAlarm = new HibitAlarm(getApplicationContext());
 
         // 색상 선택
@@ -271,8 +274,6 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
         HSDN_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                IdSave idSave = (IdSave) getApplication();
-                SloginId = idSave.getUserId();
 
                 try {
                     if (HSDN_Title.getText() != null) {
@@ -328,14 +329,10 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                                 // 시간과 분 그대로 저장
                                 hour = originalHour;
                                 minute = originalMinute;
-                                // 알림 설정
-                                habitAlarm.setAlarm(hour, minute, Sname);
                             } else { // 오후인 경우
                                 // 시간에 12를 더하여 24시간 형식으로 변환
                                 hour = originalHour + 12;
                                 minute = originalMinute;
-                                // 알림 설정
-                                habitAlarm.setAlarm(hour, minute, Sname);
                             }
                         }
                     } catch (NullPointerException e) {
@@ -429,6 +426,7 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                 } else {
                     // 오늘 날짜 반복해서 url 만들기
                     ApiService habitApiService = new ApiService();
+                    ApiService AlarmApiService = new ApiService();
                     int success = 0;
 //                    System.out.println("횟수: " + SrepeatN + " SrepeatDay: " + SrepeatDay);
 
@@ -441,6 +439,14 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                         if (habitApiService.getStatus() == 200) {
                             success += 1;
                         }
+                        String Alarm_url = "http://203.250.133.162:8080/habitAPI/get_habit_Alarm/" + SloginId + "/" + Sname + "/" + SstartDate + "/"
+                                + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
+                                + Shabit_nfc + "/" + Shabit_state;
+                        AlarmApiService.getUrl(Alarm_url);
+
+                        // 알림 설정
+                        habitAlarm.setAlarm(hour, minute, AlarmApiService.getValue("habit_list_id"),Sname);
+
                         /*// 종료 날짜 전까지 반복
                         currentDate = (Calendar) startSelectedDate.clone();
                         while (currentDate.compareTo(endSelectedDate) < 1) {
@@ -501,6 +507,13 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                         if (habitApiService.getStatus() == 200) {
                             success += 1;
                         }
+                        String Alarm_url = "http://203.250.133.162:8080/habitAPI/get_habit_Alarm/" + SloginId + "/" + Sname + "/" + SstartDate + "/"
+                                + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
+                                + Shabit_nfc + "/" + Shabit_state;
+                        AlarmApiService.getUrl(Alarm_url);
+
+                        // 알림 설정
+                        habitAlarm.setAlarm(hour, minute, AlarmApiService.getValue("habit_list_id"),Sname);
 
                         /*// 종료 날짜 전까지 반복
                         currentDate = (Calendar) startSelectedDate.clone();

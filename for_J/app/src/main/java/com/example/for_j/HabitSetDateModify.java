@@ -29,12 +29,13 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
 
-
-
 public class HabitSetDateModify extends AppCompatActivity implements DatePickerFragment.OnDateSelectedListener, TimePickerFragment.OnTimeSelectedListener{
 
     // Toast
     private Toast toast;
+
+    // habit 알림 변수
+    private HibitAlarm habitAlarm;
 
     // 날짜 저장 변수
     private Calendar startSelectedDate = Calendar.getInstance();
@@ -76,6 +77,7 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
     private ApiService getHabitToUpdateAPI = new ApiService();
     private String updateHabitURL;
     private ApiService updateHabitAPI = new ApiService();
+    private ApiService AlarmApiService = new ApiService();
 
     // habit 스키마
     String SloginId = null;
@@ -91,6 +93,7 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
     String Shabit_color = null;
     String Shabit_nfc = "";
     int Shabit_state = 0;
+    int hour, minute;
 
     // 기존 해빗 정보
     String PreName = null;
@@ -120,6 +123,8 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
 
         HSDN_Title = findViewById(R.id.HSDN_HabitTitle);
         HSDN_Title.setText(Sname);
+
+        habitAlarm = new HibitAlarm(getApplicationContext());
 
         // 색상 선택
         HSDN_Color = findViewById(R.id.HSDN_Color);
@@ -387,9 +392,6 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
         HSDN_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // loginId는 123으로 통일
-                // 나중에 바꿀거임 여기 수정해야함!!!!!
-                SloginId = "123";
 
                 try {
                     if (HSDN_Title.getText() != null) {
@@ -432,6 +434,24 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
                     try {
                         if (HSDN_AlarmBtn.getText() != null) {
                             Salarm = HSDN_AlarmBtn.getText().toString();
+                            String[] splitTime = Salarm.split(" ");
+                            String timeIndicator = splitTime[0]; // "오전" 또는 "오후"
+
+                            // 시간과 분을 분리
+                            String[] splitHourMinute = splitTime[1].split(":");
+                            int originalHour = Integer.parseInt(splitHourMinute[0]); // 12시간 형식으로 된 시간
+                            int originalMinute = Integer.parseInt(splitHourMinute[1]);
+
+                            // 오전인 경우
+                            if (timeIndicator.equals("오전")) {
+                                // 시간과 분 그대로 저장
+                                hour = originalHour;
+                                minute = originalMinute;
+                            } else { // 오후인 경우
+                                // 시간에 12를 더하여 24시간 형식으로 변환
+                                hour = originalHour + 12;
+                                minute = originalMinute;
+                            }
                         }
                     } catch (NullPointerException e) {
                         Salarm = "";
@@ -579,6 +599,16 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
                                 SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/" + Shabit_nfc + "/" + Shabit_state;
                         updateHabitAPI = new ApiService();
                         updateHabitAPI.putUrl(updateHabitURL);
+
+                        String Alarm_url = "http://203.250.133.162:8080/habitAPI/get_habit_Alarm/" + SloginId + "/" + Sname + "/" + SstartDate + "/"
+                                + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
+                                + Shabit_nfc + "/" + Shabit_state;
+                        AlarmApiService.getUrl(Alarm_url);
+
+                        habitAlarm.cancelAlarm(AlarmApiService.getValue("habit_list_id"));
+
+                        // 알림 설정
+                        habitAlarm.setAlarm(hour, minute, AlarmApiService.getValue("habit_list_id"),Sname);
                     }
                     finish();
                 }

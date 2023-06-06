@@ -3,6 +3,7 @@ package com.example.for_j;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
     // Toast
     private Toast toast;
 
-    // habit 알림 변수
+    // calendar 알림 변수
     private CalAlarm CalAlarm;
 
     // 날짜 저장 변수
@@ -72,7 +73,7 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
     private EditText CSDN_MemoET;
 
     // 서버 통신 변수
-    String login_id = "123";
+    String login_id = null;
     String name = null;
     String color = null;
     int allDay = 1;
@@ -102,7 +103,6 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
         login_id = idSave.getUserId();
 
         CSDN_CalTitle = findViewById(R.id.CSDN_CalTitle);
-
 
         CalAlarm = new CalAlarm(getApplicationContext());
 
@@ -505,8 +505,9 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
 
                     String cal_alarm = calApiService.getValue("cal_alarm");
                     String cal_name = calApiService.getValue("cal_name");
+                    String id = calApiService.getValue("cal_id");
 
-                    CalAlarm.setAlarm(hour, minute,Integer.parseInt(cal_alarm) , cal_name);
+                    CalAlarm.setAlarm(hour, minute,Integer.parseInt(cal_alarm),id,cal_name);
 
                     finish();
 

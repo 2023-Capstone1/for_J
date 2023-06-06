@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
+import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +46,6 @@ public class TimeListItemAdapter extends BaseAdapter {
     private String id;
     private int orderTotal;
 
-
     boolean isRun = false;
     String[] timeParts; // :을 기준으로 문자열 자르기
     int hours;
@@ -52,8 +53,6 @@ public class TimeListItemAdapter extends BaseAdapter {
     int seconds;
     private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
     String timeTmp;
-
-
 
 //    ApiService
     private String getOrderInfoURL;
@@ -64,8 +63,6 @@ public class TimeListItemAdapter extends BaseAdapter {
 
     private String pauseClickURL;
     private ApiService pauseClickAPI = new ApiService();
-
-
 
     public interface TimeListAdapterListener {
         void onCheckButtonClicked(int position, TimeTrackerListDialog timeListDialog);
@@ -178,7 +175,6 @@ public class TimeListItemAdapter extends BaseAdapter {
             }
         });
 
-
         name = items.get(position).getListName();
         id = items.get(position).getListId();
 
@@ -190,12 +186,17 @@ public class TimeListItemAdapter extends BaseAdapter {
         // 기존에 저장되어 있는 오더 리스트 가지고 오기
         resetOrderList(position, convertView);
 
+        // TimeAlarm의 인스턴스 생성
+        TimeAlarm timeAlarm = new TimeAlarm(context);
 
         // play버튼 눌렀을 때
         play.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
+
+                // TimeAlarm 시작
+                timeAlarm.start();
 
                 // 크로노미터 동작 중일 때 버튼 비활성화
                 listName.setEnabled(false);
@@ -220,7 +221,7 @@ public class TimeListItemAdapter extends BaseAdapter {
                     seconds = Integer.parseInt(timeParts[2]);
                     long totalTimeInMillis = TimeUnit.HOURS.toMillis(hours) + TimeUnit.MINUTES.toMillis(minutes) + TimeUnit.SECONDS.toMillis(seconds);
                     items.get(position).chrono.setBase(SystemClock.elapsedRealtime() - totalTimeInMillis);
-                }else{
+
                     items.get(position).chrono.setBase(SystemClock.elapsedRealtime());  // 크로노미터 0으로 초기화
                 }
 
@@ -230,21 +231,30 @@ public class TimeListItemAdapter extends BaseAdapter {
                 playClickURL = "http://203.250.133.162:8080/timeAPI/play_click/" + loginId + "/" + items.get(position).getListId() + "/" + timeTmp;
                 playClickAPI.getUrl(playClickURL);
 
-
                 items.get(position).chrono.start();
                 isRun = true;
                 play.setVisibility(View.INVISIBLE);
                 pause.setVisibility(View.VISIBLE);
-
 
                 items.get(position).addListOrder(Integer.parseInt(playClickAPI.getValue("create_list_order")));
                 items.get(position).addListStartTime(playClickAPI.getValue("create_list_startTime"));
                 items.get(position).addListEndTime(playClickAPI.getValue("create_list_endTime"));
                 items.get(position).addListTimeTaken(playClickAPI.getValue("create_list_timeTaken"));
 
+                // hours가 1 증가할 때마다 알림 보여주기
+                items.get(position).chrono.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+                    @Override
+                    public void onChronometerTick(Chronometer chronometer) {
+                        long elapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
+                        hours = (int) (elapsedMillis / 3600000);
+                        if (hours > 0) {
+                            timeAlarm.showElapsedNotification(name, hours);
+                        }
+                    }
+                });
+
             }
         });
-
 
         // pause 버튼 눌렀을 때
         pause.setOnClickListener(new View.OnClickListener() {
@@ -262,6 +272,9 @@ public class TimeListItemAdapter extends BaseAdapter {
 
                 // 멈춘 시간 가져오기
                 timeTmp = timeFormat.format(new Date(System.currentTimeMillis()));
+
+                // TimeAlarm 정지
+                timeAlarm.stop();
 
                 pauseClickURL = "http://203.250.133.162:8080/timeAPI/pause_click/" + loginId + "/" + items.get(position).getListId() + "/" + timeTmp;
                 pauseClickAPI.getUrl(pauseClickURL);
@@ -301,11 +314,6 @@ public class TimeListItemAdapter extends BaseAdapter {
                 }
             }
         });
-
-
-
-
-
         return convertView;
     }
 
@@ -366,18 +374,6 @@ public class TimeListItemAdapter extends BaseAdapter {
             items.get(position).chrono.setBase(SystemClock.elapsedRealtime());  // 크로노미터 0으로 초기화
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
     public void addItem(TimeListItem item) {
         items.add(item);
     }
