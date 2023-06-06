@@ -28,6 +28,7 @@ import com.example.for_j.dialog.TimePickerFragment;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 public class CalSetDateNew extends AppCompatActivity implements DatePickerFragment.OnDateSelectedListener, TimePickerFragment.OnTimeSelectedListener{
     // Toast
@@ -499,16 +500,17 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
 
                     TIME = calApiService.getValue("cal_startTime");
 
-                    String[] splitHourMinute = TIME.split(":");
-                    hour = Integer.parseInt(splitHourMinute[0]); // 12시간 형식으로 된 시간
-                    minute = Integer.parseInt(splitHourMinute[1]);
+                    if (!Objects.equals(TIME, "null")) {
+                        String[] splitHourMinute = TIME.split(":");
+                        hour = Integer.parseInt(splitHourMinute[0]); // 12시간 형식으로 된 시간
+                        minute = Integer.parseInt(splitHourMinute[1]);
 
-                    String cal_alarm = calApiService.getValue("cal_alarm");
-                    String cal_name = calApiService.getValue("cal_name");
-                    String id = calApiService.getValue("cal_id");
+                        String cal_alarm = calApiService.getValue("cal_alarm");
+                        String cal_name = calApiService.getValue("cal_name");
+                        String id = calApiService.getValue("cal_id");
 
-                    CalAlarm.setAlarm(hour, minute,Integer.parseInt(cal_alarm),id,cal_name);
-
+                        CalAlarm.setAlarm(hour, minute, Integer.parseInt(cal_alarm), id, cal_name);
+                    }
                     finish();
 
 

@@ -528,18 +528,19 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
 
                 TIME = calApiService.getValue("cal_startTime");
 
-                String[] splitHourMinute = TIME.split(":");
-                hour = Integer.parseInt(splitHourMinute[0]); // 12시간 형식으로 된 시간
-                minute = Integer.parseInt(splitHourMinute[1]);
+                if (!Objects.equals(TIME, "null")) {
+                    String[] splitHourMinute = TIME.split(":");
+                    hour = Integer.parseInt(splitHourMinute[0]); // 12시간 형식으로 된 시간
+                    minute = Integer.parseInt(splitHourMinute[1]);
 
-                String cal_alarm = calApiService.getValue("cal_alarm");
-                String cal_name = calApiService.getValue("cal_name");
-                String id = calApiService.getValue("cal_id");
-                // 기존 알람 삭제
-                CalAlarm.cancelAlarm(id);
-                // 새로운 알람 설정
-                CalAlarm.setAlarm(hour, minute,Integer.parseInt(cal_alarm),id,cal_name);
-
+                    String cal_alarm = calApiService.getValue("cal_alarm");
+                    String cal_name = calApiService.getValue("cal_name");
+                    String id = calApiService.getValue("cal_id");
+                    // 기존 알람 삭제
+                    CalAlarm.cancelAlarm(id);
+                    // 새로운 알람 설정
+                    CalAlarm.setAlarm(hour, minute, Integer.parseInt(cal_alarm), id, cal_name);
+                }
                 finish();
 
 
