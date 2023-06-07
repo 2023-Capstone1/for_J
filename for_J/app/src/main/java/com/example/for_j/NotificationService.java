@@ -43,36 +43,10 @@ public class NotificationService extends Service {
 
         String contentText;
         if(code == 0 && cal_Alarm == 0 || cal_Alarm == 1 || cal_Alarm == 2 || cal_Alarm == 3){
-            if (cal_Alarm == 1) {
-                // case 1: 시간과 분에서 10분을 빼는 조작
-                Log.d("hour",String.valueOf(hour));
-                Log.d("mi",String.valueOf(minute));
-                int modifiedHour = hour;
-                int modifiedMinute = minute - 10;
-                // 시간과 분이 음수인 경우에 대한 예외 처리
-                if (modifiedMinute < 0) {
-                    modifiedHour -= 1;
-                    modifiedMinute += 60;
-                }
-                contentText = getCalendarContentTextForCode(modifiedHour, modifiedMinute, Sname);
-            }else if (cal_Alarm == 2) {
-                Log.d("hour",String.valueOf(hour));
-                Log.d("mi",String.valueOf(minute));
-                // case 2: 1시간 전으로 조작
-                int modifiedHour = hour - 1;
-                int modifiedMinute = minute;
-                // 시간이 음수인 경우에 대한 예외 처리
-                if (modifiedHour < 0) {
-                    // 음수일 경우, 23으로 설정하여 이전 날로 이동
-                    modifiedHour = 23;
-                }
-                contentText = getCalendarContentTextForCode(modifiedHour, modifiedMinute, Sname);
-            }else {
-                Log.d("hour",String.valueOf(hour));
-                Log.d("mi",String.valueOf(minute));
-                // 기본적인 case: getHabitContentTextForCode 메서드 호출
-                contentText = getHabitContentTextForCode(hour, minute, Sname);
-            }
+            Log.d("hour",String.valueOf(hour));
+            Log.d("mi",String.valueOf(minute));
+            // 기본적인 case: getHabitContentTextForCode 메서드 호출
+            contentText = getHabitContentTextForCode(hour, minute, Sname);
         }else if (code == 0) {
             Log.d("hour",String.valueOf(hour));
             Log.d("mi",String.valueOf(minute));
@@ -112,8 +86,11 @@ public class NotificationService extends Service {
             {
                 // url 작성
                 ApiService AlarmApiService = new ApiService();
-                String url = "http://203.250.133.162:8080/settingAPI/get_todo_list/" + user_id + selectedDateStr;
+                String url = "http://203.250.133.162:8080/todoAPI/get_todo_list/" + user_id +"/"+ selectedDateStr;
                 AlarmApiService.getUrl(url);
+
+                Log.d("id",user_id);
+                Log.d("date",selectedDateStr);
 
                 String num = AlarmApiService.getValue("todo_total");
 
@@ -127,7 +104,7 @@ public class NotificationService extends Service {
             {
                 // url 작성
                 ApiService AlarmApiService = new ApiService();
-                String url = "http://203.250.133.162:8080/settingAPI/get_habit_today/" + user_id + selectedDateStr;
+                String url = "http://203.250.133.162:8080/habitAPI/get_habit_today/" + user_id +"/"+ selectedDateStr;
                 AlarmApiService.getUrl(url);
 
                 String num = AlarmApiService.getValue("habit_today_total");
@@ -142,7 +119,7 @@ public class NotificationService extends Service {
             {
                 // url 작성
                 ApiService AlarmApiService = new ApiService();
-                String url = "http://203.250.133.162:8080/settingAPI/get_cal_list/" + user_id + selectedDateStr;
+                String url = "http://203.250.133.162:8080/calendarAPI/get_cal_list/" + user_id +"/"+ selectedDateStr;
                 AlarmApiService.getUrl(url);
 
                 String num = AlarmApiService.getValue("total");
@@ -150,7 +127,7 @@ public class NotificationService extends Service {
                 if(num == null){
                     return "오늘의 Calendar 일정이 " + "0개 남았습니다.";
                 }else{
-                    return "오늘의 Calendar 일정이 " + AlarmApiService.getValue("habit_today_total") + "개 남았습니다.";
+                    return "오늘의 Calendar 일정이 " + AlarmApiService.getValue("total") + "개 남았습니다.";
                 }
             }
             default:

@@ -5,12 +5,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import java.util.Calendar;
 
 public class CalAlarm {
     private Context context;
     private AlarmManager alarmManager;
+    PendingIntent pendingIntent;
 
     public CalAlarm(Context context) {
         this.context = context;
@@ -26,7 +28,7 @@ public class CalAlarm {
         intent.putExtra("id", id); // id를 Intent에 추가
         intent.putExtra("name", name); // name을 Intent에 추가
 
-        PendingIntent pendingIntent;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_IMMUTABLE);
         } else {
@@ -39,10 +41,29 @@ public class CalAlarm {
 
         // 선택한 시간 설정
         Calendar selectedTime = Calendar.getInstance();
-        selectedTime.setTimeInMillis(System.currentTimeMillis());
-        selectedTime.set(Calendar.HOUR_OF_DAY, hour);
-        selectedTime.set(Calendar.MINUTE, minute);
-        selectedTime.set(Calendar.SECOND, 0);
+
+        if(cal_Alarm == 1){
+            // 선택한 시간 설정
+            selectedTime = Calendar.getInstance();
+            selectedTime.setTimeInMillis(System.currentTimeMillis());
+            selectedTime.set(Calendar.HOUR_OF_DAY, hour);
+            selectedTime.set(Calendar.MINUTE, minute-10);
+            selectedTime.set(Calendar.SECOND, 0);
+        }else if(cal_Alarm == 1){
+            // 선택한 시간 설정
+            selectedTime = Calendar.getInstance();
+            selectedTime.setTimeInMillis(System.currentTimeMillis());
+            selectedTime.set(Calendar.HOUR_OF_DAY, hour-10);
+            selectedTime.set(Calendar.MINUTE, minute);
+            selectedTime.set(Calendar.SECOND, 0);
+        }else{
+            // 선택한 시간 설정
+            selectedTime = Calendar.getInstance();
+            selectedTime.setTimeInMillis(System.currentTimeMillis());
+            selectedTime.set(Calendar.HOUR_OF_DAY, hour);
+            selectedTime.set(Calendar.MINUTE, minute);
+            selectedTime.set(Calendar.SECOND, 0);
+        }
 
         // 선택한 시간이 현재 시간보다 이전인 경우, 다음 날로 설정
         if (selectedTime.before(currentTime)) {
@@ -62,9 +83,19 @@ public class CalAlarm {
 
     public void cancelAlarm(String id) {
         Intent intent = new Intent(context, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_IMMUTABLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         if (alarmManager != null) {
-            alarmManager.cancel(pendingIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.cancel(pendingIntent);
+            }  else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.cancel(pendingIntent);
+            }  else {
+                alarmManager.cancel(pendingIntent);
+            }
         }
     }
 }

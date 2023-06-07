@@ -559,6 +559,7 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
                     String cal_alarm = calApiService.getValue("cal_alarm");
                     String cal_name = calApiService.getValue("cal_name");
                     String id = calApiService.getValue("cal_list_id");
+
                     // 기존 알람 삭제
                     CalAlarm.cancelAlarm(id);
                     // 새로운 알람 설정

@@ -16,13 +16,13 @@ public class TimeAlarm {
     private Context context;
     private long startTime;
     private boolean isRunning;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences TimeSwitch;
 
     public TimeAlarm(Context context) {
         this.context = context;
         this.startTime = 0;
         this.isRunning = false;
-        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        this.TimeSwitch = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create the notification channel
@@ -36,13 +36,13 @@ public class TimeAlarm {
     }
 
     public void setTimeSwitch(String timeSwitch) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = TimeSwitch.edit();
         editor.putString("timeSwitch", timeSwitch);
         editor.apply();
     }
 
     public String getTimeSwitch() {
-        return sharedPreferences.getString("timeSwitch", null);
+        return TimeSwitch.getString("timeSwitch", null);
     }
 
     public boolean isTimeSwitchEnabled() {
@@ -52,7 +52,6 @@ public class TimeAlarm {
     public void start() {
         if (!isRunning) {
             startTime = SystemClock.elapsedRealtime();
-
             isRunning = true;
         }
     }

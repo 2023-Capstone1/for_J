@@ -71,7 +71,7 @@
     <string name="signup_pw_check_no_image">image</string>
     <string name="signup_name">이름</string>
     <string name="signup_name_hint">실명 입력</string>
-    <string name="signup_email">이메일</string>
+    <string name="signup_email">이메일 주소</string>
     <string name="signup_email_hint">name@email.com</string>
     <string name="signup_email_cn_button">인증번호 받기</string>
     <string name="signup_cn_check">인증번호</string>

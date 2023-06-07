@@ -38,7 +38,7 @@ public class LoginPwChange extends AppCompatActivity {
                 String input_New_pw_check = LoginPwChange_Edit_New_Pw_Check.getText().toString();
 
                 if(inputId.isEmpty()){
-                    Toast.makeText(LoginPwChange.this, "Id를 작성해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginPwChange.this, "아이디를 작성해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(input_New_pw.isEmpty()){
@@ -49,17 +49,30 @@ public class LoginPwChange extends AppCompatActivity {
                     Toast.makeText(LoginPwChange.this, "비밀번호를 다시 한번 작성해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(!input_New_pw.equals(input_New_pw_check)){
+                    Toast.makeText(LoginPwChange.this, "두 비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String PwCheckUrl = "http://203.250.133.162:8080/usersAPI/user_info/" + inputId;
+                ApiService PwCheckApiService = new ApiService();
+                PwCheckApiService.getUrl(PwCheckUrl);
+
+                String PwCheck = PwCheckApiService.getValue("user_pw");
+
+                if(input_New_pw.equals(PwCheck)){
+                    Toast.makeText(LoginPwChange.this, "바꾸려는 비밀번호가 \n현재 비밀번호와 같습니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 // url 작성
                 String url = "http://203.250.133.162:8080/usersAPI/pw_update/" + inputId +  "/" + input_New_pw + "/" + input_New_pw_check;
                 ApiService LoginPwChangeApiService = new ApiService();
                 LoginPwChangeApiService.putUrl(url);
 
-                if(input_New_pw.equals(input_New_pw_check) && LoginPwChangeApiService.getStatus() == 200){
+                if(LoginPwChangeApiService.getStatus() == 200){
                     Toast.makeText(LoginPwChange.this, "비밀번호 변경에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginPwChange.this, Login.class);
                     startActivity(intent);
-                }else if(!input_New_pw.equals(input_New_pw_check) && LoginPwChangeApiService.getStatus() == 200){
-                    Toast.makeText(LoginPwChange.this, "두 비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(LoginPwChange.this, "비밀번호 변경에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 }

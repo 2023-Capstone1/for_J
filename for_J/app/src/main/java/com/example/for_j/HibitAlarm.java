@@ -4,12 +4,14 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import java.util.Calendar;
 
 public class HibitAlarm {
     private Context context;
     private AlarmManager alarmManager;
+    PendingIntent pendingIntent;
 
     public HibitAlarm(Context context) {
         this.context = context;
@@ -17,6 +19,20 @@ public class HibitAlarm {
     }
 
     public void setAlarm(int hour, int minute, String id, String name) {
+        // 알람 설정
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.putExtra("hour", hour); // 시간 전달
+        intent.putExtra("minute", minute); // 분 전달
+        intent.putExtra("id", id); // id를 Intent에 추가
+        intent.putExtra("name", name); // name을 Intent에 추가
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
         // 현재 시간 설정
         Calendar currentTime = Calendar.getInstance();
         currentTime.setTimeInMillis(System.currentTimeMillis());
@@ -33,23 +49,32 @@ public class HibitAlarm {
             selectedTime.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        // 알람 설정
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        intent.putExtra("hour", hour); // 시간 전달
-        intent.putExtra("minute", minute); // 분 전달
-        intent.putExtra("id", id); // id를 Intent에 추가
-        intent.putExtra("name", name); // name을 Intent에 추가
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, selectedTime.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
+        if (alarmManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, selectedTime.getTimeInMillis(), pendingIntent);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, selectedTime.getTimeInMillis(), pendingIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, selectedTime.getTimeInMillis(), pendingIntent);
+            }
+        }
     }
 
     public void cancelAlarm(String id) {
         Intent intent = new Intent(context, AlarmReceiver.class);
-        intent.putExtra("id", id); // id를 Intent에 추가
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.cancel(pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(id), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        if (alarmManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.cancel(pendingIntent);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.cancel(pendingIntent);
+            } else {
+                alarmManager.cancel(pendingIntent);
+            }
+        }
     }
 }

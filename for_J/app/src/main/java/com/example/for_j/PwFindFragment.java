@@ -2,6 +2,7 @@ package com.example.for_j;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,7 @@ public class PwFindFragment extends Fragment {
                 }
 
                 // url 작성
-                String url = "http://203.250.133.162:8080/usersAPI/user_info" + Id;
+                String url = "http://203.250.133.162:8080/usersAPI/user_info/" + Id;
                 ApiService PwFindApiService = new ApiService();
                 PwFindApiService.getUrl(url);
 
