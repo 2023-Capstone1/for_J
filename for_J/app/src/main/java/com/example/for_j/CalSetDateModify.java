@@ -227,10 +227,12 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         // 날짜 스위치
         SwitchCompat CSDN_AllDaySwitch = findViewById(R.id.CSDN_AllDaySwitch);
         if (Objects.equals(getCalAPI.getValue("cal_allDay"), "1")){
+            allDay = 1;
             CSDN_AllDaySwitch.setChecked(true);
             CSDN_AllDayTrue.setVisibility(View.VISIBLE);
             CSDN_AllDayFalse.setVisibility(View.GONE);
         }else{
+            allDay = 0;
             CSDN_AllDaySwitch.setChecked(false);
             CSDN_AllDayTrue.setVisibility(View.GONE);
             CSDN_AllDayFalse.setVisibility(View.VISIBLE);
@@ -272,7 +274,12 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         // 시작 시간 xml 연동
         CSDN_AllDayFalseStartTime = findViewById(R.id.CSDN_AllDayFalseStartTime);
         if (!Objects.equals(getCalAPI.getValue("cal_startTime"), "null")){
-            CSDN_AllDayFalseStartTime.setText(getCalAPI.getValue("cal_startTime"));
+            time = 0;
+            String[] splitTime = getCalAPI.getValue("cal_startTime").split(":");
+            int splitHour = Integer.parseInt(splitTime[0]);
+            int splitMinute = Integer.parseInt(splitTime[1]);
+            onTimeSelected(splitHour, splitMinute);
+//            CSDN_AllDayFalseStartTime.setText(getCalAPI.getValue("cal_startTime"));
         }
         // 종료 날짜 xml 연동
         CSDN_AllDayFalseEndDate = findViewById(R.id.CSDN_AllDayFalseEndDate);
@@ -280,7 +287,12 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         // 종료 시간 xml 연동
         CSDN_AllDayFalseEndTime = findViewById(R.id.CSDN_AllDayFalseEndTime);
         if (!Objects.equals(getCalAPI.getValue("cal_endTime"), "null")){
-            CSDN_AllDayFalseEndTime.setText(getCalAPI.getValue("cal_endTime"));
+            time = 1;
+            String[] splitTime = getCalAPI.getValue("cal_endTime").split(":");
+            int splitHour = Integer.parseInt(splitTime[0]);
+            int splitMinute = Integer.parseInt(splitTime[1]);
+            onTimeSelected(splitHour, splitMinute);
+//            CSDN_AllDayFalseEndTime.setText(getCalAPI.getValue("cal_endTime"));
         }
 
         // 시작 날짜 버튼 클릭
@@ -371,6 +383,30 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
 
         CSDN_SetAlarmSpinner.setAdapter(adapter);
 
+        int defaultPosition;
+
+        switch (getCalAPI.getValue("cal_alarm")){
+            case "0":
+                defaultPosition = 0;
+//                System.out.println("!!!!!!!!!!!!!!!! 알림 0임!! 정각");
+                break;
+            case "1":
+                defaultPosition = 1;
+//                System.out.println("!!!!!!!!!!!!!!!! 알림 1임!! 10분전");
+                break;
+            case "2":
+                defaultPosition = 2;
+//                System.out.println("!!!!!!!!!!!!!!!! 알림 2임!! 1시간 전");
+                break;
+            default:
+                defaultPosition = 3;
+//                System.out.println("!!!!!!!!!!!!!!!! 알림 3임!! 하루 전");
+                break;
+        }
+
+
+        CSDN_SetAlarmSpinner.setSelection(defaultPosition);
+
         CSDN_SetAlarmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -378,19 +414,6 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                int defaultPosition;
-
-                if (Objects.equals(getCalAPI.getValue("cal_alarm"), "0")){
-                    defaultPosition = 0;
-                } else if (Objects.equals(getCalAPI.getValue("cal_alarm"), "1")){
-                    defaultPosition = 1;
-                } else if (Objects.equals(getCalAPI.getValue("cal_alarm"), "2")){
-                    defaultPosition = 2;
-                } else{
-                    defaultPosition = 3;
-                }
-
-                CSDN_SetAlarmSpinner.setSelection(defaultPosition);
             }
         });
 
@@ -535,7 +558,7 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
 
                     String cal_alarm = calApiService.getValue("cal_alarm");
                     String cal_name = calApiService.getValue("cal_name");
-                    String id = calApiService.getValue("cal_id");
+                    String id = calApiService.getValue("cal_list_id");
                     // 기존 알람 삭제
                     CalAlarm.cancelAlarm(id);
                     // 새로운 알람 설정

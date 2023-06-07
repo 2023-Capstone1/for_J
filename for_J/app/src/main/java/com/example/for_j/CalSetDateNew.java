@@ -507,7 +507,7 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
 
                         String cal_alarm = calApiService.getValue("cal_alarm");
                         String cal_name = calApiService.getValue("cal_name");
-                        String id = calApiService.getValue("cal_id");
+                        String id = calApiService.getValue("cal_list_id");
 
                         CalAlarm.setAlarm(hour, minute, Integer.parseInt(cal_alarm), id, cal_name);
                     }
