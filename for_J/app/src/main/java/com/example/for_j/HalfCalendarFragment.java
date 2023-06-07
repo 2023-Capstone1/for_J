@@ -35,6 +35,8 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
         this.selectedDate = selectedDate;
     }
 
+    public HalfCalendarFragment(){}
+
     private Calendar calendar = Calendar.getInstance();
     private String loginID;
 
@@ -150,7 +152,9 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
         HalfFragment_recyclerView = halfCalView.findViewById(R.id.Calendar_RecyclerView);
 
         // 현재 날짜
-//        selectedDate = LocalDate.now();
+        if (selectedDate == null) {
+            selectedDate = LocalDate.now();
+        }
 
         // 달력 화면 설정
         setMonthView();
@@ -208,7 +212,6 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
 
         // selectedDate 포매팅하기
         selectedDateStr = selectedDate.format(formatter);
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+selectedDateStr);
 
         // 캘린더 레이아웃 설정
         if (HalfCal_CalList != null){
