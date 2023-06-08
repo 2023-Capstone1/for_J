@@ -479,7 +479,7 @@ public class Setting extends AppCompatActivity {
                     deleteApiService.deleteUrl(url);
                 }else if (scheduleType.equals("Calendar 일정")) {
                     // Calendar 일정 삭제 메소드 호출
-                    String url = "http://203.250.133.162:8080/settingAPI/delete_all_Calendar/" + user_id;
+                    String url = "http://203.250.133.162:8080/settingAPI/delete_all_calendar/" + user_id;
                     deleteApiService.deleteUrl(url);
                 }else if (scheduleType.equals("Time tracker 일정")) {
                     // Calendar 일정 삭제 메소드 호출
