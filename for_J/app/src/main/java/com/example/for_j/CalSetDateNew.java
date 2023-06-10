@@ -26,6 +26,7 @@ import com.example.for_j.dialog.ColorPaletteDialog;
 import com.example.for_j.dialog.DatePickerFragment;
 import com.example.for_j.dialog.TimePickerFragment;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
@@ -86,7 +87,6 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
     int alarm = 0;
     String memo = null;
     String TIME;
-    int hour,minute;
 
     String setCalURL;
     String CalAlarmURL;
@@ -184,6 +184,7 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
         CSDN_AllDayTrue = findViewById(R.id.CSDN_AllDayTrue);
         // 시작 날짜 버튼
         CSDN_AllDayTrueStartDate = findViewById(R.id.CSDN_AllDayTrueStartDate);
+
         // 종료 날짜 버튼
         CSDN_ALlDayTrueEndDate = findViewById(R.id.CSDN_ALlDayTrueEndDate);
 
@@ -502,8 +503,8 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
 
                     if (!Objects.equals(TIME, "null")) {
                         String[] splitHourMinute = TIME.split(":");
-                        hour = Integer.parseInt(splitHourMinute[0]); // 12시간 형식으로 된 시간
-                        minute = Integer.parseInt(splitHourMinute[1]);
+                        int hour = Integer.parseInt(splitHourMinute[0]); // 12시간 형식으로 된 시간
+                        int minute = Integer.parseInt(splitHourMinute[1]);
 
                         String cal_alarm = calApiService.getValue("cal_alarm");
                         String cal_name = calApiService.getValue("cal_name");
@@ -550,8 +551,25 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
             }
         });
 
+        initBtn();
 
+    }
 
+    public void initBtn(){
+        Calendar calendar = Calendar.getInstance();
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        for(int i = 0; i< 2; i++){
+            switchNum = i;
+            time = i;
+            onDateSelected(year, month, day);
+            onTimeSelected(hour, minute);
+        }
     }
 
 
@@ -580,8 +598,6 @@ public class CalSetDateNew extends AppCompatActivity implements DatePickerFragme
     @Override
     public void onTimeSelected(int hour, int minute) {
         String timeServerFormat = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
-
-
 
         String t = "오전";
 //        int hhour = hour;

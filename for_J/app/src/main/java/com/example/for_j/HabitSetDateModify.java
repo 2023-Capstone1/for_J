@@ -41,7 +41,6 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
     private Calendar startSelectedDate = Calendar.getInstance();
     private Calendar endSelectedDate = Calendar.getInstance();
     private final Calendar currentSelectedDate = Calendar.getInstance();
-    private Calendar currentDate;
 
     // 색 버튼
     private AppCompatButton HSDN_Color;
@@ -297,12 +296,13 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
         if (Objects.equals(getHabitToUpdateAPI.getValue("habit_alarmSwitch"), "0")){
             HSDN_AlarmSwitch.setChecked(false);
             HSDN_AlarmBtn.setVisibility(View.GONE);
-            System.out.println("스위치 커져있어야 함");
+            initBtn();
+//            System.out.println("스위치 커져있어야 함");
         } else {
             HSDN_AlarmSwitch.setChecked(true);
             HSDN_AlarmBtn.setVisibility(View.VISIBLE);
             HSDN_AlarmBtn.setText(getHabitToUpdateAPI.getValue("habit_alarm"));
-            System.out.println("스위치 꺼져 있어야 함");
+//            System.out.println("스위치 꺼져 있어야 함");
         }
 
         // 스위치 온오프
@@ -624,8 +624,16 @@ public class HabitSetDateModify extends AppCompatActivity implements DatePickerF
                 finish();
             }
         });
+    }
 
+    @SuppressLint("SetTextI18n")
+    public void initBtn(){
+        Calendar calendar = Calendar.getInstance();
 
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        onTimeSelected(hour, minute);
     }
 
     @Override

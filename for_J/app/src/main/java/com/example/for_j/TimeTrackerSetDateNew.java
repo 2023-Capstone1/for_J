@@ -1,6 +1,8 @@
 package com.example.for_j;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -49,6 +51,7 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
     private Calendar todayCal = Calendar.getInstance();
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,17 +224,6 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
                         finish();
                     }
                 }
-
-
-
-
-
-
-                // edit text 디비에 저장하기
-                // 현재 날짜 db에 저장하기
-                // 카테고리 버튼 색상, 이름 저장하기
-                // nfc 값 저장하기 -> nfc 없으면 기본값은 null
-                // db에 모두 올리기
             }
         });
 
@@ -242,20 +234,16 @@ public class TimeTrackerSetDateNew extends AppCompatActivity{
                 finish();
             }
         });
+
+        initBtn();
     }
 
-/*    private final ActivityResultLauncher<Intent> registerNFCResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK) {
-                    Intent data = result.getData();
-                    if (data != null) {
-                        nfc = data.getStringExtra("time_nfc");
-                        // Do something with habit_nfc value
-                        Toast.makeText(this, "nfc value: " + nfc, Toast.LENGTH_SHORT).show();
-                        TRSDN_NFCBtn.setText("NFC: " + nfc);
-                    }
-                }
-            }
-    );*/
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @SuppressLint("SetTextI18n")
+    public void initBtn(){
+        TRSDN_CategoryBtn.setText("not selected");
+        TRSDN_CategoryBtn.setTextColor(Color.WHITE);
+    }
+
 }
 

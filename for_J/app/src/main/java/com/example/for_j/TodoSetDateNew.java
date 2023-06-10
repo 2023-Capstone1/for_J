@@ -1,5 +1,7 @@
 package com.example.for_j;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -53,6 +55,7 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +97,7 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
             public void onClick(View v) {
                 // pickCategory 띄우기
                 TodoPickCategoryDialog PCD = new TodoPickCategoryDialog(TodoSetDateNew.this, new TodoPickCategoryDialog.PickCategoryDialogListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void getCategoryData(String cName, String cColor) {
                         // 카테고리 색, 이름 가지고 오기
@@ -106,7 +109,7 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
                         // 텍스트 색상
                         int colorValue;
                         Drawable btnDrawable;
-                        //caName = cName;
+                        caName = cName;
                         //caColor = cColor;
                         // 컬러설정
                         switch(cColor){
@@ -196,7 +199,9 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
                 }
 
                 // 투두 카테고리 이름
-                if (TSDN_CategortBtn.getText() != null){
+                if (TSDN_CategortBtn.getText().equals("not selected")){
+                    caName = "";
+                }else{
                     caName = TSDN_CategortBtn.getText().toString();
                 }
 
@@ -231,27 +236,22 @@ public class TodoSetDateNew extends AppCompatActivity implements DatePickerFragm
             }
         });
 
+        initBtn();
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @SuppressLint("SetTextI18n")
+    public void initBtn(){
+        Calendar calendar = Calendar.getInstance();
 
-        /*
-        // 반복 주기 버튼 xml 연동
-        TSDN_RepeatBtn = findViewById(R.id.TSDN_RepeatBtn);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // 반복 주기 버튼 클릭
-        TSDN_RepeatBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // pickCategory 띄우기
-                RepeatCycle RCD = new RepeatCycle();
+        onDateSelected(year, month, day);
 
-                RCD.show(getSupportFragmentManager(), "RepeatCycle");
-            }
-        });
-
-         */
-
-
-
+        TSDN_CategortBtn.setText("not selected");
+        TSDN_CategortBtn.setTextColor(Color.WHITE);
     }
 
     @Override

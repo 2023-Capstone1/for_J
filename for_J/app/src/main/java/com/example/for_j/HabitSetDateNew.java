@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.fonts.Font;
+import android.graphics.fonts.FontFamily;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +42,6 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
     private Calendar startSelectedDate = Calendar.getInstance();
     private Calendar endSelectedDate = Calendar.getInstance();
     private final Calendar currentSelectedDate = Calendar.getInstance();
-    private Calendar currentDate;
 
     // 색 버튼
     private AppCompatButton HSDN_Color;
@@ -382,19 +383,7 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 //                    toast.show();
                 }
 
-                // 해빗 컬러 // 위에서 이미 지정함
-                // 해빗 nfc 값
-//                try {
-//                    if (Shabit_nfc != null) {
-//                        System.out.println("HSDN_NFCBtn text: " + HSDN_NFCBtn.getText().toString());
-//                    }
-//                } catch (NullPointerException e) {
-//                    Shabit_nfc = "";
-//                    System.out.println("Shabit_nfc: " + Shabit_nfc);
-//                    System.out.println("nfc null exception");
-//                    toast = Toast.makeText(HabitSetDateNew.this, "nfc를 등록해주세요", Toast.LENGTH_SHORT);
-//                    toast.show();
-//                }
+
                 // 해빗 상태
                 Shabit_state = 0;
 
@@ -451,27 +440,6 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
                             // 알림 설정
                             habitAlarm.setAlarm(hour, minute, AlarmApiService.getValue("habit_list_id"), Sname);
                         }
-
-                        /*// 종료 날짜 전까지 반복
-                        currentDate = (Calendar) startSelectedDate.clone();
-                        while (currentDate.compareTo(endSelectedDate) < 1) {
-                            year = currentDate.get(Calendar.YEAR);
-                            month = currentDate.get(Calendar.MONTH) + 1;
-                            day = currentDate.get(Calendar.DAY_OF_MONTH);
-                            Stoday = String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, day);
-//                            System.out.println("start date: " + SstartDate);
-//                            System.out.println("today: " + Stoday);
-//                            System.out.println("end date: " + SendDate);
-
-                            Log.d("TAG", SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
-                                    + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-                                    + Shabit_nfc + "/" + Shabit_state + "/" + currentDate.get(Calendar.DAY_OF_WEEK));
-                            habitApiService.postUrl(url);
-                            if (habitApiService.getStatus() == 200) {
-                                success += 1;
-                            }
-                            currentDate.add(Calendar.DAY_OF_MONTH, 1);
-                        }*/
                     } else {    // 반복 날짜
                         boolean[] dayOfWeek = new boolean[7];
                         // Calendar.DAY_OF_WEEK 일요일 1, 월요일 2, 화요일 3, 수요일 4, 목요일 5, 금요일 6, 토요일 7
@@ -519,36 +487,6 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
 
                         // 알림 설정
                         habitAlarm.setAlarm(hour, minute, AlarmApiService.getValue("habit_list_id"),Sname);
-
-                        /*// 종료 날짜 전까지 반복
-                        currentDate = (Calendar) startSelectedDate.clone();
-                        int dayOfToday;
-
-                        while (currentDate.compareTo(endSelectedDate) < 1) {
-                            dayOfToday = currentDate.get(Calendar.DAY_OF_WEEK);
-                            year = currentDate.get(Calendar.YEAR);
-                            month = currentDate.get(Calendar.MONTH) + 1;
-                            day = currentDate.get(Calendar.DAY_OF_MONTH);
-
-                            if (dayOfWeek[dayOfToday - 1]) {
-                                Stoday = String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, day);
-                                System.out.println("start date: " + SstartDate);
-                                System.out.println("today: " + Stoday);
-                                System.out.println("end date: " + SendDate);
-                                String url = "http://203.250.133.162:8080/habitAPI/set_habit/" + SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
-                                        + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-                                        + Shabit_nfc + "/" + Shabit_state + "/" + currentDate.get(Calendar.DAY_OF_WEEK);
-                                Log.d("TAG", SloginId + "/" + Sname + "/" + Stoday + "/" + SstartDate + "/"
-                                        + SendDate + "/" + SalarmSwitch + "/" + Salarm + "/" + SrepeatDay + "/" + SrepeatN + "/" + Shabit_color + "/"
-                                        + Shabit_nfc + "/" + Shabit_state + "/" + currentDate.get(Calendar.DAY_OF_WEEK));
-                                habitApiService.postUrl(url);
-                                if (habitApiService.getStatus() == 200) {
-                                    success += 1;
-                                }
-
-                            }
-                            currentDate.add(Calendar.DATE, 1);
-                        }*/
                     }
                     finish();
                 }
@@ -564,7 +502,26 @@ public class HabitSetDateNew extends AppCompatActivity implements DatePickerFrag
             }
         });
 
+        initBtn();
+    }
 
+    @SuppressLint("SetTextI18n")
+    public void initBtn(){
+        Calendar calendar = Calendar.getInstance();
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        for(int i = 0; i< 2; i++){
+            dateCheck = i;
+            onDateSelected(year, month, day);
+        }
+        onTimeSelected(hour, minute);
+
+        HSDN_RepeatBtn.setText("not selected");
     }
 
     @Override

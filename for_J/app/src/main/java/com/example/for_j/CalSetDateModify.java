@@ -273,26 +273,30 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         CSDN_AllDayFalseStartDate.setText(getCalAPI.getValue("cal_startDate"));
         // 시작 시간 xml 연동
         CSDN_AllDayFalseStartTime = findViewById(R.id.CSDN_AllDayFalseStartTime);
+        time = 0;
         if (!Objects.equals(getCalAPI.getValue("cal_startTime"), "null")){
-            time = 0;
             String[] splitTime = getCalAPI.getValue("cal_startTime").split(":");
             int splitHour = Integer.parseInt(splitTime[0]);
             int splitMinute = Integer.parseInt(splitTime[1]);
             onTimeSelected(splitHour, splitMinute);
 //            CSDN_AllDayFalseStartTime.setText(getCalAPI.getValue("cal_startTime"));
+        }else{
+            initBtn();
         }
         // 종료 날짜 xml 연동
         CSDN_AllDayFalseEndDate = findViewById(R.id.CSDN_AllDayFalseEndDate);
         CSDN_AllDayFalseEndDate.setText(getCalAPI.getValue("cal_endDate"));
         // 종료 시간 xml 연동
         CSDN_AllDayFalseEndTime = findViewById(R.id.CSDN_AllDayFalseEndTime);
+        time = 1;
         if (!Objects.equals(getCalAPI.getValue("cal_endTime"), "null")){
-            time = 1;
             String[] splitTime = getCalAPI.getValue("cal_endTime").split(":");
             int splitHour = Integer.parseInt(splitTime[0]);
             int splitMinute = Integer.parseInt(splitTime[1]);
             onTimeSelected(splitHour, splitMinute);
 //            CSDN_AllDayFalseEndTime.setText(getCalAPI.getValue("cal_endTime"));
+        }else{
+            initBtn();
         }
 
         // 시작 날짜 버튼 클릭
@@ -577,6 +581,14 @@ public class CalSetDateModify extends AppCompatActivity implements DatePickerFra
         CSDN_Cancle.setOnClickListener(view -> finish());
     }
 
+    public void initBtn(){
+        Calendar calendar = Calendar.getInstance();
+
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        onTimeSelected(hour, minute);
+    }
 
     @Override
     public void onDateSelected(int year, int month, int day) {

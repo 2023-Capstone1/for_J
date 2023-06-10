@@ -309,27 +309,6 @@ public class TodoSetDateModify extends AppCompatActivity implements DatePickerFr
             }
         });
 
-
-
-        /*
-        // 반복 주기 버튼 xml 연동
-        TSDN_RepeatBtn = findViewById(R.id.TSDN_RepeatBtn);
-
-        // 반복 주기 버튼 클릭
-        TSDN_RepeatBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // pickCategory 띄우기
-                RepeatCycle RCD = new RepeatCycle();
-
-                RCD.show(getSupportFragmentManager(), "RepeatCycle");
-            }
-        });
-
-         */
-
-
-
     }
 
     @Override
