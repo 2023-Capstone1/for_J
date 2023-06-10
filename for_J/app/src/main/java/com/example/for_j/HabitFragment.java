@@ -59,6 +59,8 @@ public class HabitFragment extends Fragment implements HabitListAdapter.HabitLis
 
     // + 버튼
     private ImageButton moveHabitSetDateNew;
+    // nfc check 버튼
+    private ImageButton habit_nfc_check_btn;
 
 
     // 서버 통신 관련 변수
@@ -102,6 +104,18 @@ public class HabitFragment extends Fragment implements HabitListAdapter.HabitLis
                 startActivity(intent);
             }
         });
+
+        habit_nfc_check_btn = habitView.findViewById(R.id.habit_nfc_check_btn);
+        habit_nfc_check_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), HabitCheckNFC.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        });
+
+
 
         // 옵션 버튼 클릭 이벤트
         Btn_Option = habitView.findViewById(R.id.btn_option);

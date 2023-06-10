@@ -14,14 +14,25 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.fragment.app.DialogFragment;
 
-public class Setting extends AppCompatActivity {
+import com.example.for_j.dialog.TimePickerFragment;
+
+import java.util.Calendar;
+import java.util.Locale;
+
+public class Setting extends AppCompatActivity implements TimePickerFragment.OnTimeSelectedListener{
     Button  setting_todo_button, setting_habit_button, setting_calendar_button;
     int hour, minute;
 
     String user_id;
     String Alarm_Switch, Todo_Time, Todo_Switch, Habit_Time, Habit_Switch, Calendar_Time, Calendar_Switch, Time_Switch, Dark_Mode;
     TextView Setting_All_Del, Setting_Todo_Del, Setting_Habit_Del, Setting_Calendar_Del, Setting_Time_Del;
+
+    private final Calendar todoSelectedDate = Calendar.getInstance();
+    private final Calendar habitSelectedDate = Calendar.getInstance();
+    private final Calendar calendarSelectedDate = Calendar.getInstance();
+    int time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -39,8 +50,9 @@ public class Setting extends AppCompatActivity {
         setting_todo_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SetTime customDialog = new SetTime(Setting.this,1);
-                customDialog.show();
+                time = 0;
+                DialogFragment customDialog = new TimePickerFragment(todoSelectedDate, Setting.this);
+                customDialog.show(getSupportFragmentManager(), "timePicker");
             }
         });
 
@@ -49,8 +61,9 @@ public class Setting extends AppCompatActivity {
         setting_habit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SetTime customDialog = new SetTime(Setting.this,2);
-                customDialog.show();
+                time = 1;
+                DialogFragment customDialog = new TimePickerFragment(todoSelectedDate, Setting.this);
+                customDialog.show(getSupportFragmentManager(), "timePicker");
             }
         });
 
@@ -59,8 +72,9 @@ public class Setting extends AppCompatActivity {
         setting_calendar_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SetTime customDialog = new SetTime(Setting.this,3);
-                customDialog.show();
+                time = 2;
+                DialogFragment customDialog = new TimePickerFragment(todoSelectedDate, Setting.this);
+                customDialog.show(getSupportFragmentManager(), "timePicker");
             }
         });
 
@@ -405,43 +419,7 @@ public class Setting extends AppCompatActivity {
             }
         });
     }
-    // 각 버튼 눌렀을 때 설정한 시간으로 시간 출력
-    public void setValue(int code, int hour, int minute){
-        this.hour = hour;
-        this.minute = minute;
 
-        String savedHour, savedMinute;
-
-        switch(code){
-            case 1:
-                savedHour = String.valueOf(hour);
-                savedMinute = String.valueOf(minute);
-
-                setting_todo_button.setText(hour+":"+minute);
-                Todo_Time = savedHour + ":" + savedMinute;
-                // 알람 예약
-                AlarmUtil.setAlarm(getApplicationContext(), code, hour, minute);
-                break;
-            case 2:
-                savedHour = String.valueOf(hour);
-                savedMinute = String.valueOf(minute);
-
-                setting_habit_button.setText(hour+":"+minute);
-                Habit_Time = savedHour + ":" + savedMinute;
-                // 알람 예약
-                AlarmUtil.setAlarm(getApplicationContext(), code, hour, minute);
-                break;
-            case 3:
-                savedHour = String.valueOf(hour);
-                savedMinute = String.valueOf(minute);
-
-                setting_calendar_button.setText(hour+":"+minute);
-                Calendar_Time = savedHour + ":" + savedMinute;
-                // 알람 예약
-                AlarmUtil.setAlarm(getApplicationContext(), code, hour, minute);
-                break;
-        }
-    }
 
     private void showDeleteDialog(String scheduleType) {
         Dialog dialog = new Dialog(Setting.this);
@@ -490,5 +468,51 @@ public class Setting extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+
+    @Override
+    public void onTimeSelected(int hour, int minute) {
+        String timeServerFormat = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+
+        String t = "오전";
+        if (hour > 12){
+            hour -= 12;
+            t = "오후";
+        }
+
+        String timeString = String.format(Locale.getDefault(), "%s %d:%02d", t, hour, minute);
+
+        switch(time){
+            case 0:
+                setting_todo_button.setText(timeString);
+                Todo_Time = timeServerFormat;
+
+                todoSelectedDate.set(Calendar.HOUR_OF_DAY, hour);
+                todoSelectedDate.set(Calendar.MINUTE, minute);
+
+                // 알람 예약
+                AlarmUtil.setAlarm(getApplicationContext(), time, hour, minute);
+                break;
+            case 1:
+                setting_habit_button.setText(timeString);
+                Habit_Time = timeServerFormat;
+
+                habitSelectedDate.set(Calendar.HOUR_OF_DAY, hour);
+                habitSelectedDate.set(Calendar.MINUTE, minute);
+                // 알람 예약
+                AlarmUtil.setAlarm(getApplicationContext(), time, hour, minute);
+                break;
+            case 2:
+
+                setting_calendar_button.setText(timeString);
+                Calendar_Time = timeServerFormat;
+
+                calendarSelectedDate.set(Calendar.HOUR_OF_DAY, hour);
+                calendarSelectedDate.set(Calendar.MINUTE, minute);
+                // 알람 예약
+                AlarmUtil.setAlarm(getApplicationContext(), time, hour, minute);
+                break;
+        }
     }
 }
