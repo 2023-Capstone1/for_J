@@ -107,8 +107,8 @@ public class TimeFragment extends Fragment implements TimeListItemAdapter.TimeLi
     @SuppressLint({"MissingInflatedId", "ResourceType"})
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        CalendarMainActivity.clickFlag = 4;
 
         IdSave idSave = (IdSave) requireActivity().getApplication();
         loginID = idSave.getUserId();

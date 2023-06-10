@@ -104,8 +104,9 @@ public class ToDoFragment extends Fragment implements ListItemAdapter.ToDoListAd
     @SuppressLint({"MissingInflatedId", "ResourceType"})
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        CalendarMainActivity.clickFlag = 2;
+
         IdSave idSave = (IdSave) requireActivity().getApplication();
         loginID = idSave.getUserId();
         // 투두 프래그먼트 뷰 생성

@@ -235,8 +235,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|bottom"
-                android:src="@drawable/plus_btn"
-                android:background="#000ff000">
+                android:background="#000ff000"
+                android:src="@drawable/plus_btn">
 
             </ImageButton>
 

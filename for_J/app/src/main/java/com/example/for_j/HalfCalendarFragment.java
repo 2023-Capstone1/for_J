@@ -9,13 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -76,16 +79,13 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
     private ListView Todo_listView;
     private CalTodoListAdapter Todo_listAdapter;
 
+    // full calendar로 바꾸는 버튼
+    private Button change_full;
+
     // nothing 화면
     private TextView cal_nothing;
     private TextView habit_nothing;
     private TextView todo_nothing;
-
-
-
-
-
-
 
     // 서버 소통 변수
     private String CalIsTupleExistURL;
@@ -112,15 +112,28 @@ public class HalfCalendarFragment extends Fragment implements CalListAdapter.Cal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        CalendarMainActivity.isFull = false;
+        CalendarMainActivity.clickFlag = 1;
 
 //        halfCalView = inflater.inflate(R.layout.fragment_half_calendar, null);
         halfCalView = inflater.inflate(R.layout.fragment_half_calendar, container, false);
 
-
-
-
         IdSave idSave = (IdSave) requireActivity().getApplication();
         loginID = idSave.getUserId();
+
+        change_full = halfCalView.findViewById(R.id.change_full);
+        change_full.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CalendarFragment calendarFragment = new CalendarFragment();
+                FragmentManager fragmentManager = ((AppCompatActivity) getContext()).getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.containers, calendarFragment)
+                        .addToBackStack(null)  // 이전 Fragment로 돌아갈 수 있도록 백 스택에 추가
+                        .commit();
+
+            }
+        });
 
         // 타임 리스트 추가 인텐트로 이동
         moveTimeSetDateNew = halfCalView.findViewById(R.id.time_listAddBtn);

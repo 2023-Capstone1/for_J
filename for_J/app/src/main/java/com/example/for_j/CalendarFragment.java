@@ -61,8 +61,10 @@ public class CalendarFragment extends Fragment {
     @SuppressLint("MissingInflatedId")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        CalendarMainActivity.isFull = true;
+        CalendarMainActivity.clickFlag = 0;
         /*
         * 달력 관련 코드
         * -달력 날짜 부분에 디비에서 일정이 있는 날짜 알아와서 해당 날짜에 바(-)나 점으로 표시해야함

@@ -24,6 +24,7 @@ public class CalendarMainActivity extends AppCompatActivity {
     HalfCalendarFragment CalendarMain_halfCalendarFragment;
 
     static int clickFlag = 0;
+    static boolean isFull = true;
     MenuItem menuItem;
 
     @SuppressLint("NonConstantResourceId")
@@ -48,6 +49,7 @@ public class CalendarMainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_calendarFragment).commit();
                 menuItem = navigationBarView.getMenu().findItem(R.id.calendar);
                 menuItem.setChecked(true);
+                isFull = true;
 //                System.out.println("\n\n\n\n\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! clickFlage" + clickFlag);
                 break;
             case 1: // 하프캘린더
@@ -55,6 +57,7 @@ public class CalendarMainActivity extends AppCompatActivity {
 //                System.out.println("\n\n\n\n\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! clickFlage" + clickFlag);
                 menuItem = navigationBarView.getMenu().findItem(R.id.calendar);
                 menuItem.setChecked(true);
+                isFull = false;
                 break;
             case 2: // 투두
                 getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_toDoFragment).commit();
@@ -83,23 +86,24 @@ public class CalendarMainActivity extends AppCompatActivity {
         navigationBarView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.todo:
-                    clickFlag = 2;
 //                    System.out.println("\n\n\n\n\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! clickFlage" + clickFlag);
                     getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_toDoFragment).commit();
                     return true;
                 case R.id.habit:
-                    clickFlag = 3;
 //                    System.out.println("\n\n\n\n\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! clickFlage" + clickFlag);
                     getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_habitFragment).commit();
                     return true;
                 case R.id.calendar:
-                    clickFlag = 1;
+                    if (isFull) {
+                        clickFlag = 0;
+                        getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_calendarFragment).commit();
+                    } else {
+                        clickFlag = 1;
+                        getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_halfCalendarFragment).commit();
+                    }
 //                    System.out.println("\n\n\n\n\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! clickFlage" + clickFlag);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_calendarFragment).commit();
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_halfCalendarFragment).commit();
                     return true;
                 case R.id.time:
-                    clickFlag = 4;
 //                    System.out.println("\n\n\n\n\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! clickFlage" + clickFlag);
                     getSupportFragmentManager().beginTransaction().replace(R.id.containers, CalendarMain_timeFragment).commit();
                     return true;

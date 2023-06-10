@@ -133,6 +133,7 @@
         android:layout_height="wrap_content"
         android:background="#efefef" />
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -140,6 +141,18 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="20dp"
         >
+        <android.widget.Button
+            android:id="@+id/change_full"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="full"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/indigo_400"
+            android:background="@drawable/list_item_background"
+            android:layout_gravity="right|top"
+            />
 
         <ScrollView
             android:id="@+id/todo_listScrollView"

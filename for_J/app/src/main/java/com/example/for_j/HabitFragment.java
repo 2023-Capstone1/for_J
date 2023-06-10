@@ -88,6 +88,7 @@ public class HabitFragment extends Fragment implements HabitListAdapter.HabitLis
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        CalendarMainActivity.clickFlag = 3;
 
         IdSave idSave = (IdSave) requireActivity().getApplication();
         loginID = idSave.getUserId();
